@@ -5,246 +5,330 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mijn Zorgvisie</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- ───────────────────────────── ONBOARDING ───────────────────────────── -->
+<!-- ══════════════════════════ ONBOARDING ══════════════════════════ -->
 <div id="onboarding" class="screen active">
+  <div class="ob-split">
 
-  <!-- stap-indicator -->
-  <div class="ob-header">
-    <div class="ob-logo">Zorgvisie</div>
-    <div class="ob-steps">
-      <span class="step active" data-n="1">1</span>
-      <span class="step-line"></span>
-      <span class="step" data-n="2">2</span>
-      <span class="step-line"></span>
-      <span class="step" data-n="3">3</span>
+    <!-- LINKER PANEEL — branding -->
+    <div class="ob-left">
+      <div class="ob-left-inner">
+        <div class="ob-brand">
+          <span class="ob-logo-text">Zorgvisie</span>
+          <span class="ob-logo-dot"></span>
+        </div>
+        <div class="ob-left-body">
+          <h2 class="ob-left-title">Relevante informatie,<br/><em>direct op maat.</em></h2>
+          <p class="ob-left-sub">Stel eenmalig je profiel in en ontvang nieuws, dossiers en duiding die écht aansluiten op jouw werkpraktijk.</p>
+          <ul class="ob-features">
+            <li><span class="ob-feat-check">✓</span> Persoonlijk dashboard per rol &amp; sector</li>
+            <li><span class="ob-feat-check">✓</span> Thematische duiding bij actuele ontwikkelingen</li>
+            <li><span class="ob-feat-check">✓</span> Regionale filtering zonder zoeken</li>
+            <li><span class="ob-feat-check">✓</span> Prioriteitsthema voor urgent beleid</li>
+          </ul>
+        </div>
+        <div class="ob-left-steps" id="ob-left-steps">
+          <div class="ls-item active" data-n="1"><span>Rol &amp; sector</span></div>
+          <div class="ls-item" data-n="2"><span>Regio</span></div>
+          <div class="ls-item" data-n="3"><span>Thema's</span></div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- stap 1 — functie & sector -->
-  <div class="ob-step active" id="step1">
-    <div class="ob-content">
-      <p class="ob-label">Stap 1 van 3</p>
-      <h1>Wat is jouw rol?</h1>
-      <p class="ob-sub">We stemmen je dashboard af op jouw functie en sector.</p>
-
-      <div class="ob-group">
-        <p class="ob-group-label">Functie</p>
-        <div class="pill-grid" id="functie-grid">
-          <button class="pill" data-key="functie" data-val="Zorgmanager">Zorgmanager</button>
-          <button class="pill" data-key="functie" data-val="Bestuurder">Bestuurder</button>
-          <button class="pill" data-key="functie" data-val="Beleidsmedewerker">Beleidsmedewerker</button>
-          <button class="pill" data-key="functie" data-val="Adviseur">Adviseur</button>
-          <button class="pill" data-key="functie" data-val="HR-professional">HR-professional</button>
-          <button class="pill" data-key="functie" data-val="Financieel directeur">Financieel directeur</button>
+    <!-- RECHTER PANEEL — formulier -->
+    <div class="ob-right">
+      <div class="ob-right-top">
+        <div class="ob-progress">
+          <div class="ob-progress-bar" id="ob-progress-bar" style="width:33%"></div>
         </div>
       </div>
 
-      <div class="ob-group">
-        <p class="ob-group-label">Sector</p>
-        <div class="pill-grid" id="sector-grid">
-          <button class="pill" data-key="sector" data-val="Ziekenhuiszorg">Ziekenhuiszorg</button>
-          <button class="pill" data-key="sector" data-val="GGZ">GGZ</button>
-          <button class="pill" data-key="sector" data-val="VVT">VVT</button>
-          <button class="pill" data-key="sector" data-val="Gehandicaptenzorg">Gehandicaptenzorg</button>
-          <button class="pill" data-key="sector" data-val="Huisartsenzorg">Huisartsenzorg</button>
-          <button class="pill" data-key="sector" data-val="GGD / Publieke gezondheid">GGD / Publieke gezondheid</button>
+      <!-- stap 1 -->
+      <div class="ob-step active" id="step1">
+        <div class="ob-content">
+          <p class="ob-label">Stap 1 van 3</p>
+          <h1 class="ob-title">Wat is jouw rol?</h1>
+          <p class="ob-sub">We stemmen je dashboard af op jouw functie en sector.</p>
+
+          <div class="ob-group">
+            <p class="ob-group-label">Functie</p>
+            <div class="pill-grid">
+              <button class="pill" data-key="functie" data-val="Zorgmanager">Zorgmanager</button>
+              <button class="pill" data-key="functie" data-val="Bestuurder">Bestuurder</button>
+              <button class="pill" data-key="functie" data-val="Beleidsmedewerker">Beleidsmedewerker</button>
+              <button class="pill" data-key="functie" data-val="Adviseur">Adviseur</button>
+              <button class="pill" data-key="functie" data-val="HR-professional">HR-professional</button>
+              <button class="pill" data-key="functie" data-val="Financieel directeur">Financieel directeur</button>
+            </div>
+          </div>
+
+          <div class="ob-group">
+            <p class="ob-group-label">Sector</p>
+            <div class="pill-grid">
+              <button class="pill" data-key="sector" data-val="Ziekenhuiszorg">Ziekenhuiszorg</button>
+              <button class="pill" data-key="sector" data-val="GGZ">GGZ</button>
+              <button class="pill" data-key="sector" data-val="VVT">VVT</button>
+              <button class="pill" data-key="sector" data-val="Gehandicaptenzorg">Gehandicaptenzorg</button>
+              <button class="pill" data-key="sector" data-val="Huisartsenzorg">Huisartsenzorg</button>
+              <button class="pill" data-key="sector" data-val="GGD / Publieke gezondheid">GGD / Publieke gezondheid</button>
+            </div>
+          </div>
+
+          <button class="ob-next" onclick="goStep(2)">Volgende <span class="btn-arrow">→</span></button>
         </div>
       </div>
 
-      <button class="ob-next" onclick="goStep(2)">Volgende <span>→</span></button>
-    </div>
-  </div>
+      <!-- stap 2 -->
+      <div class="ob-step" id="step2">
+        <div class="ob-content">
+          <p class="ob-label">Stap 2 van 3</p>
+          <h1 class="ob-title">Waar werk je?</h1>
+          <p class="ob-sub">We tonen relevante regionale artikelen en praktijkvoorbeelden.</p>
 
-  <!-- stap 2 — regio -->
-  <div class="ob-step" id="step2">
-    <div class="ob-content">
-      <p class="ob-label">Stap 2 van 3</p>
-      <h1>Waar werk je?</h1>
-      <p class="ob-sub">We filteren regionale nieuwtjes en praktijkvoorbeelden voor jou.</p>
+          <div class="ob-group">
+            <p class="ob-group-label">Provincie / Regio</p>
+            <div class="pill-grid">
+              <button class="pill" data-key="regio" data-val="Noord-Holland">Noord-Holland</button>
+              <button class="pill" data-key="regio" data-val="Zuid-Holland">Zuid-Holland</button>
+              <button class="pill" data-key="regio" data-val="Utrecht">Utrecht</button>
+              <button class="pill" data-key="regio" data-val="Noord-Brabant">Noord-Brabant</button>
+              <button class="pill" data-key="regio" data-val="Gelderland">Gelderland</button>
+              <button class="pill" data-key="regio" data-val="Overijssel">Overijssel</button>
+              <button class="pill" data-key="regio" data-val="Friesland">Friesland</button>
+              <button class="pill" data-key="regio" data-val="Groningen">Groningen</button>
+              <button class="pill" data-key="regio" data-val="Zeeland">Zeeland</button>
+              <button class="pill" data-key="regio" data-val="Limburg">Limburg</button>
+            </div>
+          </div>
 
-      <div class="ob-group">
-        <p class="ob-group-label">Regio</p>
-        <div class="pill-grid">
-          <button class="pill" data-key="regio" data-val="Noord-Holland">Noord-Holland</button>
-          <button class="pill" data-key="regio" data-val="Zuid-Holland">Zuid-Holland</button>
-          <button class="pill" data-key="regio" data-val="Utrecht">Utrecht</button>
-          <button class="pill" data-key="regio" data-val="Noord-Brabant">Noord-Brabant</button>
-          <button class="pill" data-key="regio" data-val="Gelderland">Gelderland</button>
-          <button class="pill" data-key="regio" data-val="Overijssel">Overijssel</button>
-          <button class="pill" data-key="regio" data-val="Friesland">Friesland</button>
-          <button class="pill" data-key="regio" data-val="Groningen">Groningen</button>
-          <button class="pill" data-key="regio" data-val="Zeeland">Zeeland</button>
-          <button class="pill" data-key="regio" data-val="Limburg">Limburg</button>
+          <div class="ob-nav">
+            <button class="ob-back" onclick="goStep(1)">← Terug</button>
+            <button class="ob-next" onclick="goStep(3)">Volgende <span class="btn-arrow">→</span></button>
+          </div>
         </div>
       </div>
 
-      <button class="ob-next" onclick="goStep(3)">Volgende <span>→</span></button>
-    </div>
-  </div>
+      <!-- stap 3 -->
+      <div class="ob-step" id="step3">
+        <div class="ob-content">
+          <p class="ob-label">Stap 3 van 3</p>
+          <h1 class="ob-title">Welke thema's volg je?</h1>
+          <p class="ob-sub">Kies minimaal twee thema's. Je past dit later altijd aan.</p>
 
-  <!-- stap 3 — thema's -->
-  <div class="ob-step" id="step3">
-    <div class="ob-content">
-      <p class="ob-label">Stap 3 van 3</p>
-      <h1>Welke thema's volg je?</h1>
-      <p class="ob-sub">Kies minimaal twee thema's. Je kunt dit later altijd aanpassen.</p>
+          <div class="theme-cards" id="theme-picker">
+            <button class="theme-card" data-val="Arbeidsmarkt">
+              <span class="tc-icon">👥</span>
+              <span class="tc-name">Arbeidsmarkt</span>
+              <span class="tc-desc">Personeelstekorten, cao's en werving</span>
+            </button>
+            <button class="theme-card" data-val="Passende zorg">
+              <span class="tc-icon">🎯</span>
+              <span class="tc-name">Passende zorg</span>
+              <span class="tc-desc">Uitkomstgerichte zorg en doelmatigheid</span>
+            </button>
+            <button class="theme-card" data-val="Digitalisering">
+              <span class="tc-icon">💻</span>
+              <span class="tc-name">Digitalisering</span>
+              <span class="tc-desc">EPD, AI en data in de zorg</span>
+            </button>
+            <button class="theme-card" data-val="Capaciteitsdruk">
+              <span class="tc-icon">📊</span>
+              <span class="tc-name">Capaciteitsdruk</span>
+              <span class="tc-desc">Wachtlijsten, bedden en planning</span>
+            </button>
+            <button class="theme-card" data-val="Regionale samenwerking">
+              <span class="tc-icon">🤝</span>
+              <span class="tc-name">Regionale samenwerking</span>
+              <span class="tc-desc">Netwerken, IZA en regiobeelden</span>
+            </button>
+            <button class="theme-card" data-val="Financiering">
+              <span class="tc-icon">💶</span>
+              <span class="tc-name">Financiering</span>
+              <span class="tc-desc">Bekostiging, bezuinigingen en NZa</span>
+            </button>
+          </div>
 
-      <div class="theme-cards" id="theme-picker">
-        <button class="theme-card" data-val="Arbeidsmarkt">
-          <span class="tc-icon">👥</span>
-          <span class="tc-name">Arbeidsmarkt</span>
-          <span class="tc-desc">Personeelstekorten, cao's en werving</span>
-        </button>
-        <button class="theme-card" data-val="Passende zorg">
-          <span class="tc-icon">🎯</span>
-          <span class="tc-name">Passende zorg</span>
-          <span class="tc-desc">Uitkomstgerichte zorg en doelmatigheid</span>
-        </button>
-        <button class="theme-card" data-val="Digitalisering">
-          <span class="tc-icon">💻</span>
-          <span class="tc-name">Digitalisering</span>
-          <span class="tc-desc">EPD, AI en data in de zorg</span>
-        </button>
-        <button class="theme-card" data-val="Capaciteitsdruk">
-          <span class="tc-icon">📊</span>
-          <span class="tc-name">Capaciteitsdruk</span>
-          <span class="tc-desc">Wachtlijsten, bedden en planningsvraagstukken</span>
-        </button>
-        <button class="theme-card" data-val="Regionale samenwerking">
-          <span class="tc-icon">🤝</span>
-          <span class="tc-name">Regionale samenwerking</span>
-          <span class="tc-desc">Netwerken, IZA en regiobeelden</span>
-        </button>
-        <button class="theme-card" data-val="Financiering">
-          <span class="tc-icon">💶</span>
-          <span class="tc-name">Financiering</span>
-          <span class="tc-desc">Bekostiging, bezuinigingen en NZa</span>
-        </button>
+          <div class="ob-nav">
+            <button class="ob-back" onclick="goStep(2)">← Terug</button>
+            <button class="ob-next ob-finish" onclick="finishOnboarding()">Dashboard openen <span class="btn-arrow">→</span></button>
+          </div>
+        </div>
       </div>
 
-      <button class="ob-next ob-finish" onclick="finishOnboarding()">Mijn dashboard openen <span>→</span></button>
-    </div>
+    </div><!-- /ob-right -->
   </div>
-
 </div>
 
 
-<!-- ───────────────────────────── DASHBOARD ───────────────────────────── -->
+<!-- ══════════════════════════ DASHBOARD ══════════════════════════ -->
 <div id="dashboard" class="screen">
 
-  <!-- topbar -->
+  <!-- TOPBAR -->
   <header class="topbar">
     <div class="topbar-left">
-      <div class="logo-mark">Zorgvisie</div>
-      <span class="logo-badge">Mijn Zorgvisie</span>
+      <div class="t-logo">
+        <span class="t-logo-text">Zorgvisie</span>
+        <span class="t-logo-badge">Mijn Zorgvisie</span>
+      </div>
     </div>
+
     <nav class="topbar-nav">
-      <a href="#" class="nav-link active">Dashboard</a>
-      <a href="#" class="nav-link">Artikelen</a>
-      <a href="#" class="nav-link">Dossiers</a>
-      <a href="#" class="nav-link">Agenda</a>
+      <a href="#" class="nav-link active">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </a>
+      <a href="#" class="nav-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        Artikelen
+      </a>
+      <a href="#" class="nav-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Dossiers
+      </a>
+      <a href="#" class="nav-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Agenda
+      </a>
     </nav>
+
     <div class="topbar-right">
-      <button class="icon-btn" title="Zoeken">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <button class="t-icon-btn" title="Zoeken">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       </button>
-      <div class="avatar" id="topbar-avatar">KV</div>
+      <button class="t-icon-btn notif-btn" title="Meldingen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="t-avatar" id="topbar-avatar">KV</div>
     </div>
   </header>
 
   <div class="layout">
 
-    <!-- sidebar -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="sidebar-profile">
-        <div class="profile-avatar" id="sidebar-avatar">KV</div>
-        <div>
-          <div class="profile-name" id="profile-name">Katy van Vogelpoel</div>
-          <div class="profile-role" id="profile-role">Beleidsmedewerker · VVT</div>
+
+      <div class="sb-profile">
+        <div class="sb-avatar" id="sidebar-avatar">KV</div>
+        <div class="sb-profile-info">
+          <div class="sb-name" id="profile-name">Katy van Vogelpoel</div>
+          <div class="sb-role" id="profile-role">Beleidsmedewerker · VVT</div>
         </div>
       </div>
 
-      <div class="sidebar-section">
-        <p class="sidebar-label">Jouw thema's</p>
-        <div id="sidebar-themes" class="sidebar-themes"></div>
+      <div class="sb-divider"></div>
+
+      <div class="sb-section">
+        <p class="sb-label">Jouw thema's</p>
+        <div id="sidebar-themes" class="sb-themes"></div>
       </div>
 
-      <div class="sidebar-section">
-        <p class="sidebar-label">Regio</p>
-        <div class="sidebar-regio" id="sidebar-regio">
-          <span class="regio-dot"></span>
+      <div class="sb-divider"></div>
+
+      <div class="sb-section">
+        <p class="sb-label">Regio</p>
+        <div class="sb-regio" id="sidebar-regio">
+          <span class="sb-regio-pin">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </span>
           <span id="regio-naam">Noord-Holland</span>
         </div>
       </div>
 
-      <div class="sidebar-section">
-        <p class="sidebar-label">Thema prioriteren</p>
-        <select class="priority-select" id="priority-select" onchange="setPriority(this.value)">
-          <option value="">— geen prioriteit —</option>
+      <div class="sb-divider"></div>
+
+      <div class="sb-section">
+        <p class="sb-label">Thema prioriteren</p>
+        <select class="sb-select" id="priority-select" onchange="setPriority(this.value)">
+          <option value="">— Geen prioriteit —</option>
         </select>
       </div>
 
-      <div class="sidebar-bottom">
-        <button class="edit-profile-btn" onclick="resetOnboarding()">✏ Profiel aanpassen</button>
+      <div class="sb-footer">
+        <button class="sb-edit-btn" onclick="resetOnboarding()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Profiel aanpassen
+        </button>
       </div>
     </aside>
 
-    <!-- main content -->
+    <!-- MAIN -->
     <main class="main">
 
-      <!-- welkomstbalk -->
-      <div class="welcome-bar">
-        <div>
+      <!-- WELKOM -->
+      <div class="welcome">
+        <div class="welcome-text">
           <h2 class="welcome-title" id="welcome-title">Goedemiddag, Katy</h2>
           <p class="welcome-sub" id="welcome-sub">Je hebt <strong>7 nieuwe artikelen</strong> op basis van jouw profiel.</p>
         </div>
-        <div class="regio-toggle">
-          <label class="toggle-label">
-            <input type="checkbox" id="regio-filter-toggle" onchange="toggleRegioFilter(this.checked)" checked />
-            <span class="toggle-track"></span>
-            Regiofilter aan
-          </label>
+        <label class="regio-toggle-wrap">
+          <input type="checkbox" id="regio-filter-toggle" onchange="toggleRegioFilter(this.checked)" checked />
+          <span class="rt-track"></span>
+          <span class="rt-label">Regiofilter</span>
+        </label>
+      </div>
+
+      <!-- STATS STRIP -->
+      <div class="stats-strip">
+        <div class="stat-chip">
+          <span class="stat-n">7</span>
+          <span class="stat-l">Nieuwe artikelen</span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-n" id="stat-themas">3</span>
+          <span class="stat-l">Gevolgde thema's</span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-n">2</span>
+          <span class="stat-l">Actuele dossiers</span>
+        </div>
+        <div class="stat-chip accent">
+          <span class="stat-n">!</span>
+          <span class="stat-l">Nieuw IZA-akkoord</span>
         </div>
       </div>
 
-      <!-- prioriteitsband -->
+      <!-- PRIORITEITSBAND -->
       <div class="priority-band" id="priority-band" style="display:none">
-        <div class="pb-header">
-          <span class="pb-icon">⚡</span>
-          <span class="pb-title" id="pb-title">Prioriteitsthema: Arbeidsmarkt</span>
-          <button class="pb-close" onclick="setPriority('')">✕</button>
+        <div class="pb-left">
+          <span class="pb-flash">⚡</span>
+          <div>
+            <p class="pb-title" id="pb-title">Prioriteitsthema: Arbeidsmarkt</p>
+            <p class="pb-duiding" id="pb-duiding"></p>
+          </div>
         </div>
-        <p class="pb-duiding" id="pb-duiding"></p>
+        <button class="pb-close" onclick="setPriority('')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
-      <!-- uitgelichte artikelen -->
+      <!-- ARTIKELEN -->
       <section class="section">
         <div class="section-header">
           <h3 class="section-title">Voor jou uitgelicht</h3>
-          <a href="#" class="section-link">Alle artikelen →</a>
+          <a href="#" class="section-more">Alle artikelen →</a>
         </div>
         <div class="articles-grid" id="articles-grid"></div>
       </section>
 
-      <!-- thematische duiding -->
+      <!-- THEMATISCHE DUIDING -->
       <section class="section">
         <div class="section-header">
           <h3 class="section-title">Thematische duiding</h3>
-          <a href="#" class="section-link">Alle thema's →</a>
+          <a href="#" class="section-more">Alle thema's →</a>
         </div>
-        <div class="duiding-row" id="duiding-row"></div>
+        <div class="duiding-grid" id="duiding-row"></div>
       </section>
 
-      <!-- regionale content -->
+      <!-- REGIO -->
       <section class="section" id="regio-section">
         <div class="section-header">
           <h3 class="section-title">In jouw regio</h3>
-          <a href="#" class="section-link">Meer uit jouw regio →</a>
+          <a href="#" class="section-more">Meer regioberichten →</a>
         </div>
         <div class="regio-list" id="regio-list"></div>
       </section>

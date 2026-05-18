@@ -11,39 +11,48 @@ const DUIDING = {
   },
   'Passende zorg': {
     icon: '🎯',
-    text: 'Passende zorg staat centraal in de hervorming van het zorgstelsel. Het IZA en de Juiste Zorg op de Juiste Plek-beweging vragen om verschuiving van taken en verantwoordelijkheden. Voor managers betekent dit nadenken over nieuwe bekostigingsmodellen en samenwerking.'
+    text: 'Passende zorg staat centraal in de hervorming van het zorgstelsel. Het IZA en de Juiste Zorg op de Juiste Plek-beweging vragen om verschuiving van taken. Nieuwe bekostigingsmodellen en samenwerking staan hoog op de agenda.'
   },
   'Digitalisering': {
     icon: '💻',
-    text: 'AI-toepassingen in de zorg winnen terrein, met name in diagnostiek en administratie. EPD-vervanging en data-uitwisseling (FHIR) staan hoog op de agenda. Cyberveiligheid wordt een bestuurlijke verantwoordelijkheid nu incidenten toenemen.'
+    text: 'AI-toepassingen winnen terrein in diagnostiek en administratie. EPD-vervanging en data-uitwisseling (FHIR) staan hoog op de agenda. Cyberveiligheid wordt een bestuurlijke kernverantwoordelijkheid.'
   },
   'Capaciteitsdruk': {
     icon: '📊',
-    text: 'Wachtlijsten groeien in bijna alle sectoren. Capaciteitsplanning vraagt om samenwerking over organisatiegrenzen heen. Regiobeelden bieden inzicht, maar de vertaling naar oplossingen blijft een uitdaging voor bestuurders en managers.'
+    text: 'Wachtlijsten groeien in bijna alle sectoren. Capaciteitsplanning vraagt om samenwerking over grenzen heen. Regiobeelden bieden inzicht, maar de vertaling naar oplossingen blijft een uitdaging.'
   },
   'Regionale samenwerking': {
     icon: '🤝',
-    text: 'IZA-akkoorden dwingen tot regionale samenwerking. Netwerkzorg vraagt nieuwe governance en heldere afspraken over verantwoordelijkheden. Regio\'s verschillen sterk in volwassenheid — van verkennende tafelgesprekken tot concrete uitvoeringsplannen.'
+    text: 'IZA-akkoorden dwingen tot regionale samenwerking. Netwerkzorg vraagt nieuwe governance en heldere afspraken. Regio\'s verschillen sterk in volwassenheid — van verkenning tot concrete uitvoering.'
   },
   'Financiering': {
     icon: '💶',
-    text: 'De NZa stuurt op transparantie en doelmatigheid. Bezuinigingen op langdurige zorg zetten druk op instellingen. Bestuurders zoeken naar slimme bekostigingsmodellen die zowel kwaliteit als kostenbeheersing dienen.'
+    text: 'De NZa stuurt op transparantie en doelmatigheid. Bezuinigingen op langdurige zorg zetten druk op instellingen. Bestuurders zoeken naar bekostigingsmodellen die kwaliteit en kostenbeheersing verbinden.'
   }
 };
 
+const THEME_COLORS = {
+  'Arbeidsmarkt':           '#0B7075',
+  'Passende zorg':          '#2D6A4F',
+  'Digitalisering':         '#4F46E5',
+  'Capaciteitsdruk':        '#C2410C',
+  'Regionale samenwerking': '#0369A1',
+  'Financiering':           '#7C3AED',
+};
+
 const ARTICLES = [
-  { title: 'Personeelstekort in VVT bereikt nieuw record', excerpt: 'Ruim 40% van de VVT-instellingen meldt dat de bezetting structureel onder de norm ligt, blijkt uit nieuw onderzoek van ActiZ.', thema: 'Arbeidsmarkt', kleur: '#0B6E72', datum: 'Vandaag' },
-  { title: 'Minister kondigt nieuw actieplan passende zorg aan', excerpt: 'Het kabinet presenteert een driejarig investeringsprogramma gericht op de verschuiving van ziekenhuiszorg naar de eerste lijn.', thema: 'Passende zorg', kleur: '#2D6A4F', datum: 'Gisteren' },
-  { title: 'AI in de radiologie: van pilot naar praktijk', excerpt: 'Steeds meer ziekenhuizen zetten AI-tools in voor beelddiagnostiek. Een inventarisatie van ervaringen en valkuilen.', thema: 'Digitalisering', kleur: '#5A67D8', datum: '2 dagen geleden' },
-  { title: 'GGZ-wachtlijsten nauwelijks korter ondanks extra middelen', excerpt: 'Ondanks de extra investeringen uit het Hoofdlijnenakkoord GGZ zijn de wachttijden in 2025 nauwelijks gedaald.', thema: 'Capaciteitsdruk', kleur: '#C05621', datum: '3 dagen geleden' },
-  { title: 'Regio Utrecht sluit breed IZA-uitvoeringsplan', excerpt: 'Zeven zorgorganisaties en drie gemeenten ondertekenen een samenwerkingsconvenant gericht op thuiszorg en preventie.', thema: 'Regionale samenwerking', kleur: '#0B6E72', datum: '4 dagen geleden', isRegio: true },
-  { title: 'NZa publiceert nieuwe tarieven langdurige zorg', excerpt: 'De nieuwe tarieven voor 2026 zijn gepubliceerd. Instellingen krijgen te maken met hogere energiekosten en een beperkte looncompensatie.', thema: 'Financiering', kleur: '#744210', datum: '5 dagen geleden' },
+  { title: 'Personeelstekort in VVT bereikt nieuw record', excerpt: 'Ruim 40% van de VVT-instellingen meldt dat de bezetting structureel onder de norm ligt, blijkt uit nieuw onderzoek van ActiZ.', thema: 'Arbeidsmarkt', datum: 'Vandaag', minuten: 4 },
+  { title: 'Minister kondigt nieuw actieplan passende zorg aan', excerpt: 'Het kabinet presenteert een driejarig investeringsprogramma gericht op de verschuiving van ziekenhuiszorg naar de eerste lijn.', thema: 'Passende zorg', datum: 'Gisteren', minuten: 6 },
+  { title: 'AI in de radiologie: van pilot naar praktijk', excerpt: 'Steeds meer ziekenhuizen zetten AI-tools in voor beelddiagnostiek. Een inventarisatie van ervaringen en valkuilen.', thema: 'Digitalisering', datum: '2 dagen geleden', minuten: 5 },
+  { title: 'GGZ-wachtlijsten nauwelijks korter ondanks extra middelen', excerpt: 'Ondanks de extra investeringen uit het Hoofdlijnenakkoord GGZ zijn de wachttijden in 2025 nauwelijks gedaald.', thema: 'Capaciteitsdruk', datum: '3 dagen geleden', minuten: 7 },
+  { title: 'Regio Utrecht sluit breed IZA-uitvoeringsplan', excerpt: 'Zeven zorgorganisaties en drie gemeenten ondertekenen een samenwerkingsconvenant gericht op thuiszorg en preventie.', thema: 'Regionale samenwerking', datum: '4 dagen geleden', minuten: 4, isRegio: true },
+  { title: 'NZa publiceert nieuwe tarieven langdurige zorg', excerpt: 'De nieuwe tarieven voor 2026 zijn gepubliceerd. Instellingen krijgen te maken met hogere energiekosten en een beperkte looncompensatie.', thema: 'Financiering', datum: '5 dagen geleden', minuten: 5 },
 ];
 
 const REGIO_ITEMS = {
   'Noord-Holland': [
     { title: 'Amsterdam UMC en Dijklander werken aan regionale spoedzorgketen', meta: 'Noord-Holland · 2 dagen geleden' },
-    { title: 'Wethouder Noord-Holland: meer investeringen in wijkverpleging nodig', meta: 'Noord-Holland · 4 dagen geleden' },
+    { title: 'Wethouder: meer investeringen in wijkverpleging nodig', meta: 'Noord-Holland · 4 dagen geleden' },
     { title: 'Transferpunt Noord-Holland West van start: snellere doorstroom uit ziekenhuis', meta: 'Noord-Holland · 1 week geleden' },
   ],
   'Zuid-Holland': [
@@ -79,27 +88,15 @@ const REGIO_ITEMS = {
   ],
 };
 
-const KLEUREN = {
-  'Arbeidsmarkt':           '#0B6E72',
-  'Passende zorg':          '#2D6A4F',
-  'Digitalisering':         '#5A67D8',
-  'Capaciteitsdruk':        '#C05621',
-  'Regionale samenwerking': '#0B5EA8',
-  'Financiering':           '#744210',
-};
-
-/* ── pill / card selectie ── */
+/* ── selectie ── */
 document.addEventListener('click', e => {
   const pill = e.target.closest('.pill');
   if (pill) {
     const key = pill.dataset.key;
-    const val = pill.dataset.val;
-    // single select per key
     document.querySelectorAll(`.pill[data-key="${key}"]`).forEach(p => p.classList.remove('selected'));
     pill.classList.add('selected');
-    profile[key] = val;
+    profile[key] = pill.dataset.val;
   }
-
   const tc = e.target.closest('.theme-card');
   if (tc) {
     const val = tc.dataset.val;
@@ -118,22 +115,24 @@ function goStep(n) {
   document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('active'));
   document.getElementById(`step${n}`).classList.add('active');
 
-  document.querySelectorAll('.step').forEach((s, i) => {
-    s.classList.remove('active', 'done');
-    if (i + 1 < n) s.classList.add('done');
-    if (i + 1 === n) s.classList.add('active');
+  // progress bar
+  const pct = { 1: 33, 2: 66, 3: 100 };
+  document.getElementById('ob-progress-bar').style.width = pct[n] + '%';
+
+  // left panel steps
+  document.querySelectorAll('.ls-item').forEach(el => {
+    el.classList.remove('active', 'done');
+    const num = parseInt(el.dataset.n);
+    if (num === n) el.classList.add('active');
+    if (num < n)  el.classList.add('done');
   });
 }
 
 /* ── onboarding afronden ── */
 function finishOnboarding() {
   if (profile.themas.length === 0) {
-    // selecteer eerste twee als niks gekozen
     document.querySelectorAll('.theme-card').forEach((tc, i) => {
-      if (i < 2) {
-        tc.classList.add('selected');
-        profile.themas.push(tc.dataset.val);
-      }
+      if (i < 2) { tc.classList.add('selected'); profile.themas.push(tc.dataset.val); }
     });
   }
   if (!profile.functie) profile.functie = 'Beleidsmedewerker';
@@ -141,44 +140,40 @@ function finishOnboarding() {
   if (!profile.regio)   profile.regio   = 'Noord-Holland';
 
   buildDashboard();
-
   document.getElementById('onboarding').classList.remove('active');
   document.getElementById('dashboard').classList.add('active');
 }
 
-/* ── dashboard opbouwen ── */
+/* ── dashboard bouwen ── */
 function buildDashboard() {
-  // profiel
-  const initials = 'KV';
-  document.getElementById('topbar-avatar').textContent = initials;
-  document.getElementById('sidebar-avatar').textContent = initials;
+  document.getElementById('topbar-avatar').textContent  = 'KV';
+  document.getElementById('sidebar-avatar').textContent = 'KV';
   document.getElementById('profile-name').textContent = 'Katy van Vogelpoel';
   document.getElementById('profile-role').textContent = `${profile.functie} · ${profile.sector}`;
-  document.getElementById('regio-naam').textContent = profile.regio;
+  document.getElementById('regio-naam').textContent   = profile.regio;
+  document.getElementById('stat-themas').textContent  = profile.themas.length;
 
-  // welkom
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
-  document.getElementById('welcome-title').textContent = `${greeting}, Katy`;
+  const gr = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
+  document.getElementById('welcome-title').textContent = `${gr}, Katy`;
 
   // sidebar thema's
   const sidebar = document.getElementById('sidebar-themes');
   sidebar.innerHTML = '';
   profile.themas.forEach(t => {
-    const tag = document.createElement('button');
-    tag.className = 'theme-tag';
-    tag.innerHTML = `<span>${DUIDING[t]?.icon || '●'}</span> ${t}`;
-    tag.onclick = () => setPriority(t);
-    sidebar.appendChild(tag);
+    const btn = document.createElement('button');
+    btn.className = 'theme-tag';
+    btn.innerHTML = `<span>${DUIDING[t]?.icon || '●'}</span>${t}`;
+    btn.onclick = () => setPriority(t);
+    sidebar.appendChild(btn);
   });
 
   // priority select
   const sel = document.getElementById('priority-select');
-  sel.innerHTML = '<option value="">— geen prioriteit —</option>';
+  sel.innerHTML = '<option value="">— Geen prioriteit —</option>';
   profile.themas.forEach(t => {
     const opt = document.createElement('option');
-    opt.value = t;
-    opt.textContent = t;
+    opt.value = t; opt.textContent = t;
     sel.appendChild(opt);
   });
 
@@ -191,128 +186,116 @@ function buildDashboard() {
 function renderArticles() {
   const grid = document.getElementById('articles-grid');
   grid.innerHTML = '';
-
-  // filter op profiel-thema's, met prioriteit bovenaan
   let filtered = ARTICLES.filter(a => profile.themas.includes(a.thema));
   if (priorityTheme) {
-    filtered = [
-      ...filtered.filter(a => a.thema === priorityTheme),
-      ...filtered.filter(a => a.thema !== priorityTheme),
-    ];
+    filtered = [...filtered.filter(a => a.thema === priorityTheme), ...filtered.filter(a => a.thema !== priorityTheme)];
   }
-
   filtered.slice(0, 6).forEach((art, i) => {
+    const color = THEME_COLORS[art.thema] || '#0B7075';
     const card = document.createElement('div');
     card.className = 'article-card';
-    card.style.animationDelay = `${i * 50}ms`;
+    card.style.animationDelay = `${i * 55}ms`;
     card.innerHTML = `
-      <div class="ac-color-bar" style="background:${art.kleur}"></div>
+      <div class="ac-stripe" style="background:${color}"></div>
       <div class="ac-body">
-        <span class="ac-tag${art.isRegio ? ' regio' : ''}">${art.isRegio ? '📍 ' : ''}${art.thema}</span>
+        <div class="ac-top">
+          <span class="ac-tag${art.isRegio ? ' regio' : ''}">${art.thema}</span>
+          <span class="ac-readtime">${art.minuten} min</span>
+        </div>
         <div class="ac-title">${art.title}</div>
         <div class="ac-excerpt">${art.excerpt}</div>
-        <div class="ac-meta">${art.datum}</div>
+        <div class="ac-footer">
+          <span class="ac-date">${art.datum}</span>
+          <span class="ac-arrow">Lees meer →</span>
+        </div>
       </div>
     `;
     grid.appendChild(card);
   });
 }
 
-/* ── thematische duiding ── */
+/* ── duiding ── */
 function renderDuiding() {
   const row = document.getElementById('duiding-row');
   row.innerHTML = '';
-
   profile.themas.forEach((t, i) => {
-    const d = DUIDING[t];
-    if (!d) return;
+    const d = DUIDING[t]; if (!d) return;
     const card = document.createElement('div');
     card.className = 'duiding-card';
-    card.style.animationDelay = `${i * 60}ms`;
+    card.style.animationDelay = `${i * 65}ms`;
     card.innerHTML = `
-      <div class="dc-icon">${d.icon}</div>
-      <div class="dc-theme">${t}</div>
-      <div class="dc-text">${d.text}</div>
+      <div class="dc-header">
+        <div class="dc-icon-wrap">${d.icon}</div>
+        <div>
+          <div class="dc-theme-name">${t}</div>
+          <div class="dc-label">Thematische duiding</div>
+        </div>
+      </div>
+      <div class="dc-body"><p class="dc-text">${d.text}</p></div>
     `;
     row.appendChild(card);
   });
 }
 
-/* ── regionale content ── */
+/* ── regio ── */
 function renderRegio() {
   const section = document.getElementById('regio-section');
-  const list = document.getElementById('regio-list');
+  const list    = document.getElementById('regio-list');
   list.innerHTML = '';
-
-  if (!regioFilterOn) {
-    section.style.display = 'none';
-    return;
-  }
+  if (!regioFilterOn) { section.style.display = 'none'; return; }
   section.style.display = 'block';
-
   const items = REGIO_ITEMS[profile.regio] || [];
-  if (items.length === 0) {
-    list.innerHTML = '<p style="color:var(--ink-muted);font-size:14px">Geen regionale berichten gevonden.</p>';
-    return;
-  }
-
+  if (!items.length) { list.innerHTML = '<p style="color:var(--ink-muted);font-size:14px">Geen regionale berichten gevonden.</p>'; return; }
   items.forEach((item, i) => {
     const el = document.createElement('div');
     el.className = 'regio-item';
     el.style.animationDelay = `${i * 60}ms`;
     el.innerHTML = `
-      <span class="ri-badge">📍 ${profile.regio}</span>
-      <div class="ri-content">
+      <div class="ri-pin">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
+      <div>
         <div class="ri-title">${item.title}</div>
         <div class="ri-meta">${item.meta}</div>
       </div>
+      <div class="ri-chevron">→</div>
     `;
     list.appendChild(el);
   });
 }
 
-/* ── regiofilter toggle ── */
+/* ── regiofilter ── */
 function toggleRegioFilter(on) {
   regioFilterOn = on;
   renderRegio();
   document.getElementById('welcome-sub').innerHTML = on
     ? 'Je hebt <strong>7 nieuwe artikelen</strong> op basis van jouw profiel.'
-    : 'Je hebt <strong>7 nieuwe artikelen</strong> — regiofilter staat uit.';
+    : 'Regiofilter staat uit — je ziet landelijk nieuws.';
 }
 
-/* ── prioriteitsthema ── */
+/* ── prioriteit ── */
 function setPriority(val) {
   priorityTheme = val || null;
-
-  const band = document.getElementById('priority-band');
-  const sel  = document.getElementById('priority-select');
-  sel.value = val || '';
-
-  // sidebar tags
+  document.getElementById('priority-select').value = val || '';
   document.querySelectorAll('.theme-tag').forEach(tag => {
-    tag.classList.toggle('priority', tag.textContent.trim().includes(val));
+    tag.classList.toggle('priority', val && tag.textContent.trim().includes(val));
   });
-
+  const band = document.getElementById('priority-band');
   if (val && DUIDING[val]) {
-    document.getElementById('pb-title').textContent = `Prioriteitsthema: ${val}`;
+    document.getElementById('pb-title').textContent   = `Prioriteitsthema: ${val}`;
     document.getElementById('pb-duiding').textContent = DUIDING[val].text;
-    band.style.display = 'block';
+    band.style.display = 'flex';
   } else {
     band.style.display = 'none';
   }
-
   renderArticles();
 }
 
-/* ── reset (terug naar onboarding) ── */
+/* ── reset ── */
 function resetOnboarding() {
   document.getElementById('dashboard').classList.remove('active');
   document.getElementById('onboarding').classList.add('active');
   goStep(1);
 }
 
-/* ── start ── */
-window.onload = () => {
-  // direct naar onboarding stap 1
-  goStep(1);
-};
+window.onload = () => goStep(1);
