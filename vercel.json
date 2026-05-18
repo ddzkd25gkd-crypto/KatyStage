@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/mijn-zorgvisie/index.html" },
+    { "source": "/(.*)", "destination": "/mijn-zorgvisie/$1" }
+  ]
+}
