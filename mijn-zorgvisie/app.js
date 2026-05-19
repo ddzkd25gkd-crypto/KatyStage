@@ -644,20 +644,32 @@ function buildArticleCard(container, art, index) {
   container.appendChild(card);
 }
 
+const ZORG_FOTOS = [
+  'photo-1559757148-5c350d0d3c56', 'photo-1584432810601-6c7f27d2362b',
+  'photo-1576091160550-2173dba999ef', 'photo-1504813184591-01572f98c85f',
+  'photo-1579684385127-1571037e9d45', 'photo-1530026186672-2cd00ffc50d1',
+  'photo-1576671081837-5c4ab9c07dba', 'photo-1516841273335-e39b37888115',
+  'photo-1519494026-f1d59edd8df6',   'photo-1584820927498-cfe5211fd8bf',
+  'photo-1516574187841-cb9cc2ca948b', 'photo-1454165804606-c3d57bc86b40',
+];
+
 function buildCustomThemePlaceholder(container, thema, index) {
+  const foto = ZORG_FOTOS[(thema.length + index) % ZORG_FOTOS.length];
+  const imgUrl = `https://images.unsplash.com/${foto}?w=800&h=400&fit=crop&q=80`;
+  const color = '#6B7280';
   const card = document.createElement('div');
-  card.className = 'article-card custom-placeholder';
+  card.className = 'article-card';
   card.style.animationDelay = `${index * 55}ms`;
-  card.style.opacity = '.75';
   card.innerHTML = `
-    <div class="ac-stripe" style="background:var(--ink-muted)"></div>
+    <img class="ac-image" src="${imgUrl}" alt="${thema}" loading="lazy" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${encodeURIComponent(thema)}/800/400'">
+    <div class="ac-stripe" style="background:${color}"></div>
     <div class="ac-body">
       <div class="ac-top">
-        <span class="ac-tag" style="background:#f0f0f0;color:var(--ink-muted)">${thema}</span>
+        <span class="ac-tag" style="background:#f3f4f6;color:${color}">${thema}</span>
       </div>
-      <div class="ac-title" style="color:var(--ink-muted)">Artikelen over ${thema}</div>
+      <div class="ac-title">Artikelen over ${thema}</div>
       <div class="ac-excerpt">Op Zorgvisie.nl zijn artikelen beschikbaar over dit onderwerp. In de live omgeving verschijnen ze hier automatisch op basis van jouw profiel.</div>
-      <div class="ac-footer"><span class="ac-date">Zorgvisie.nl</span></div>
+      <div class="ac-footer"><span class="ac-date" style="color:var(--ink-muted)">Zorgvisie.nl</span></div>
     </div>`;
   container.appendChild(card);
 }
