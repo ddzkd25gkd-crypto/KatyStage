@@ -27,9 +27,86 @@ const THEME_COLORS = {
   'Capaciteitsdruk': '#C2410C', 'Regionale samenwerking': '#0369A1', 'Financiering': '#7C3AED',
 };
 
+/* Gepersonaliseerde duiding per thema × functie */
+const ARTIKEL_CONTEXT = {
+  'Arbeidsmarkt': {
+    speelt: 'Structurele personeelstekorten raken alle zorgsectoren, met VVT en GGZ als zwaarst getroffen. Vergrijzing van de beroepsbevolking versnelt de uitstroom terwijl instroom stagneert. Cao-onderhandelingen draaien vrijwel continu en dure flexinzet is voor veel instellingen structureel geworden.',
+    relevant: {
+      'Zorgmanager':         'De tekorten raken jouw team direct: roosters kloppen niet meer, werkdruk stijgt en kwalitatief goede medewerkers vertrekken naar de concurrent. Retentie en dagelijkse bezettingsplanning zijn jouw voornaamste hefbomen.',
+      'Bestuurder':          'Strategische keuzes over arbeidsvoorwaarden, partnerships met onderwijs en het employer brand van je organisatie bepalen je concurrentiepositie als werkgever voor de komende jaren.',
+      'Beleidsmedewerker':   'Cao-akkoorden en landelijk arbeidsmarktbeleid vertalen naar uitvoerbare instellingsafspraken vraagt actuele kennis van het speelveld. Jij bent de brug tussen macro-ontwikkelingen en de eigen organisatie.',
+      'Adviseur':            'Adviesvragen richten zich steeds meer op workforce planning, nieuwe personeelsmodellen en strategische keuzes over flexibilisering versus vaste contracten.',
+      'HR-professional':     'Dit is jouw kerndomein. Werving, selectie, behoud en cultuur staan centraal. Benchmarkdata en cao-kennis zijn direct inzetbaar om jouw aanpak te onderbouwen en bij te sturen.',
+      'Financieel directeur':'Personeelskosten zijn de grootste post op de begroting. Structurele tekorten leiden tot dure inhuur van flex en ZZP. Een meerjarig perspectief op loonkosten en capaciteitskosten is essentieel.',
+    },
+    betekenis: 'Arbeidsmarktontwikkelingen vragen om een integrale aanpak: personeelsplanning koppelen aan bekostiging, een duurzame werkgeversstrategie ontwikkelen en regionale samenwerking zoeken voor gedeelde instroom en opleidingsinfrastructuur.',
+  },
+  'Passende zorg': {
+    speelt: 'Het Integraal Zorgakkoord verplicht zorgaanbieders tot verschuiving van tweedelijn naar de eerste lijn. Digitale substitutie, taakherschikking en preventie zijn de drie pijlers. IZA-middelen zijn beschikbaar maar vragen concrete regionale uitvoeringsplannen vóór uitbetaling.',
+    relevant: {
+      'Zorgmanager':         'Taakherschikking en nieuwe zorgpaden herdefiniëren wie wat doet in jouw team. Dat vraagt aanpassing van werkprocessen, competentieprofielen en dagelijkse samenwerking met ketenpartners.',
+      'Bestuurder':          'Hoe positioneer je jouw organisatie in een veranderend zorglandschap? Samenwerking, focus of differentiatie zijn strategische scenario\'s die nu worden uitgewerkt — en later moeilijk te herzien zijn.',
+      'Beleidsmedewerker':   'IZA vertalen naar instellingsbeleid, zorgpaden en samenwerkingsafspraken. Begrip van uitkomstbekostiging en populatiemanagement wordt steeds essentiëler voor jouw werk.',
+      'Adviseur':            'Organisaties zoeken begeleiding bij herinrichting van zorgprocessen, governance van regionale netwerken en implementatie van passende-zorg-principes in de dagelijkse praktijk.',
+      'HR-professional':     'Nieuwe rolverdeling in de zorg vraagt andere competentieprofielen, een bijgestelde scholingsagenda en herziene functieomschrijvingen. Verandermanagement is een cruciaal onderdeel.',
+      'Financieel directeur':'Uitkomstbekostiging verschuift financieel risico van verzekeraar naar aanbieder. Jouw financiële modellen moeten aanpasbaar zijn op nieuwe bekostigingsstromen en populatieafspraken.',
+    },
+    betekenis: 'Passende zorg vraagt om strategische positionering, herinrichting van zorgprocessen en verdiepte samenwerking — zowel binnen de eigen organisatie als in de regio. Instellingen die nu investeren in relaties en governance, plukken daar op middellange termijn de vruchten van.',
+  },
+  'Digitalisering': {
+    speelt: 'AI en dataficering winnen snel terrein in diagnostiek, planning en administratie. EPD-vervanging staat hoog op de agenda bij veel instellingen. FHIR en gegevensuitwisseling worden via wetgeving afgedwongen. Cyberveiligheid is uitgegroeid tot een bestuurlijk risico met directe aansprakelijkheid.',
+    relevant: {
+      'Zorgmanager':         'Digitale tools raken het dagelijkse werkproces van je team direct. De implementatiekwaliteit — en niet de technologie zelf — bepaalt of het de werkdruk verlaagt of juist verhoogt.',
+      'Bestuurder':          'Digitale strategie is een strategisch bestuursthema. Investeringskeuzes in EPD, AI en data-infrastructuur hebben een impact van 10+ jaar en hoge overstapkosten. Vroeg bewust kiezen loont.',
+      'Beleidsmedewerker':   'Wet- en regelgeving rondom data, privacy (AVG) en gegevensuitwisseling vraagt continue aandacht. Beleid moet bijhouden wat technologie al doet in de praktijk.',
+      'Adviseur':            'Adviesvragen rondom digitale transformatie, selectie van systemen en begeleiding van implementaties zijn sterk in opkomst. Technische kennis gecombineerd met organisatiebegrip is de sleutel.',
+      'HR-professional':     'Digitalisering verandert functies en werkprocessen ingrijpend. Digitale vaardigheidsontwikkeling, omscholing en begeleiding van medewerkers zijn onderdeel van jouw agenda.',
+      'Financieel directeur':'Grote ICT-investeringen vragen om een gedegen businesscase met realistische TCO. Het risico op kostenoverschrijding bij EPD-trajecten is aanzienlijk — kosten stijgen gemiddeld 40% boven initiële begroting.',
+    },
+    betekenis: 'Digitalisering is geen IT-kwestie maar een organisatiebrede transformatie. Succesvol digitaliseren vraagt om bestuurlijke sturing, budgetruimte, scholingsbeleid en heldere governance rondom data en cyberveiligheid.',
+  },
+  'Capaciteitsdruk': {
+    speelt: 'Wachtlijsten groeien in vrijwel alle sectoren. GGZ, ouderenzorg en specialistische zorg zijn het zwaarst getroffen. Treeknormen worden structureel overschreden — gemiddeld met factor 2 tot 4. Regionale spreiding van beschikbare capaciteit is ongelijk en vraagt om actieve afstemming.',
+    relevant: {
+      'Zorgmanager':         'Wachtlijstbeheer, capaciteitsplanning en triage horen tot je dagelijkse uitdaging. Keuzes over wie voorrang krijgt hebben directe kwaliteits- en aansprakelijkheidsimplicaties.',
+      'Bestuurder':          'Capaciteitsvraagstukken overstijgen de eigen organisatie. Regionale afstemming en beleidsdialoog met overheid en zorgkantoor zijn noodzakelijk om structurele oplossingen te vinden.',
+      'Beleidsmedewerker':   'Capaciteitsberekeningen, wachtlijstrapportages en IZA-monitoring vormen de basis voor beleid. Datagedreven analyse is een kerncompetentie die steeds zwaarder weegt.',
+      'Adviseur':            'Instellingen zoeken expertise op capaciteitsmanagement, scenario-planning en het ontwerpen van regionale samenwerkingsmodellen om capaciteit beter te benutten.',
+      'HR-professional':     'Capaciteitsdruk verhoogt werkdruk structureel en draagt bij aan uitstroom. Preventief HR-beleid, welzijnsprogramma\'s en slimme roostering zijn urgente instrumenten.',
+      'Financieel directeur':'Zowel overcapaciteit als ondercapaciteit heeft directe financiële gevolgen — via lege bedden of dure klachtenafhandeling en reputatieschade. Capaciteitsoptimalisatie is financieel strategisch relevant.',
+    },
+    betekenis: 'Capaciteitsdruk vraagt om een integrale aanpak: betere planning en triage, sterkere regionale samenwerking en directe koppeling aan personeelsstrategie en bekostigingsvraagstukken. Instellingen die wachten op een landelijke oplossing raken verder achterop.',
+  },
+  'Regionale samenwerking': {
+    speelt: 'IZA verplicht regio\'s tot gezamenlijke uitvoeringsplannen met concrete afspraken over capaciteit, preventie en digitale uitwisseling. Governance van regionale netwerken is complex: wie beslist wat, wie financiert, wie is eindverantwoordelijk? Regio\'s verschillen sterk in rijpheid — van eerste verkenning tot geavanceerde uitvoering.',
+    relevant: {
+      'Zorgmanager':         'Jij bent de operationele schakel tussen de eigen organisatie en regionale partners. Praktische afspraken over overdracht, gezamenlijke ketenzorg en capaciteitsafstemming vereisen jouw betrokkenheid.',
+      'Bestuurder':          'Jouw positie in regionale netwerken bepaalt mede je strategische speelruimte voor de komende jaren. Governance, vertrouwen en langetermijnrelaties zijn sleutelfactoren die nu worden gevestigd.',
+      'Beleidsmedewerker':   'Regionale akkoorden vertalen naar instellingsbeleid, bijdragen aan regionale overlegtafels en monitoren van uitvoeringsafspraken zijn concrete taken die steeds zwaarder wegen.',
+      'Adviseur':            'Procesbegeleiding bij het vormen en bestendigen van regionale netwerken — inclusief governance-ontwerp en conflictoplossing — is een sterk groeiende adviesvraag.',
+      'HR-professional':     'Regionale arbeidsmarktsamenwerkingen — gezamenlijke werving, gedeelde opleidingspoolen, uitwisseling van personeel — zijn relevante instrumenten voor het arbeidsmarktvraagstuk.',
+      'Financieel directeur':'Kostenverdeling in regionale samenwerking en gezamenlijke investeringen vragen om heldere financiële afspraken, transparante rapportage en solide juridische contractering.',
+    },
+    betekenis: 'Regionale samenwerking vereist investering in relaties, heldere governance en de bereidheid om eigen belangen af te wegen tegen het bredere regionale belang. Organisaties die dat te lang uitstellen, staan straks buitenspel bij beslissingen die hun werkgebied direct raken.',
+  },
+  'Financiering': {
+    speelt: 'NZa-tarieven stijgen gemiddeld 3,1% terwijl werkelijke kostenstijging uitkomt op 5,4%. Bezuinigingen op langdurige zorg zetten instellingen met krappe marges verder onder druk. Uitkomstbekostiging wint terrein maar is complex te implementeren. Meerdere instellingen melden dat de financiële duurzaamheid op middellange termijn in het geding is.',
+    relevant: {
+      'Zorgmanager':         'Bezuinigingen vertalen zich direct naar bezetting, middelen en mogelijkheden op de werkvloer. Efficiëntie en kwaliteit staan tegelijk onder druk — dat vraagt om scherpe prioritering en heldere communicatie naar je team.',
+      'Bestuurder':          'Financiële strategie in een krimpende bekostigingsomgeving vraagt scenario-denken, robuust reservebeleid en tijdige bijsturing van de meerjarenbegroting. Verantwoording naar RvT neemt toe.',
+      'Beleidsmedewerker':   'NZa-besluiten, tariefwijzigingen en bezuinigingsmaatregelen op de voet volgen en vertalen naar concrete instellingsimplicaties is kernwerk dat steeds sneller moet gaan.',
+      'Adviseur':            'Financieel advies aan zorginstellingen richt zich steeds meer op scenario-planning, kostenoptimalisatie en het begeleiden van bekostigingstransities — van volumebekostiging naar uitkomstgerichte modellen.',
+      'HR-professional':     'Bezuinigingen raken direct de personele inzet en het arbeidsvoorwaardenbeleid. Begrip van de financiële context helpt bij het onderbouwen van investeringen in mensen tegenover het bestuur.',
+      'Financieel directeur':'Dit is jouw kerndossier. Tariefanalyse, begroting, reservering en risicomanagement zijn direct relevant voor de financiële duurzaamheid. De NZa-zienswijzeprocedure biedt een formele mogelijkheid tot bezwaar.',
+    },
+    betekenis: 'Financiële duurzaamheid vraagt om transparantie, proactieve begrotingssturing en een helder gesprek met toezichthouders en financiers over wat de sector realistisch kan leveren binnen de gestelde bekostigingskaders.',
+  },
+};
+
 const ARTICLES = [
   {
     id: 1, thema: 'Arbeidsmarkt', datum: 'Vandaag', minuten: 4,
+    img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=400&fit=crop&q=80',
     title: 'Personeelstekort in VVT bereikt nieuw record',
     excerpt: 'Ruim 40% van de VVT-instellingen meldt dat de bezetting structureel onder de norm ligt, blijkt uit nieuw onderzoek van ActiZ.',
     body: `<p>Ruim 40 procent van de instellingen voor verpleging, verzorging en thuiszorg (VVT) meldt dat hun personeelsbezetting structureel onder de norm ligt. Dit blijkt uit een grootschalig onderzoek dat brancheorganisatie ActiZ heeft uitgevoerd onder 380 leden.</p>
@@ -38,10 +115,11 @@ const ARTICLES = [
     <blockquote>"We zien dat teams al jaren op hun tandvlees lopen. De instroom van nieuwe collega's houdt simpelweg de uitstroom niet bij." — Directeur ActiZ</blockquote>
     <h3>Gevolgen voor de zorgverlening</h3>
     <p>Instellingen geven aan dat zij zorginhoudelijke keuzes moeten maken die ze liever niet maken: minder begeleiding per cliënt, beperking van activiteiten en in sommige gevallen het tijdelijk sluiten van capaciteit. De wachtlijsten voor verpleeghuiszorg nemen daardoor verder toe.</p>
-    <p>Het kabinet heeft aangekondigd met een nieuw arbeidsmarktakkoord voor de zorg te komen. Vakbonden en werkgevers zijn momenteel in gesprek over structurele maatregelen voor de komende cao-periode.</p>`
+    <p>Het kabinet heeft aangekondigd met een nieuw arbeidsmarktakkoord voor de zorg te komen. Vakbonden en werkgevers zijn momenteel in gesprek over structurele maatregelen voor de komende cao-periode.</p>`,
   },
   {
     id: 2, thema: 'Passende zorg', datum: 'Gisteren', minuten: 6,
+    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop&q=80',
     title: 'Minister kondigt nieuw actieplan passende zorg aan',
     excerpt: 'Het kabinet presenteert een driejarig investeringsprogramma gericht op de verschuiving van ziekenhuiszorg naar de eerste lijn.',
     body: `<p>De minister van Volksgezondheid heeft een driejarig investeringsprogramma aangekondigd dat de verschuiving van ziekenhuiszorg naar de eerste lijn moet versnellen. Het programma heeft een omvang van 420 miljoen euro en loopt van 2026 tot en met 2028.</p>
@@ -49,10 +127,11 @@ const ARTICLES = [
     <p>Het actieplan richt zich op drie pijlers: versterking van de huisartsenzorg, uitbreiding van gespecialiseerde verpleging in de wijk en betere samenwerking tussen ziekenhuizen en eerstelijnsorganisaties via regionale zorgnetwerken.</p>
     <blockquote>"Passende zorg betekent dat we de goede zorg op de goede plek leveren. Dat is niet altijd het ziekenhuis." — Minister VWS</blockquote>
     <h3>Reacties uit het veld</h3>
-    <p>Koepelorganisaties reageren gematigd positief. Zij waarschuwen dat extra financiering alleen niet voldoende is zolang het personeelstekort aanhoudt. Ook vragen zij om heldere kaders voor de regionale uitvoering.</p>`
+    <p>Koepelorganisaties reageren gematigd positief. Zij waarschuwen dat extra financiering alleen niet voldoende is zolang het personeelstekort aanhoudt. Ook vragen zij om heldere kaders voor de regionale uitvoering.</p>`,
   },
   {
     id: 3, thema: 'Digitalisering', datum: '2 dagen geleden', minuten: 5,
+    img: 'https://images.unsplash.com/photo-1516841273335-e39b37888115?w=800&h=400&fit=crop&q=80',
     title: 'AI in de radiologie: van pilot naar praktijk',
     excerpt: 'Steeds meer ziekenhuizen zetten AI-tools in voor beelddiagnostiek. Een inventarisatie van ervaringen en valkuilen.',
     body: `<p>Kunstmatige intelligentie maakt een stille opmars in de Nederlandse radiologie. Waar twee jaar geleden AI-tools voor beelddiagnostiek nog een zeldzaamheid waren, gebruiken inmiddels meer dan 60 procent van de ziekenhuizen minstens één AI-toepassing structureel in hun radiologische werkproces.</p>
@@ -60,10 +139,11 @@ const ARTICLES = [
     <p>Toepassingen voor de detectie van longknobbeltjes en borsttumoren scoren hoog op gebruikerstevredenheid. Radiologen zeggen dat AI hen helpt om prioriteiten te stellen en minder kritische bevindingen te missen. Minder succesvol zijn toepassingen die de volledige verslaglegging proberen over te nemen: de acceptatie onder specialisten blijft laag.</p>
     <blockquote>"AI is een co-piloot, geen piloot. De verantwoordelijkheid blijft bij de radioloog." — Hoofd radiologie, academisch ziekenhuis</blockquote>
     <h3>Aandachtspunten voor bestuurders</h3>
-    <p>Inkoop van AI-tools vraagt om een zorgvuldige validatieprocedure. Algoritmen die elders zijn getraind, presteren niet altijd goed op lokale patiëntenpopulaties. Ziekenhuizen worden aangeraden om vóór implementatie een onafhankelijke klinische validatie uit te voeren.</p>`
+    <p>Inkoop van AI-tools vraagt om een zorgvuldige validatieprocedure. Algoritmen die elders zijn getraind, presteren niet altijd goed op lokale patiëntenpopulaties. Ziekenhuizen worden aangeraden om vóór implementatie een onafhankelijke klinische validatie uit te voeren.</p>`,
   },
   {
     id: 4, thema: 'Capaciteitsdruk', datum: '3 dagen geleden', minuten: 7,
+    img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop&q=80',
     title: 'GGZ-wachtlijsten nauwelijks korter ondanks extra middelen',
     excerpt: 'Ondanks de extra investeringen uit het Hoofdlijnenakkoord GGZ zijn de wachttijden in 2025 nauwelijks gedaald.',
     body: `<p>De wachttijden in de geestelijke gezondheidszorg (GGZ) zijn in 2025 nauwelijks afgenomen, ondanks de extra middelen die via het Hoofdlijnenakkoord GGZ beschikbaar zijn gesteld. Dit concludeert de Nederlandse Zorgautoriteit (NZa) in haar nieuwste trendrapportage.</p>
@@ -71,10 +151,11 @@ const ARTICLES = [
     <p>De gemiddelde wachttijd voor generalistische basis-GGZ bedraagt momenteel 11 weken, tegen de Treeknorm van 4 weken. Voor de specialistische GGZ loopt de gemiddelde wachttijd op tot 18 weken. De NZa signaleert dat met name jongeren lang moeten wachten op toegang tot psychische hulp.</p>
     <blockquote>"Extra middelen helpen, maar lossen het onderliggende capaciteitsprobleem niet op." — Directeur NZa</blockquote>
     <h3>Structurele oorzaken</h3>
-    <p>Onderzoekers wijzen op drie structurele factoren: de toenemende vraag naar psychische hulp na de covidpandemie, het personeelstekort in de sector en de administratielast die zorgprofessionals ervan weerhoudt meer patiënten te behandelen. Het ministerie bekijkt momenteel aanvullende maatregelen.</p>`
+    <p>Onderzoekers wijzen op drie structurele factoren: de toenemende vraag naar psychische hulp na de covidpandemie, het personeelstekort in de sector en de administratielast die zorgprofessionals ervan weerhoudt meer patiënten te behandelen. Het ministerie bekijkt momenteel aanvullende maatregelen.</p>`,
   },
   {
     id: 5, thema: 'Regionale samenwerking', datum: '4 dagen geleden', minuten: 4, isRegio: true,
+    img: 'https://images.unsplash.com/photo-1530026186672-2cd00ffc50d1?w=800&h=400&fit=crop&q=80',
     title: 'Regio Utrecht sluit breed IZA-uitvoeringsplan',
     excerpt: 'Zeven zorgorganisaties en drie gemeenten ondertekenen een samenwerkingsconvenant gericht op thuiszorg en preventie.',
     body: `<p>In de regio Utrecht hebben zeven zorgorganisaties en drie gemeenten een samenwerkingsconvenant ondertekend voor de uitvoering van het Integraal Zorgakkoord (IZA). Het is een van de eerste regio's in Nederland met een breed gedragen uitvoeringsplan.</p>
@@ -82,10 +163,11 @@ const ARTICLES = [
     <p>Het convenant bevat afspraken over de uitbreiding van thuiszorgcapaciteit, gezamenlijke preventieactiviteiten in wijken met een hoge zorgvraag en de inrichting van een regionaal zorgcoördinatiepunt. Partijen spreken ook af om samen te investeren in digitale gegevensuitwisseling.</p>
     <blockquote>"Dit is niet een plan op papier, maar een concreet uitvoeringsprogramma met budget en aanspreekpunten." — Wethouder gemeente Utrecht</blockquote>
     <h3>Landelijke betekenis</h3>
-    <p>Het Ministerie van VWS presenteert de Utrechtse aanpak als voorbeeld voor andere regio's. Een evaluatie is gepland voor het voorjaar van 2027.</p>`
+    <p>Het Ministerie van VWS presenteert de Utrechtse aanpak als voorbeeld voor andere regio's. Een evaluatie is gepland voor het voorjaar van 2027.</p>`,
   },
   {
     id: 6, thema: 'Financiering', datum: '5 dagen geleden', minuten: 5,
+    img: 'https://images.unsplash.com/photo-1563213126-a4273aed2016?w=800&h=400&fit=crop&q=80',
     title: 'NZa publiceert nieuwe tarieven langdurige zorg',
     excerpt: 'De nieuwe tarieven voor 2026 zijn gepubliceerd. Instellingen krijgen te maken met hogere energiekosten en een beperkte looncompensatie.',
     body: `<p>De Nederlandse Zorgautoriteit (NZa) heeft de tarieven voor de langdurige zorg voor 2026 gepubliceerd. De tarieven stijgen gemiddeld met 3,1 procent, maar voor veel instellingen is dit onvoldoende om de gestegen loon- en energiekosten op te vangen.</p>
@@ -93,7 +175,7 @@ const ARTICLES = [
     <p>Brancheorganisaties ActiZ en VGN spreken van een ontoereikende compensatie. Zij stellen dat de werkelijke kostenstijging in de sector uitkomt op gemiddeld 5,4 procent. De organisaties kondigen aan opnieuw in gesprek te gaan met de NZa en het ministerie.</p>
     <blockquote>"Instellingen die al krap bij kas zitten, komen verder in de problemen." — Voorzitter ActiZ</blockquote>
     <h3>Implicaties voor bedrijfsvoering</h3>
-    <p>Financieel directeuren worden aangeraden hun begroting voor 2026 tijdig bij te stellen. De NZa biedt de mogelijkheid om via een zienswijzeprocedure bezwaar aan te tekenen tegen de vastgestelde tarieven. De deadline daarvoor is 1 augustus 2026.</p>`
+    <p>Financieel directeuren worden aangeraden hun begroting voor 2026 tijdig bij te stellen. De NZa biedt de mogelijkheid om via een zienswijzeprocedure bezwaar aan te tekenen tegen de vastgestelde tarieven. De deadline daarvoor is 1 augustus 2026.</p>`,
   },
 ];
 
@@ -130,6 +212,8 @@ const REGIO_ITEMS = {
   'Groningen':     [{ title: 'UMCG lanceert digitaal zorgnetwerk Noordoost-Nederland', meta: 'Groningen · Gisteren' }],
   'Zeeland':       [{ title: 'Adrz en gemeenten starten pilot bereikbaarheid ouderenzorg', meta: 'Zeeland · 4 dagen geleden' }],
   'Limburg':       [{ title: 'VieCuri en Zuyderland versterken samenwerking Midden-Limburg', meta: 'Limburg · 2 dagen geleden' }],
+  'Drenthe':       [{ title: 'Treant Zorggroep en huisartsen starten regio-overleg capaciteit', meta: 'Drenthe · 3 dagen geleden' }],
+  'Flevoland':     [{ title: 'MC Lelystad en partners werken aan regionale spoedketen', meta: 'Flevoland · 2 dagen geleden' }],
 };
 
 
@@ -153,25 +237,58 @@ document.addEventListener('click', e => {
       if (wrap) wrap.style.display = 'none';
       profile[key] = val;
     }
+    return;
   }
 
   const tc = e.target.closest('.theme-card');
-  if (tc) {
+  if (tc && !e.target.closest('.anders-add-btn')) {
     const val = tc.dataset.val;
+
+    if (val === '__anders__') {
+      tc.classList.toggle('selected');
+      const wrap = document.getElementById('anders-thema');
+      if (wrap) {
+        wrap.style.display = tc.classList.contains('selected') ? 'flex' : 'none';
+        if (tc.classList.contains('selected')) wrap.querySelector('input').focus();
+      }
+      return;
+    }
+
     tc.classList.toggle('selected');
     if (tc.classList.contains('selected')) profile.themas.push(val);
     else profile.themas = profile.themas.filter(t => t !== val);
   }
 });
 
-// anders-tekstvelden live inlezen
 document.addEventListener('input', e => {
   const inp = e.target.closest('.anders-input');
-  if (inp) {
+  if (inp && inp.dataset.key) {
     const key = inp.dataset.key;
     profile[key] = inp.value.trim() || null;
   }
 });
+
+function addAndersThema() {
+  const inp = document.getElementById('anders-thema-input');
+  const val = inp.value.trim();
+  if (!val || profile.themas.includes(val)) { inp.value = ''; return; }
+
+  profile.themas.push(val);
+
+  const list = document.getElementById('custom-themas-list');
+  const chip = document.createElement('span');
+  chip.className = 'custom-thema-chip';
+  chip.innerHTML = `${val} <button onclick="removeAndersThema(this,'${val.replace(/'/g, "\\'")}')">×</button>`;
+  list.appendChild(chip);
+
+  inp.value = '';
+  inp.focus();
+}
+
+function removeAndersThema(btn, val) {
+  profile.themas = profile.themas.filter(t => t !== val);
+  btn.parentElement.remove();
+}
 
 
 /* ══════════════════════════════════════
@@ -192,7 +309,10 @@ function goStep(n) {
 function finishOnboarding() {
   if (profile.themas.length === 0) {
     document.querySelectorAll('.theme-card').forEach((tc, i) => {
-      if (i < 2) { tc.classList.add('selected'); profile.themas.push(tc.dataset.val); }
+      if (i < 2 && tc.dataset.val !== '__anders__') {
+        tc.classList.add('selected');
+        profile.themas.push(tc.dataset.val);
+      }
     });
   }
   if (!profile.functie) profile.functie = 'Beleidsmedewerker';
@@ -212,7 +332,7 @@ function resetOnboarding() {
 
 
 /* ══════════════════════════════════════
-   NAVIGATIE (tabbladen)
+   NAVIGATIE
 ══════════════════════════════════════ */
 function navigateTo(page, linkEl) {
   if (linkEl) {
@@ -231,7 +351,7 @@ function navigateTo(page, linkEl) {
 
 
 /* ══════════════════════════════════════
-   DASHBOARD OPBOUWEN
+   DASHBOARD
 ══════════════════════════════════════ */
 function buildDashboard() {
   document.getElementById('topbar-avatar').textContent  = 'KV';
@@ -244,7 +364,6 @@ function buildDashboard() {
   const h = new Date().getHours();
   document.getElementById('welcome-title').textContent = `${h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond'}, Katy`;
 
-  // sidebar thema's
   const sb = document.getElementById('sidebar-themes');
   sb.innerHTML = '';
   profile.themas.forEach(t => {
@@ -255,7 +374,6 @@ function buildDashboard() {
     sb.appendChild(btn);
   });
 
-  // priority select
   const sel = document.getElementById('priority-select');
   sel.innerHTML = '<option value="">— Geen prioriteit —</option>';
   profile.themas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o); });
@@ -309,7 +427,7 @@ function renderRegio() {
 
 
 /* ══════════════════════════════════════
-   ARTIKEL CARD (herbruikbaar)
+   ARTIKEL CARD
 ══════════════════════════════════════ */
 function buildArticleCard(container, art, index) {
   const color = THEME_COLORS[art.thema] || '#0B7075';
@@ -317,6 +435,7 @@ function buildArticleCard(container, art, index) {
   card.className = 'article-card';
   card.style.animationDelay = `${index * 55}ms`;
   card.innerHTML = `
+    ${art.img ? `<img class="ac-image" src="${art.img}" alt="${art.title}" loading="lazy">` : ''}
     <div class="ac-stripe" style="background:${color}"></div>
     <div class="ac-body">
       <div class="ac-top">
@@ -343,10 +462,46 @@ function openArtikel(id) {
   if (!art) return;
 
   prevPage = currentPage;
-
   const color = THEME_COLORS[art.thema] || '#0B7075';
-  const el    = document.getElementById('article-detail-content');
+  const ctx   = ARTIKEL_CONTEXT[art.thema];
+
+  const relevantText = ctx?.relevant?.[profile.functie]
+    || ctx?.relevant?.['Beleidsmedewerker']
+    || 'Dit thema is relevant voor jouw dagelijkse werkpraktijk in de zorg.';
+
+  let duidingHtml = '';
+  if (ctx) {
+    duidingHtml = `
+    <div class="ad-duiding-blok">
+      <div class="adb-header">
+        <span class="adb-icon">🔍</span>
+        <div>
+          <div class="adb-title">Thematische duiding voor jou</div>
+          <div class="adb-sub">${profile.functie || 'Professional'} · ${profile.sector || 'Zorg'}</div>
+        </div>
+      </div>
+      <div class="adb-body">
+        <div class="adb-item">
+          <div class="adb-item-label">Wat speelt er</div>
+          <div class="adb-item-text">${ctx.speelt}</div>
+        </div>
+        <div class="adb-divider"></div>
+        <div class="adb-item">
+          <div class="adb-item-label">Waarom relevant voor jou</div>
+          <div class="adb-item-text">${relevantText}</div>
+        </div>
+        <div class="adb-divider"></div>
+        <div class="adb-item">
+          <div class="adb-item-label">Wat dit kan betekenen</div>
+          <div class="adb-item-text">${ctx.betekenis}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const el = document.getElementById('article-detail-content');
   el.innerHTML = `
+    ${art.img ? `<img class="ad-hero" src="${art.img}" alt="${art.title}" loading="lazy">` : ''}
     <span class="ad-tag" style="background:${color}20;color:${color}">${art.thema}</span>
     <h1 class="ad-title">${art.title}</h1>
     <div class="ad-meta">
@@ -355,22 +510,20 @@ function openArtikel(id) {
       <span>✍️ Redactie Zorgvisie</span>
     </div>
     <div class="ad-body">${art.body}</div>
+    ${duidingHtml}
     <div class="ad-related">
       <div class="ad-related-title">Gerelateerde artikelen</div>
       <div class="ad-related-grid" id="related-grid"></div>
     </div>`;
 
-  // gerelateerde artikelen
   const related = ARTICLES.filter(a => a.thema === art.thema && a.id !== id).slice(0, 3);
   const rGrid   = document.getElementById('related-grid');
   related.forEach((a, i) => buildArticleCard(rGrid, a, i));
 
-  // terug-knop
   document.getElementById('detail-back-btn').onclick = () => navigateTo(prevPage,
     document.querySelector(`[data-page="${prevPage}"]`));
 
   navigateTo('artikel-detail', null);
-  // update nav actief
   document.querySelectorAll('.nav-link').forEach(l => {
     l.classList.toggle('active', l.dataset.page === prevPage);
   });
@@ -383,7 +536,6 @@ function openArtikel(id) {
    ARTIKELEN PAGINA
 ══════════════════════════════════════ */
 function renderArtikelenPagina() {
-  // filter pills per thema
   const pillsEl = document.getElementById('filter-pills');
   if (!pillsEl.children.length) {
     const alleBtn = document.createElement('button');
@@ -430,7 +582,7 @@ function renderArtikelenGrid() {
 
 
 /* ══════════════════════════════════════
-   DOSSIERS PAGINA
+   DOSSIERS
 ══════════════════════════════════════ */
 function renderDossiers() {
   const grid = document.getElementById('dossiers-grid');
@@ -459,7 +611,7 @@ function renderDossiers() {
 
 
 /* ══════════════════════════════════════
-   AGENDA PAGINA
+   AGENDA
 ══════════════════════════════════════ */
 function renderAgenda() {
   const list = document.getElementById('agenda-list');
