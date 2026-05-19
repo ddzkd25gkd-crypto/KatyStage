@@ -112,7 +112,7 @@ const ARTICLES = [
   /* ── ARBEIDSMARKT ── */
   {
     id: 1, thema: 'Arbeidsmarkt', datum: 'Vandaag', minuten: 4,
-    img: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=400&fit=crop&q=80',
     title: 'Personeelstekort in VVT bereikt nieuw record',
     excerpt: 'Ruim 40% van de VVT-instellingen meldt dat de bezetting structureel onder de norm ligt, blijkt uit nieuw onderzoek van ActiZ.',
     body: `<p>Ruim 40 procent van de instellingen voor verpleging, verzorging en thuiszorg (VVT) meldt dat hun personeelsbezetting structureel onder de norm ligt. Dit blijkt uit een grootschalig onderzoek van ActiZ onder 380 leden.</p>
@@ -124,7 +124,7 @@ const ARTICLES = [
   },
   {
     id: 2, thema: 'Arbeidsmarkt', datum: 'Gisteren', minuten: 3,
-    img: 'https://picsum.photos/seed/zv2/800/400',
+    img: 'https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?w=800&h=400&fit=crop&q=80',
     title: 'Cao Ziekenhuizen 2026: akkoord bereikt over 4,5 procent loonsverhoging',
     excerpt: 'Na maanden van onderhandelen liggen vakbonden en werkgevers op één lijn. De loonsverhoging geldt met terugwerkende kracht vanaf 1 januari.',
     body: `<p>Vakbonden FNV en CNV hebben samen met werkgeversorganisatie NVZ een principe-akkoord bereikt over de nieuwe cao Ziekenhuizen. De loonsverhoging van 4,5 procent geldt met terugwerkende kracht vanaf 1 januari 2026 en loopt tot en met december 2026.</p>
@@ -134,7 +134,7 @@ const ARTICLES = [
   },
   {
     id: 3, thema: 'Arbeidsmarkt', datum: '3 dagen geleden', minuten: 5,
-    img: 'https://picsum.photos/seed/zv3/800/400',
+    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop&q=80',
     title: 'Zijinstromers moeten tekort aanvullen — maar begeleiding schiet tekort',
     excerpt: 'Meer dan 12.000 zij-instromers vonden het afgelopen jaar een baan in de zorg. Instellingen worstelen echter met hun begeleiding en scholing.',
     body: `<p>Het aantal zij-instromers in de zorg is het afgelopen jaar gestegen naar ruim 12.000. Toch is de instroom niet voldoende om de structurele tekorten op te lossen, en instellingen die zij-instromers aannemen kampen met nieuwe problemen: de begeleiding en inwerking kosten meer tijd dan verwacht.</p>
@@ -144,7 +144,7 @@ const ARTICLES = [
   },
   {
     id: 4, thema: 'Arbeidsmarkt', datum: '1 week geleden', minuten: 6,
-    img: 'https://picsum.photos/seed/zv4/800/400',
+    img: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=800&h=400&fit=crop&q=80',
     title: 'Onderzoek: vertrek uit de zorg ligt aan werkdruk, niet aan salaris',
     excerpt: 'Zorgmedewerkers vertrekken niet vanwege loon, maar vanwege administratieve druk en te weinig autonomie. Dat blijkt uit nationaal onderzoek.',
     body: `<p>Salaris speelt een ondergeschikte rol bij het vertrek van zorgmedewerkers. Dat blijkt uit een grootschalig onderzoek van het Nivel onder 4.200 voormalig zorgprofessionals. De twee voornaamste vertrekredenen zijn de ervaren administratieve last en het gebrek aan zeggenschap over het eigen werk.</p>
@@ -168,7 +168,7 @@ const ARTICLES = [
   },
   {
     id: 6, thema: 'Passende zorg', datum: '2 dagen geleden', minuten: 4,
-    img: 'https://picsum.photos/seed/zv6/800/400',
+    img: 'https://images.unsplash.com/photo-1530026186672-2cd00ffc50d1?w=800&h=400&fit=crop&q=80',
     title: 'Helft IZA-regio\'s loopt achter op uitvoeringsplanning',
     excerpt: 'Een tussentijdse evaluatie van het Integraal Zorgakkoord toont dat 54 procent van de regio\'s vertraging heeft in de uitvoering van regionale plannen.',
     body: `<p>Meer dan de helft van de IZA-regio's loopt achter op de afgesproken uitvoeringsplanning. Dat blijkt uit een tussentijdse evaluatie uitgevoerd in opdracht van het ministerie van VWS. Als voornaamste oorzaken worden governance-problemen, personeelstekorten en onvoldoende financiële middelen voor uitvoering aangedragen.</p>
@@ -178,7 +178,7 @@ const ARTICLES = [
   },
   {
     id: 7, thema: 'Passende zorg', datum: '4 dagen geleden', minuten: 5,
-    img: 'https://picsum.photos/seed/zv7/800/400',
+    img: 'https://images.unsplash.com/photo-1504813184591-01572f98c85f?w=800&h=400&fit=crop&q=80',
     title: 'Huisartsen onder druk door verschuiving ziekenhuiszorg naar eerste lijn',
     excerpt: 'De werkdruk in huisartsenpraktijken neemt verder toe nu meer patiënten worden verwezen vanuit de tweedelijn richting de eerste lijn.',
     body: `<p>Huisartsenpraktijken in stedelijke gebieden melden een stijging van 15 procent in het aantal consulten voor patiënten die voorheen in ziekenhuizen werden behandeld. De verschuiving naar passende zorg, bedoeld om de zorg doelgerichter te organiseren, leidt in de praktijk tot overbelasting in de eerste lijn.</p>
@@ -188,7 +188,7 @@ const ARTICLES = [
   },
   {
     id: 8, thema: 'Passende zorg', datum: '6 dagen geleden', minuten: 7,
-    img: 'https://picsum.photos/seed/zv8/800/400',
+    img: 'https://images.unsplash.com/photo-1576671081837-5c4ab9c07dba?w=800&h=400&fit=crop&q=80',
     title: 'Uitkomstbekostiging: vier pilots tonen veelbelovende resultaten',
     excerpt: 'In vier regio\'s wordt geëxperimenteerd met bekostiging op basis van gezondheidsuitkomsten. De eerste data na één jaar zijn bemoedigend.',
     body: `<p>In vier regio's — Amsterdam, Eindhoven, Groningen en Zeeland — loopt al een jaar een pilot met uitkomstbekostiging voor chronische zorg. De eerste resultaten laten zien dat zorgaanbieders meer inzetten op preventie en vroeg ingrijpen, en dat de ziekenhuisopnames in de pilotpopulaties zijn gedaald met gemiddeld 8 procent.</p>
@@ -212,7 +212,7 @@ const ARTICLES = [
   },
   {
     id: 10, thema: 'Digitalisering', datum: 'Vandaag', minuten: 4,
-    img: 'https://picsum.photos/seed/zv10/800/400',
+    img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop&q=80',
     title: 'EPD-implementatie bij groot UMC loopt zes maanden vertraging op',
     excerpt: 'Integratiekwesties met bestaande systemen vertragen de uitrol. De kosten lopen op naar het dubbele van de oorspronkelijke raming.',
     body: `<p>De implementatie van een nieuw elektronisch patiëntendossier bij een van de grote universitaire medische centra loopt zes maanden vertraging op. Oorzaak zijn onverwachte integratieproblemen met bestaande laboratorium- en beeldsystemen. De totale projectkosten zijn inmiddels opgelopen tot het dubbele van de initiële raming van 45 miljoen euro.</p>
@@ -222,7 +222,7 @@ const ARTICLES = [
   },
   {
     id: 11, thema: 'Digitalisering', datum: '3 dagen geleden', minuten: 5,
-    img: 'https://picsum.photos/seed/zv11/800/400',
+    img: 'https://images.unsplash.com/photo-1550751827-4bd374f7a3c9?w=800&h=400&fit=crop&q=80',
     title: 'Helft van zorginstellingen niet voorbereid op cyberaanval',
     excerpt: 'Onderzoek van het NCSC toont aan dat cyberveiligheid bij veel zorgorganisaties nog geen bestuurlijk thema is — met grote risico\'s tot gevolg.',
     body: `<p>Bij 51 procent van de Nederlandse zorginstellingen ontbreekt een actueel incidentresponsplan voor een cyberaanval. Dat blijkt uit onderzoek van het Nationaal Cyber Security Centrum (NCSC) onder 340 zorgorganisaties. In acht van de tien gevallen is de CISO niet direct vertegenwoordigd in het bestuur.</p>
@@ -232,7 +232,7 @@ const ARTICLES = [
   },
   {
     id: 12, thema: 'Digitalisering', datum: '5 dagen geleden', minuten: 6,
-    img: 'https://picsum.photos/seed/zv12/800/400',
+    img: 'https://images.unsplash.com/photo-1516841273335-e39b37888115?w=800&h=400&fit=crop&q=80',
     title: 'FHIR-uitwisseling: slechts 30 procent van ziekenhuizen op schema voor EU-deadline',
     excerpt: 'De Europese richtlijn voor digitale gegevensuitwisseling vraagt implementatie voor 2027. Een minderheid van de ziekenhuizen haalt dat.',
     body: `<p>Nederland loopt achter op de implementatie van de FHIR-standaard voor digitale gegevensuitwisseling. Slechts 30 procent van de ziekenhuizen geeft aan op schema te liggen voor de Europese deadline van 2027. De NVZ spreekt van een "zorgwekkend signaal" en roept de overheid op met aanvullende ondersteuning te komen.</p>
@@ -244,7 +244,7 @@ const ARTICLES = [
   /* ── CAPACITEITSDRUK ── */
   {
     id: 13, thema: 'Capaciteitsdruk', datum: '3 dagen geleden', minuten: 7,
-    img: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&h=400&fit=crop&q=80',
     title: 'GGZ-wachtlijsten nauwelijks korter ondanks extra middelen',
     excerpt: 'Ondanks de extra investeringen uit het Hoofdlijnenakkoord GGZ zijn de wachttijden in 2025 nauwelijks gedaald.',
     body: `<p>De wachttijden in de GGZ zijn in 2025 nauwelijks afgenomen, ondanks de extra middelen uit het Hoofdlijnenakkoord. De NZa concludeert dit in haar nieuwste trendrapportage. De gemiddelde wachttijd voor basis-GGZ bedraagt 11 weken (norm: 4 weken); voor specialistische GGZ 18 weken.</p>
@@ -254,7 +254,7 @@ const ARTICLES = [
   },
   {
     id: 14, thema: 'Capaciteitsdruk', datum: 'Gisteren', minuten: 4,
-    img: 'https://picsum.photos/seed/zv14/800/400',
+    img: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=800&h=400&fit=crop&q=80',
     title: 'SEH-wachttijden stijgen in vier grote regio\'s tot boven de vier uur',
     excerpt: 'In de regio\'s Amsterdam, Rotterdam, Eindhoven en Arnhem overschrijden SEH-wachttijden structureel de aanvaardbare norm van vier uur.',
     body: `<p>In vier grote Nederlandse regio's overschrijden de wachttijden op de spoedeisende hulp structureel de vier uur. Dit blijkt uit cijfers van de Inspectie Gezondheidszorg en Jeugd (IGJ). De inspectie spreekt van "zorgwekkende patronen" en heeft de betreffende ziekenhuizen gevraagd verbeterplannen in te dienen.</p>
@@ -264,7 +264,7 @@ const ARTICLES = [
   },
   {
     id: 15, thema: 'Capaciteitsdruk', datum: '4 dagen geleden', minuten: 5,
-    img: 'https://picsum.photos/seed/zv15/800/400',
+    img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop&q=80',
     title: 'Verpleeghuiscapaciteit dreigt tekort te schieten bij verdere vergrijzing',
     excerpt: 'Prognoses van het CBS tonen aan dat het huidige tempo van capaciteitsuitbreiding onvoldoende is voor de verwachte zorgvraag in 2035.',
     body: `<p>Het huidige tempo van uitbreiding van verpleeghuiscapaciteit is onvoldoende om de verwachte stijging van de vraag op te vangen. Dat blijkt uit nieuwe prognoses van het CBS en het Planbureau voor de Leefomgeving. In 2035 wordt een tekort van naar schatting 50.000 verpleeghuisplaatsen verwacht als beleid ongewijzigd blijft.</p>
@@ -274,7 +274,7 @@ const ARTICLES = [
   },
   {
     id: 16, thema: 'Capaciteitsdruk', datum: '5 dagen geleden', minuten: 6,
-    img: 'https://picsum.photos/seed/zv16/800/400',
+    img: 'https://images.unsplash.com/photo-1519494026-f1d59edd8df6?w=800&h=400&fit=crop&q=80',
     title: 'NZa: Treeknormen overschreden in acht van de tien deelsectoren',
     excerpt: 'Een nieuw NZa-overzicht laat zien dat het eerder uitzondering dan regel is om wachttijden binnen de normen te houden.',
     body: `<p>In acht van de tien zorgdeelsectoren worden de Treeknormen voor aanvaardbare wachttijden structureel overschreden. Dit blijkt uit het nieuwste trendrapport van de Nederlandse Zorgautoriteit. Alleen in de eerstelijnsdiagnostiek en verloskunde wordt de norm gehaald.</p>
@@ -298,7 +298,7 @@ const ARTICLES = [
   },
   {
     id: 18, thema: 'Regionale samenwerking', datum: 'Vandaag', minuten: 3, isRegio: true,
-    img: 'https://picsum.photos/seed/zv18/800/400',
+    img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=400&fit=crop&q=80',
     title: 'Noord-Holland: drie gemeenten stappen uit IZA-samenwerkingsverband',
     excerpt: 'Meningsverschillen over governance en kostenverdeling liggen ten grondslag aan het vertrek. De regio zoekt nu nieuwe partners.',
     body: `<p>Drie gemeenten in de regio Noord-Holland hebben zich teruggetrokken uit het regionale IZA-samenwerkingsverband. Aanleiding zijn langlopende meningsverschillen over de verdeling van kosten voor gezamenlijke infrastructuur en onduidelijkheid over wie beslissingsbevoegdheid heeft bij conflicterende belangen.</p>
@@ -308,7 +308,7 @@ const ARTICLES = [
   },
   {
     id: 19, thema: 'Regionale samenwerking', datum: '3 dagen geleden', minuten: 5,
-    img: 'https://picsum.photos/seed/zv19/800/400',
+    img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop&q=80',
     title: 'Vijf regio\'s openen gezamenlijk zorgcoördinatiepunt',
     excerpt: 'In vijf regio\'s is een regionaal zorgcoördinatiepunt operationeel. Het doel: betere doorstroom tussen de lijnen en minder dubbele zorg.',
     body: `<p>In vijf regio's — Rotterdam, Nijmegen, Leeuwarden, Tilburg en Haarlem — is het afgelopen kwartaal een regionaal zorgcoördinatiepunt operationeel geworden. De centra fungeren als spil tussen ziekenhuizen, huisartsen, thuiszorg en sociale wijkteams.</p>
@@ -318,7 +318,7 @@ const ARTICLES = [
   },
   {
     id: 20, thema: 'Regionale samenwerking', datum: '1 week geleden', minuten: 6,
-    img: 'https://picsum.photos/seed/zv20/800/400',
+    img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop&q=80',
     title: 'Bestuurders: governance van regionale netwerken schiet tekort',
     excerpt: 'Een enquête onder 200 zorgbestuurders toont dat onduidelijke verantwoordelijkheidsverdeling de samenwerking in de regio blokkeert.',
     body: `<p>Tweederde van de ondervraagde zorgbestuurders ervaart de governance van regionale netwerken als onvoldoende. Dat blijkt uit een enquête van de NVZD onder 200 bestuurders in ziekenhuizen, VVT en GGZ. Het meest genoemde knelpunt is onduidelijkheid over wie de eindverantwoordelijkheid draagt als regionale afspraken niet nagekomen worden.</p>
@@ -342,7 +342,7 @@ const ARTICLES = [
   },
   {
     id: 22, thema: 'Financiering', datum: 'Gisteren', minuten: 4,
-    img: 'https://picsum.photos/seed/zv22/800/400',
+    img: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=800&h=400&fit=crop&q=80',
     title: 'Ziekenhuizen vrezen gezamenlijk tekort van 800 miljoen in 2026',
     excerpt: 'De NVZ waarschuwt dat de combinatie van stijgende kosten en ontoereikende tarieven tot ongekend grote tekorten leidt.',
     body: `<p>De Nederlandse Vereniging van Ziekenhuizen (NVZ) waarschuwt dat de sector gezamenlijk op een tekort van circa 800 miljoen euro afstevent in 2026. De combinatie van stijgende energiekosten, cao-verplichtingen en ontoereikende NZa-tarieven wordt als hoofdoorzaak aangewezen.</p>
@@ -352,7 +352,7 @@ const ARTICLES = [
   },
   {
     id: 23, thema: 'Financiering', datum: '4 dagen geleden', minuten: 5,
-    img: 'https://picsum.photos/seed/zv23/800/400',
+    img: 'https://images.unsplash.com/photo-1554224155-8d04cb21ed22?w=800&h=400&fit=crop&q=80',
     title: 'Alternatieve bekostiging ouderenzorg: pilots leveren gemengde resultaten',
     excerpt: 'In drie regio\'s wordt geëxperimenteerd met populatiebekostiging voor ouderenzorg. De resultaten na één jaar zijn wisselend maar leerzaam.',
     body: `<p>In drie regio's zijn pilots gaande met populatiebekostiging voor ouderenzorg, waarbij zorgaanbieders per kwartaal een vast bedrag ontvangen per ingeschreven oudere in plaats van per verleende prestatie. Na een jaar zijn de resultaten wisselend: in twee regio's zijn de kosten gedaald, in één regio juist gestegen.</p>
@@ -362,7 +362,7 @@ const ARTICLES = [
   },
   {
     id: 24, thema: 'Financiering', datum: '6 dagen geleden', minuten: 4,
-    img: 'https://picsum.photos/seed/zv24/800/400',
+    img: 'https://images.unsplash.com/photo-1576765608622-067973a79f53?w=800&h=400&fit=crop&q=80',
     title: 'NZa opent onderzoek naar marktconcentratie in GGZ na fusiegolf',
     excerpt: 'Na een reeks fusies in de geestelijke gezondheidszorg ziet de NZa aanleiding de marktconcentratie nader te onderzoeken.',
     body: `<p>De Nederlandse Zorgautoriteit heeft een marktonderzoek geopend naar de concentratie in de GGZ-sector. Aanleiding is een reeks fusies en overnames in de afgelopen drie jaar, waardoor in meerdere regio's nog maar één of twee grote GGZ-aanbieders actief zijn. De NZa wil beoordelen of dit de keuzevrijheid van patiënten en de doelmatigheid van de zorg onder druk zet.</p>
