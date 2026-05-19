@@ -238,7 +238,7 @@
         <div class="welcome">
           <div class="welcome-text">
             <h2 class="welcome-title" id="welcome-title">Goedemiddag, Katy</h2>
-            <p class="welcome-sub" id="welcome-sub">Je hebt <strong>7 nieuwe artikelen</strong> op basis van jouw profiel.</p>
+            <p class="welcome-sub" id="welcome-sub">Je hebt <strong id="welcome-count">0 nieuwe artikelen</strong> op basis van jouw profiel.</p>
           </div>
           <label class="regio-toggle-wrap">
             <input type="checkbox" id="regio-filter-toggle" onchange="toggleRegioFilter(this.checked)" checked />
@@ -247,10 +247,18 @@
           </label>
         </div>
         <div class="stats-strip">
-          <div class="stat-chip"><span class="stat-n">7</span><span class="stat-l">Nieuwe artikelen</span></div>
+          <div class="stat-chip"><span class="stat-n" id="stat-artikelen">0</span><span class="stat-l">Nieuwe artikelen</span></div>
           <div class="stat-chip"><span class="stat-n" id="stat-themas">3</span><span class="stat-l">Gevolgde thema's</span></div>
           <div class="stat-chip"><span class="stat-n">2</span><span class="stat-l">Actuele dossiers</span></div>
           <div class="stat-chip accent"><span class="stat-n">!</span><span class="stat-l">Nieuw IZA-akkoord</span></div>
+        </div>
+        <div class="welcome-intro" id="welcome-intro">
+          <div class="wi-icon">✦</div>
+          <div class="wi-content">
+            <strong>Welkom in Mijn Zorgvisie</strong>
+            <p>Dit is jouw persoonlijke omgeving op Zorgvisie.nl. Je ziet nieuws, dossiers en agenda-items afgestemd op jouw functie, sector en regio — en onderaan elk artikel een korte duiding die aansluit op jouw werkpraktijk. Je profiel pas je altijd aan via de zijbalk.</p>
+          </div>
+          <button class="wi-close" onclick="dismissIntro()" title="Sluiten">×</button>
         </div>
         <div class="priority-band" id="priority-band" style="display:none">
           <div class="pb-left">

@@ -359,7 +359,13 @@ function buildDashboard() {
   document.getElementById('profile-name').textContent   = 'Katy van Vogelpoel';
   document.getElementById('profile-role').textContent   = `${profile.functie} · ${profile.sector}`;
   document.getElementById('regio-naam').textContent     = profile.regio;
+  const artCount = ARTICLES.filter(a => profile.themas.includes(a.thema)).length || ARTICLES.length;
   document.getElementById('stat-themas').textContent    = profile.themas.length;
+  document.getElementById('stat-artikelen').textContent = artCount;
+  document.getElementById('welcome-count').textContent  = `${artCount} nieuwe artikelen`;
+
+  const intro = document.getElementById('welcome-intro');
+  if (intro) intro.style.display = sessionStorage.getItem('intro-dismissed') ? 'none' : 'flex';
 
   const h = new Date().getHours();
   document.getElementById('welcome-title').textContent = `${h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond'}, Katy`;
@@ -644,6 +650,12 @@ function renderAgenda() {
 /* ══════════════════════════════════════
    OVERIGE FUNCTIES
 ══════════════════════════════════════ */
+function dismissIntro() {
+  const el = document.getElementById('welcome-intro');
+  if (el) el.style.display = 'none';
+  sessionStorage.setItem('intro-dismissed', '1');
+}
+
 function toggleRegioFilter(on) {
   regioFilterOn = on;
   renderRegio();
