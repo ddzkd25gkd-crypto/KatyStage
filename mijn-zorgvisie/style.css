@@ -143,9 +143,11 @@ body { font-family: var(--font-sans); background: var(--surface); color: var(--i
 .topbar { height: 56px; background: var(--red); display: flex; align-items: center; padding: 0 24px; gap: 8px; position: sticky; top: 0; z-index: 200; }
 .topbar-left { display: flex; align-items: center; flex-shrink: 0; }
 .t-logo { display: flex; align-items: center; gap: 10px; margin-right: 28px; }
-.t-logo-text { font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: var(--white); letter-spacing: .08em; }
-.t-logo-sep { color: rgba(255,255,255,.25); font-size: 16px; }
-.t-logo-badge { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.55); }
+.t-logo-stack { display: flex; flex-direction: column; gap: 1px; }
+.t-logo-text { font-family: var(--font-sans); font-size: 15px; font-weight: 700; color: var(--white); letter-spacing: .1em; line-height: 1; }
+.t-logo-sub { font-family: var(--font-sans); font-size: 11px; font-weight: 600; color: rgba(255,255,255,.75); letter-spacing: .04em; line-height: 1; }
+
+.sb-env-label { padding: 14px 20px 10px; font-family: var(--font-sans); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--red); border-bottom: 2px solid var(--red); margin-bottom: 4px; }
 
 .topbar-nav { display: flex; gap: 2px; flex: 1; }
 .nav-link { display: flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: var(--radius-sm); text-decoration: none; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.5); transition: all var(--t) var(--ease); }
