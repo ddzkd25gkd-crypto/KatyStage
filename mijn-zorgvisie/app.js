@@ -106,7 +106,7 @@ const ARTIKEL_CONTEXT = {
 const ARTICLES = [
   {
     id: 1, thema: 'Arbeidsmarkt', datum: 'Vandaag', minuten: 4,
-    img: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=800&h=400&fit=crop&q=80',
     title: 'Personeelstekort in VVT bereikt nieuw record',
     excerpt: 'Ruim 40% van de VVT-instellingen meldt dat de bezetting structureel onder de norm ligt, blijkt uit nieuw onderzoek van ActiZ.',
     body: `<p>Ruim 40 procent van de instellingen voor verpleging, verzorging en thuiszorg (VVT) meldt dat hun personeelsbezetting structureel onder de norm ligt. Dit blijkt uit een grootschalig onderzoek dat brancheorganisatie ActiZ heeft uitgevoerd onder 380 leden.</p>
@@ -119,7 +119,7 @@ const ARTICLES = [
   },
   {
     id: 2, thema: 'Passende zorg', datum: 'Gisteren', minuten: 6,
-    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1579684385127-1571037e9d45?w=800&h=400&fit=crop&q=80',
     title: 'Minister kondigt nieuw actieplan passende zorg aan',
     excerpt: 'Het kabinet presenteert een driejarig investeringsprogramma gericht op de verschuiving van ziekenhuiszorg naar de eerste lijn.',
     body: `<p>De minister van Volksgezondheid heeft een driejarig investeringsprogramma aangekondigd dat de verschuiving van ziekenhuiszorg naar de eerste lijn moet versnellen. Het programma heeft een omvang van 420 miljoen euro en loopt van 2026 tot en met 2028.</p>
@@ -131,7 +131,7 @@ const ARTICLES = [
   },
   {
     id: 3, thema: 'Digitalisering', datum: '2 dagen geleden', minuten: 5,
-    img: 'https://images.unsplash.com/photo-1516841273335-e39b37888115?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=800&h=400&fit=crop&q=80',
     title: 'AI in de radiologie: van pilot naar praktijk',
     excerpt: 'Steeds meer ziekenhuizen zetten AI-tools in voor beelddiagnostiek. Een inventarisatie van ervaringen en valkuilen.',
     body: `<p>Kunstmatige intelligentie maakt een stille opmars in de Nederlandse radiologie. Waar twee jaar geleden AI-tools voor beelddiagnostiek nog een zeldzaamheid waren, gebruiken inmiddels meer dan 60 procent van de ziekenhuizen minstens één AI-toepassing structureel in hun radiologische werkproces.</p>
@@ -143,7 +143,7 @@ const ARTICLES = [
   },
   {
     id: 4, thema: 'Capaciteitsdruk', datum: '3 dagen geleden', minuten: 7,
-    img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=800&h=400&fit=crop&q=80',
     title: 'GGZ-wachtlijsten nauwelijks korter ondanks extra middelen',
     excerpt: 'Ondanks de extra investeringen uit het Hoofdlijnenakkoord GGZ zijn de wachttijden in 2025 nauwelijks gedaald.',
     body: `<p>De wachttijden in de geestelijke gezondheidszorg (GGZ) zijn in 2025 nauwelijks afgenomen, ondanks de extra middelen die via het Hoofdlijnenakkoord GGZ beschikbaar zijn gesteld. Dit concludeert de Nederlandse Zorgautoriteit (NZa) in haar nieuwste trendrapportage.</p>
@@ -155,7 +155,7 @@ const ARTICLES = [
   },
   {
     id: 5, thema: 'Regionale samenwerking', datum: '4 dagen geleden', minuten: 4, isRegio: true,
-    img: 'https://images.unsplash.com/photo-1530026186672-2cd00ffc50d1?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1559757175-5aba18ecd7de?w=800&h=400&fit=crop&q=80',
     title: 'Regio Utrecht sluit breed IZA-uitvoeringsplan',
     excerpt: 'Zeven zorgorganisaties en drie gemeenten ondertekenen een samenwerkingsconvenant gericht op thuiszorg en preventie.',
     body: `<p>In de regio Utrecht hebben zeven zorgorganisaties en drie gemeenten een samenwerkingsconvenant ondertekend voor de uitvoering van het Integraal Zorgakkoord (IZA). Het is een van de eerste regio's in Nederland met een breed gedragen uitvoeringsplan.</p>
@@ -167,7 +167,7 @@ const ARTICLES = [
   },
   {
     id: 6, thema: 'Financiering', datum: '5 dagen geleden', minuten: 5,
-    img: 'https://images.unsplash.com/photo-1563213126-a4273aed2016?w=800&h=400&fit=crop&q=80',
+    img: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&h=400&fit=crop&q=80',
     title: 'NZa publiceert nieuwe tarieven langdurige zorg',
     excerpt: 'De nieuwe tarieven voor 2026 zijn gepubliceerd. Instellingen krijgen te maken met hogere energiekosten en een beperkte looncompensatie.',
     body: `<p>De Nederlandse Zorgautoriteit (NZa) heeft de tarieven voor de langdurige zorg voor 2026 gepubliceerd. De tarieven stijgen gemiddeld met 3,1 procent, maar voor veel instellingen is dit onvoldoende om de gestegen loon- en energiekosten op te vangen.</p>
@@ -391,6 +391,7 @@ function renderArticles() {
   const grid = document.getElementById('articles-grid');
   grid.innerHTML = '';
   let list = ARTICLES.filter(a => profile.themas.includes(a.thema));
+  if (!list.length) list = ARTICLES;
   if (priorityTheme) list = [...list.filter(a => a.thema === priorityTheme), ...list.filter(a => a.thema !== priorityTheme)];
   list.slice(0, 6).forEach((art, i) => buildArticleCard(grid, art, i));
 }
@@ -435,7 +436,7 @@ function buildArticleCard(container, art, index) {
   card.className = 'article-card';
   card.style.animationDelay = `${index * 55}ms`;
   card.innerHTML = `
-    ${art.img ? `<img class="ac-image" src="${art.img}" alt="${art.title}" loading="lazy">` : ''}
+    ${art.img ? `<img class="ac-image" src="${art.img}" alt="${art.title}" loading="lazy" onerror="this.onerror=null;this.src='https://picsum.photos/seed/art${art.id}/800/400'">` : ''}
     <div class="ac-stripe" style="background:${color}"></div>
     <div class="ac-body">
       <div class="ac-top">
@@ -501,7 +502,7 @@ function openArtikel(id) {
 
   const el = document.getElementById('article-detail-content');
   el.innerHTML = `
-    ${art.img ? `<img class="ad-hero" src="${art.img}" alt="${art.title}" loading="lazy">` : ''}
+    ${art.img ? `<img class="ad-hero" src="${art.img}" alt="${art.title}" loading="lazy" onerror="this.onerror=null;this.src='https://picsum.photos/seed/art${art.id}/800/400'">` : ''}
     <span class="ad-tag" style="background:${color}20;color:${color}">${art.thema}</span>
     <h1 class="ad-title">${art.title}</h1>
     <div class="ad-meta">
@@ -569,12 +570,13 @@ function renderArtikelenGrid() {
   const grid = document.getElementById('artikelen-grid');
   grid.innerHTML = '';
   let list = ARTICLES.filter(a => profile.themas.includes(a.thema));
+  if (!list.length) list = ARTICLES;
   if (artikelenFilter.thema) list = list.filter(a => a.thema === artikelenFilter.thema);
   if (artikelenFilter.zoek)  list = list.filter(a =>
     a.title.toLowerCase().includes(artikelenFilter.zoek) ||
     a.excerpt.toLowerCase().includes(artikelenFilter.zoek));
   if (!list.length) {
-    grid.innerHTML = '<p style="color:var(--ink-muted);font-size:14px;grid-column:1/-1">Geen artikelen gevonden voor deze zoekopdracht.</p>';
+    grid.innerHTML = '<p style="color:var(--ink-muted);font-size:14px;grid-column:1/-1">Geen artikelen gevonden. Kies een ander thema of zoekterm.</p>';
     return;
   }
   list.forEach((art, i) => buildArticleCard(grid, art, i));
@@ -605,6 +607,12 @@ function renderDossiers() {
           <span class="dos-link">Bekijk dossier →</span>
         </div>
       </div>`;
+    card.onclick = () => {
+      if (!profile.themas.includes(d.thema)) profile.themas.push(d.thema);
+      artikelenFilter.thema = d.thema;
+      document.getElementById('filter-pills').innerHTML = '';
+      navigateTo('artikelen', document.querySelector('[data-page="artikelen"]'));
+    };
     grid.appendChild(card);
   });
 }

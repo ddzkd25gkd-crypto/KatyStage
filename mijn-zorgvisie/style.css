@@ -140,7 +140,7 @@ body { font-family: var(--font-sans); background: var(--surface); color: var(--i
 ══════════════════════════════════════ */
 #dashboard.active { display: block; }
 
-.topbar { height: 56px; background: var(--navy); display: flex; align-items: center; padding: 0 24px; gap: 8px; position: sticky; top: 0; z-index: 200; }
+.topbar { height: 56px; background: var(--red); display: flex; align-items: center; padding: 0 24px; gap: 8px; position: sticky; top: 0; z-index: 200; }
 .topbar-left { display: flex; align-items: center; flex-shrink: 0; }
 .t-logo { display: flex; align-items: center; gap: 10px; margin-right: 28px; }
 .t-logo-text { font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: var(--white); letter-spacing: .08em; }
@@ -155,7 +155,7 @@ body { font-family: var(--font-sans); background: var(--surface); color: var(--i
 .topbar-right { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .t-icon-btn { width: 34px; height: 34px; border-radius: var(--radius-sm); border: none; background: rgba(255,255,255,.07); color: rgba(255,255,255,.55); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--t) var(--ease); position: relative; }
 .t-icon-btn:hover { background: rgba(255,255,255,.13); color: var(--white); }
-.notif-dot { position: absolute; top: 7px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--red); border: 1.5px solid var(--navy); }
+.notif-dot { position: absolute; top: 7px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--white); border: 1.5px solid var(--red-hover); }
 .t-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--red); color: var(--white); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-left: 4px; }
 
 .layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 56px); }
