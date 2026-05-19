@@ -595,7 +595,14 @@ function renderDuiding() {
     const card = document.createElement('div');
     card.className = 'duiding-card';
     card.style.animationDelay = `${i * 65}ms`;
-    card.innerHTML = `<div class="dc-header"><div class="dc-icon-wrap">${d.icon}</div><div><div class="dc-theme-name">${t}</div><div class="dc-label">Thematische duiding</div></div></div><div class="dc-body"><p class="dc-text">${d.text}</p></div>`;
+    card.innerHTML = `<div class="dc-header"><div class="dc-icon-wrap">${d.icon}</div><div><div class="dc-theme-name">${t}</div><div class="dc-label">Achtergrond &amp; context</div></div></div><div class="dc-body"><p class="dc-text">${d.text}</p><span class="dc-cta">Bekijk artikelen →</span></div>`;
+    card.style.cursor = 'pointer';
+    card.title = `Bekijk alle artikelen over ${t}`;
+    card.onclick = () => {
+      artikelenFilter.thema = t;
+      document.getElementById('filter-pills').innerHTML = '';
+      navigateTo('artikelen', document.querySelector('[data-page="artikelen"]'));
+    };
     row.appendChild(card);
   });
 }
