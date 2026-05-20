@@ -411,6 +411,14 @@ input:checked ~ .rt-track::after { transform: translateX(16px); }
 .ri-chevron { margin-left: auto; color: var(--ink-muted); opacity: 0; transition: opacity var(--t) var(--ease); flex-shrink: 0; align-self: center; }
 .regio-item:hover .ri-chevron { opacity: 1; }
 
+/* ── Regio preview (dashboard) ── */
+.rp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.rp-item { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; cursor: pointer; transition: box-shadow var(--t) var(--ease), border-color var(--t) var(--ease); animation: cardIn 280ms var(--ease) both; }
+.rp-item:hover { box-shadow: var(--shadow-sm); border-color: var(--border-mid); }
+.rp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; flex-wrap: wrap; }
+.rp-thema { font-size: 12px; font-weight: 700; color: var(--ink); }
+.rp-signaal { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+
 
 /* ══════════════════════════════════════
    PAGINA-HEADERS

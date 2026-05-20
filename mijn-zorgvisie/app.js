@@ -442,14 +442,17 @@ const REGIO_ITEMS = {
 let savedArticleIds = new Set();
 
 function toggleBookmark(id, btn) {
+  const svg = btn.querySelector('svg');
   if (savedArticleIds.has(id)) {
     savedArticleIds.delete(id);
     btn.classList.remove('saved');
     btn.title = 'Opslaan voor later';
+    if (svg) svg.setAttribute('fill', 'none');
   } else {
     savedArticleIds.add(id);
     btn.classList.add('saved');
     btn.title = 'Opgeslagen';
+    if (svg) svg.setAttribute('fill', 'currentColor');
   }
   updateSavedCount();
 }
@@ -793,6 +796,7 @@ function buildDashboard() {
   renderWeeklySummary();
   renderArticles();
   renderDuiding();
+  renderRegioPreview();
   renderRegio();
   buildNotifications();
 }
@@ -836,6 +840,33 @@ function renderDuiding() {
       navigateTo('artikelen', document.querySelector('[data-page="artikelen"]'));
     };
     row.appendChild(card);
+  });
+}
+
+function renderRegioPreview() {
+  const el = document.getElementById('regio-preview-grid');
+  if (!el) return;
+  el.innerHTML = '';
+  const regio = profile.regio;
+  const signalen = REGIO_SIGNALEN[regio] || {};
+  const themas = profile.themas.filter(t => signalen[t]).slice(0, 4);
+  if (!themas.length) {
+    el.innerHTML = '<p style="color:var(--ink-muted);font-size:14px">Geen signalen beschikbaar voor jouw regio.</p>';
+    return;
+  }
+  themas.forEach((t, i) => {
+    const s = signalen[t];
+    const card = document.createElement('div');
+    card.className = 'rp-item';
+    card.style.animationDelay = `${i * 60}ms`;
+    card.innerHTML = `
+      <div class="rp-header">
+        <span class="rp-thema">${t}</span>
+        <span class="ts-niveau ${s.niveau}">${s.niveau.charAt(0).toUpperCase() + s.niveau.slice(1)}</span>
+      </div>
+      <p class="rp-signaal">${s.signaal}</p>`;
+    card.onclick = () => navigateTo('mijn-regio', document.querySelector('[data-page="mijn-regio"]'));
+    el.appendChild(card);
   });
 }
 
@@ -1366,7 +1397,7 @@ async function initD3Map() {
       .text(d => PROVINCE_SHORT[normProvince(d.properties.statnaam || d.properties.name || '')] || '');
 
     d3MapInitialized = true;
-    updateD3ActiveProvince(huidigeKaartRegio || profile.regio || '');
+    if (huidigeKaartRegio || profile.regio) updateD3ActiveProvince(huidigeKaartRegio || profile.regio);
   } catch(e) {
     const container2 = document.getElementById('nl-d3-map');
     if (container2) container2.innerHTML = '<p class="rk-map-error">Kaart kon niet worden geladen.<br>Controleer uw verbinding.</p>';
@@ -1374,7 +1405,7 @@ async function initD3Map() {
 }
 
 function updateD3ActiveProvince(regio) {
-  if (!d3MapInitialized || typeof d3 === 'undefined') return;
+  if (!regio || !d3MapInitialized || typeof d3 === 'undefined') return;
   d3.selectAll('.nl-d3-province').classed('active', false).classed('hover', false);
   d3.selectAll('.nl-d3-province').classed('active', function(d) {
     return normProvince(d.properties.statnaam || d.properties.name || '') === regio;
