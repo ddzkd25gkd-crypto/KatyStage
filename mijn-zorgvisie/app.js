@@ -780,9 +780,7 @@ function buildDashboard() {
     sb.appendChild(btn);
   });
 
-  const sel = document.getElementById('priority-select');
-  sel.innerHTML = '<option value="">— Geen prioriteit —</option>';
-  profile.themas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o); });
+  renderThemeDragList();
 
   // Regio link
   const regio = profile.regio;
@@ -1132,7 +1130,6 @@ function toggleRegioFilter(on) {
 
 function setPriority(val) {
   priorityTheme = val || null;
-  document.getElementById('priority-select').value = val || '';
   document.querySelectorAll('.theme-tag').forEach(tag =>
     tag.classList.toggle('priority', !!val && tag.textContent.trim().includes(val)));
   const band = document.getElementById('priority-band');
@@ -1147,6 +1144,81 @@ function setPriority(val) {
 }
 
 window.onload = () => goStep(1);
+
+/* ══════════════════════════════════════
+   TOOLTIP
+══════════════════════════════════════ */
+function showTooltip(event, text) {
+  const tip = document.getElementById('app-tooltip');
+  if (!tip) return;
+  tip.textContent = text;
+  tip.style.display = 'block';
+  const r = event.target.getBoundingClientRect();
+  const w = 240;
+  let left = r.left + r.width / 2 - w / 2;
+  let top  = r.bottom + 8;
+  if (left < 8) left = 8;
+  if (left + w > window.innerWidth - 8) left = window.innerWidth - 8 - w;
+  if (top + 80 > window.innerHeight) top = r.top - 80;
+  tip.style.left  = left + 'px';
+  tip.style.top   = top  + 'px';
+  tip.style.width = w    + 'px';
+  event.stopPropagation();
+}
+document.addEventListener('click', () => {
+  const tip = document.getElementById('app-tooltip');
+  if (tip) tip.style.display = 'none';
+});
+
+/* ══════════════════════════════════════
+   DRAG-AND-DROP THEMA RANKING
+══════════════════════════════════════ */
+let dragSrcIdx = null;
+
+function renderThemeDragList() {
+  const list = document.getElementById('theme-drag-list');
+  if (!list) return;
+  list.innerHTML = '';
+  profile.themas.forEach((t, i) => {
+    const iconSvg = THEME_ICONS[t] || '';
+    const item = document.createElement('div');
+    item.className = 'tdl-item';
+    item.draggable = true;
+    item.dataset.idx = i;
+    item.innerHTML = `
+      <span class="tdl-rank">${i + 1}</span>
+      <span class="tdl-icon">${iconSvg}</span>
+      <span class="tdl-name">${t}</span>
+      <svg class="tdl-handle" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <line x1="9" y1="5" x2="21" y2="5"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="19" x2="21" y2="19"/>
+        <circle cx="4" cy="5" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="19" r="1" fill="currentColor"/>
+      </svg>`;
+    item.addEventListener('dragstart', e => {
+      dragSrcIdx = i;
+      e.dataTransfer.effectAllowed = 'move';
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      list.querySelectorAll('.tdl-item').forEach(el => el.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', e => { e.preventDefault(); item.classList.add('drag-over'); });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      const toIdx = parseInt(item.dataset.idx);
+      if (dragSrcIdx === null || dragSrcIdx === toIdx) return;
+      const moved = profile.themas.splice(dragSrcIdx, 1)[0];
+      profile.themas.splice(toIdx, 0, moved);
+      dragSrcIdx = null;
+      renderThemeDragList();
+      renderArticles();
+      if (profile.themas[0]) setPriority(profile.themas[0]);
+    });
+    list.appendChild(item);
+  });
+}
 
 /* ══════════════════════════════════════
    MIJN REGIO — DATA
@@ -1251,41 +1323,77 @@ const PRAKTIJKVOORBEELDEN = {
 /* ══════════════════════════════════════
    MIJN REGIO — FUNCTIES
 ══════════════════════════════════════ */
-let huidigeKaartRegio = null;
+let huidigeKaartRegio   = null;
+let d3MapInitialized    = false;
+
+const PROVINCE_NAME_MAP = { 'Fryslân': 'Friesland', 'Fryslân': 'Friesland' };
+const PROVINCE_SHORT    = {
+  'Noord-Holland':'N-Holland','Zuid-Holland':'Z-Holland','Noord-Brabant':'N-Brabant',
+  'Overijssel':'Overijssel','Gelderland':'Gelderland','Groningen':'Groningen',
+  'Friesland':'Friesland','Drenthe':'Drenthe','Flevoland':'Flevoland',
+  'Utrecht':'Utrecht','Zeeland':'Zeeland','Limburg':'Limburg',
+};
+
+function normProvince(name) { return PROVINCE_NAME_MAP[name] || name; }
+
+async function initD3Map() {
+  const container = document.getElementById('nl-d3-map');
+  if (!container || d3MapInitialized) return;
+  if (typeof d3 === 'undefined') { container.innerHTML = '<p class="rk-map-error">D3 niet geladen.</p>'; return; }
+  try {
+    const geojson = await fetch('https://cartomap.github.io/nl/wgs84/provincie_2023.geojson').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    container.innerHTML = '';
+    const W = container.clientWidth || 290;
+    const H = Math.round(W * 1.28);
+    const svg = d3.select('#nl-d3-map').append('svg')
+      .attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('height', H).style('display','block').style('background','#EBF5FB');
+
+    const proj    = d3.geoMercator().fitSize([W, H], geojson);
+    const pathGen = d3.geoPath().projection(proj);
+
+    const paths = svg.selectAll('path.nl-d3-province')
+      .data(geojson.features).join('path')
+      .attr('class','nl-d3-province').attr('d', pathGen)
+      .on('mouseenter', function() { if (!d3.select(this).classed('active')) d3.select(this).classed('hover', true); })
+      .on('mouseleave', function() { d3.select(this).classed('hover', false); })
+      .on('click', function(event, d) { selectRegioOnMap(normProvince(d.properties.statnaam || d.properties.name || '')); });
+
+    svg.selectAll('text.nl-d3-label')
+      .data(geojson.features).join('text')
+      .attr('class','nl-d3-label')
+      .attr('x', d => pathGen.centroid(d)[0])
+      .attr('y', d => pathGen.centroid(d)[1])
+      .text(d => PROVINCE_SHORT[normProvince(d.properties.statnaam || d.properties.name || '')] || '');
+
+    d3MapInitialized = true;
+    updateD3ActiveProvince(huidigeKaartRegio || profile.regio || '');
+  } catch(e) {
+    const container2 = document.getElementById('nl-d3-map');
+    if (container2) container2.innerHTML = '<p class="rk-map-error">Kaart kon niet worden geladen.<br>Controleer uw verbinding.</p>';
+  }
+}
+
+function updateD3ActiveProvince(regio) {
+  if (!d3MapInitialized || typeof d3 === 'undefined') return;
+  d3.selectAll('.nl-d3-province').classed('active', false).classed('hover', false);
+  d3.selectAll('.nl-d3-province').classed('active', function(d) {
+    return normProvince(d.properties.statnaam || d.properties.name || '') === regio;
+  });
+  d3.selectAll('.nl-d3-label').attr('fill', function(d) {
+    return normProvince(d.properties.statnaam || d.properties.name || '') === regio ? '#fff' : '#4A4A4A';
+  });
+}
 
 function renderMijnRegio() {
   const regio = huidigeKaartRegio || profile.regio || 'Noord-Holland';
+  initD3Map().then(() => updateD3ActiveProvince(regio));
   selectRegioOnMap(regio);
-
-  // Vergelijk dropdown vullen
-  const sel = document.getElementById('rk-compare-select');
-  sel.innerHTML = '<option value="">— Kies een regio —</option>';
-  ALLE_REGIO_NAMEN.filter(r => r !== regio).forEach(r => {
-    const o = document.createElement('option');
-    o.value = r; o.textContent = r;
-    sel.appendChild(o);
-  });
-
-  // Leer-pills
-  const pills = document.getElementById('leer-pills');
-  pills.innerHTML = '';
-  ALLE_REGIO_NAMEN.filter(r => r !== regio).forEach(r => {
-    const btn = document.createElement('button');
-    btn.className = 'leer-pill';
-    btn.textContent = r;
-    btn.onclick = () => toonPraktijkvoorbeeld(r, btn);
-    pills.appendChild(btn);
-  });
-  document.getElementById('leer-voorbeeld').style.display = 'none';
 }
 
 function selectRegioOnMap(regio) {
+  if (!regio) return;
   huidigeKaartRegio = regio;
-
-  // Kaart: active class
-  document.querySelectorAll('.rk-province').forEach(g => {
-    g.classList.toggle('active', g.dataset.regio === regio);
-  });
+  updateD3ActiveProvince(regio);
 
   // Header
   document.getElementById('rk-regio-name').textContent = regio;

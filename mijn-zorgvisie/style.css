@@ -606,39 +606,43 @@ input:checked ~ .rt-track::after { transform: translateX(16px); }
 .rk-map-panel { position: sticky; top: 84px; }
 .rk-map-hint { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; }
 
-.nl-map {
-  width: 100%;
-  height: auto;
-  display: block;
-  background: #F0F8FF;
+/* D3 map container */
+.nl-d3-map-container {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  overflow: visible;
+  overflow: hidden;
+  min-height: 180px;
+  display: flex; align-items: center; justify-content: center;
+  background: #EBF5FB;
 }
-
-/* Province styling */
-.rk-province { cursor: pointer; }
-.rk-province polygon {
-  fill: #E8EDF2;
-  stroke: var(--white);
-  stroke-width: 2;
-  transition: fill var(--t) var(--ease);
+.rk-map-loading {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--ink-muted);
 }
-.rk-province:hover polygon { fill: #FFCCCC; }
-.rk-province.active polygon { fill: var(--red); }
+.rk-map-error { font-size: 13px; color: var(--ink-muted); text-align: center; padding: 20px; }
 
-.rk-province text {
+/* D3 SVG province paths */
+.nl-d3-province {
+  fill: #D6E4EF;
+  stroke: #fff;
+  stroke-width: 1.5px;
+  cursor: pointer;
+  transition: fill 120ms ease;
+}
+.nl-d3-province.hover  { fill: #FFCCCC; }
+.nl-d3-province.active { fill: var(--red); }
+
+.nl-d3-label {
   font-family: var(--font-sans);
   font-size: 7.5px;
   font-weight: 700;
-  fill: var(--ink-soft);
+  fill: #4A4A4A;
   pointer-events: none;
   text-anchor: middle;
   dominant-baseline: central;
-  transition: fill var(--t) var(--ease);
 }
-.rk-province:hover text { fill: var(--red); }
-.rk-province.active text { fill: var(--white); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Detail panel */
 .rk-detail-panel { display: flex; flex-direction: column; gap: 28px; }
@@ -784,4 +788,65 @@ input:checked ~ .rt-track::after { transform: translateX(16px); }
   .rk-map-panel { position: static; }
   .ts-grid { grid-template-columns: 1fr; }
   .vg-charts { grid-template-columns: 1fr; }
+}
+
+
+/* ══════════════════════════════════════
+   DRAG-AND-DROP THEMA RANKING
+══════════════════════════════════════ */
+.theme-drag-list { display: flex; flex-direction: column; gap: 3px; }
+
+.tdl-item {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.1);
+  cursor: grab; user-select: none;
+  transition: background var(--t) var(--ease), opacity var(--t) var(--ease);
+}
+.tdl-item:hover { background: rgba(255,255,255,.18); }
+.tdl-item.dragging { opacity: .4; cursor: grabbing; }
+.tdl-item.drag-over { background: rgba(255,255,255,.28); outline: 1.5px dashed rgba(255,255,255,.5); }
+
+.tdl-rank {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  color: var(--white);
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.tdl-item:first-child .tdl-rank { background: rgba(255,255,255,.45); }
+
+.tdl-icon { display: flex; color: rgba(255,255,255,.7); flex-shrink: 0; }
+.tdl-icon svg { width: 13px; height: 13px; }
+.tdl-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.9); flex: 1; line-height: 1.2; }
+.tdl-handle { color: rgba(255,255,255,.35); flex-shrink: 0; }
+.tdl-item:hover .tdl-handle { color: rgba(255,255,255,.6); }
+
+
+/* ══════════════════════════════════════
+   INFO TOOLTIP
+══════════════════════════════════════ */
+.info-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-muted); font-size: 12px;
+  padding: 1px 4px; border-radius: 50%; line-height: 1;
+  vertical-align: middle; margin-left: 3px;
+  transition: color var(--t) var(--ease), background var(--t) var(--ease);
+}
+.info-btn:hover { color: var(--red); background: var(--red-light); }
+
+.app-tooltip {
+  position: fixed; z-index: 700;
+  background: var(--navy);
+  color: rgba(255,255,255,.92);
+  font-family: var(--font-sans);
+  font-size: 12.5px; line-height: 1.6;
+  padding: 9px 13px;
+  border-radius: var(--radius);
+  box-shadow: 0 6px 24px rgba(0,0,0,.22);
+  pointer-events: none;
+  max-width: 240px;
 }
