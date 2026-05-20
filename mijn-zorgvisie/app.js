@@ -393,26 +393,220 @@ const AGENDA = [
   { dag: '2',  maand: 'JUL', type: 'Bijeenkomst', badge: 'bijeenkomst', title: 'Bestuurlijk overleg langdurige zorg', meta: 'Utrecht · VWS · 10:00 – 12:00' },
 ];
 
-const REGIO_ITEMS = {
-  'Noord-Holland': [
-    { title: 'Amsterdam UMC en Dijklander werken aan regionale spoedzorgketen', meta: 'Noord-Holland · 2 dagen geleden' },
-    { title: 'Wethouder: meer investeringen in wijkverpleging nodig', meta: 'Noord-Holland · 4 dagen geleden' },
-    { title: 'Transferpunt Noord-Holland West van start', meta: 'Noord-Holland · 1 week geleden' },
-  ],
-  'Zuid-Holland':  [{ title: 'Regio Rijnmond sluit samenwerkingsconvenant acute zorg', meta: 'Zuid-Holland · 1 dag geleden' }, { title: 'Haagse zorgorganisaties starten pilot zorgcoördinatie-app', meta: 'Zuid-Holland · 3 dagen geleden' }],
-  'Utrecht':       [{ title: 'UMC Utrecht en huisartsen starten wachtlijstoverleg', meta: 'Utrecht · Vandaag' }, { title: 'Provincie Utrecht investeert in regionale GGZ-samenwerking', meta: 'Utrecht · 2 dagen geleden' }],
-  'Noord-Brabant': [{ title: 'Brabantse ziekenhuizen testen gezamenlijk capaciteitsmodel', meta: 'Noord-Brabant · 3 dagen geleden' }],
-  'Gelderland':    [{ title: 'Gelderse zorgaanbieders lanceren regioplatform arbeidsmarkt', meta: 'Gelderland · Gisteren' }],
-  'Overijssel':    [{ title: 'ZGT en MST bundelen krachten in regio Oost', meta: 'Overijssel · 2 dagen geleden' }],
-  'Friesland':     [{ title: 'MCL en Tjongerschans: gecombineerde wachtlijstaanpak', meta: 'Friesland · 3 dagen geleden' }],
-  'Groningen':     [{ title: 'UMCG lanceert digitaal zorgnetwerk Noordoost-Nederland', meta: 'Groningen · Gisteren' }],
-  'Zeeland':       [{ title: 'Adrz en gemeenten starten pilot bereikbaarheid ouderenzorg', meta: 'Zeeland · 4 dagen geleden' }],
-  'Limburg':       [{ title: 'VieCuri en Zuyderland versterken samenwerking Midden-Limburg', meta: 'Limburg · 2 dagen geleden' }],
-  'Drenthe':       [{ title: 'Treant Zorggroep en huisartsen starten regio-overleg capaciteit', meta: 'Drenthe · 3 dagen geleden' }],
-  'Flevoland':     [{ title: 'MC Lelystad en partners werken aan regionale spoedketen', meta: 'Flevoland · 2 dagen geleden' }],
+
+/* ══════════════════════════════════════
+   THEMA ICONEN (SVG — geen emoji)
+══════════════════════════════════════ */
+const THEME_ICONS = {
+  'Arbeidsmarkt':           `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  'Passende zorg':          `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+  'Digitalisering':         `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+  'Capaciteitsdruk':        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+  'Regionale samenwerking': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  'Financiering':           `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
 };
 
-const KNOWN_THEMAS = new Set(ARTICLES.map(a => a.thema));
+/* ══════════════════════════════════════
+   REGIO DATA — uitgebreid met thema-tags
+══════════════════════════════════════ */
+const REGIO_ITEMS = {
+  'Noord-Holland': [
+    { title: 'Amsterdam UMC en Dijklander werken aan regionale spoedzorgketen', meta: 'Noord-Holland · 2 dagen geleden', thema: 'Regionale samenwerking', body: 'Amsterdam UMC en Dijklander Ziekenhuis zijn een samenwerking gestart voor een betere spoedzorgketen in Noord-Holland Noord. Het initiatief vloeit voort uit het IZA-uitvoeringsplan voor de regio en moet de doorstroom van acute patiënten verbeteren en onnodige SEH-bezoeken reduceren.' },
+    { title: 'Wethouder: meer investeringen in wijkverpleging nodig in regio', meta: 'Noord-Holland · 4 dagen geleden', thema: 'Capaciteitsdruk', body: 'De wethouder Zorg van Amsterdam heeft gepleit voor substantiële extra investeringen in wijkverpleging. De wachtlijsten in de regio zijn het afgelopen jaar met 18% gestegen, terwijl de capaciteit nauwelijks is toegenomen.' },
+    { title: 'Transferpunt Noord-Holland West van start gegaan', meta: 'Noord-Holland · 1 week geleden', thema: 'Regionale samenwerking', body: 'Een nieuw regionaal transferpunt voor Noord-Holland West is operationeel. Het punt coördineert de doorstroom van patiënten uit ziekenhuizen naar thuiszorg en verpleeghuizen, en moet de gemiddelde ligduur in ziekenhuizen met twee dagen bekorten.' },
+  ],
+  'Zuid-Holland':  [
+    { title: 'Regio Rijnmond sluit samenwerkingsconvenant acute zorg', meta: 'Zuid-Holland · 1 dag geleden', thema: 'Regionale samenwerking', body: 'Zeven zorgorganisaties in de regio Rijnmond hebben een samenwerkingsconvenant ondertekend voor de acute zorg. Het akkoord regelt de verdeling van complexe spoedeisende gevallen tussen de aangesloten ziekenhuizen.' },
+    { title: 'Haagse zorgorganisaties starten pilot zorgcoördinatie-app', meta: 'Zuid-Holland · 3 dagen geleden', thema: 'Digitalisering', body: 'Acht Haagse zorgorganisaties starten een gezamenlijke pilot met een digitale zorgcoördinatie-app. De app moet de overdracht tussen ziekenhuizen, huisartsen en wijkverpleging stroomlijnen.' },
+  ],
+  'Utrecht': [
+    { title: 'UMC Utrecht en huisartsen starten wachtlijstoverleg', meta: 'Utrecht · Vandaag', thema: 'Capaciteitsdruk', body: 'UMC Utrecht is een structureel overleg gestart met de huisartsenorganisaties in de regio over wachtlijstmanagement. Het overleg moet leiden tot betere afspraken over verwijzingen en terugverwijzing.' },
+    { title: 'Provincie Utrecht investeert in regionale GGZ-samenwerking', meta: 'Utrecht · 2 dagen geleden', thema: 'Regionale samenwerking', body: 'De provincie Utrecht trekt 4,2 miljoen euro uit voor het versterken van de regionale GGZ-samenwerking. Het geld wordt besteed aan een gezamenlijk crisisinterventie-team en een regionale wachttijstenbeurs.' },
+  ],
+  'Noord-Brabant': [{ title: 'Brabantse ziekenhuizen testen gezamenlijk capaciteitsmodel', meta: 'Noord-Brabant · 3 dagen geleden', thema: 'Capaciteitsdruk', body: 'Acht Brabantse ziekenhuizen testen een gezamenlijk capaciteitsplanningsmodel dat real-time inzicht geeft in beschikbare bedden en operatiekamercapaciteit in de regio.' }],
+  'Gelderland':    [{ title: 'Gelderse zorgaanbieders lanceren regioplatform arbeidsmarkt', meta: 'Gelderland · Gisteren', thema: 'Arbeidsmarkt', body: 'Dertig Gelderse zorgorganisaties hebben een gezamenlijk arbeidsmarktplatform gelanceerd. Via het platform kunnen medewerkers flexibel tussen de deelnemende organisaties werken.' }],
+  'Overijssel':    [{ title: 'ZGT en MST bundelen krachten in regio Oost', meta: 'Overijssel · 2 dagen geleden', thema: 'Regionale samenwerking', body: 'Ziekenhuisgroep Twente (ZGT) en Medisch Spectrum Twente (MST) hebben een vergaande samenwerking aangekondigd voor de regio Oost-Nederland.' }],
+  'Friesland':     [{ title: 'MCL en Tjongerschans: gecombineerde wachtlijstaanpak', meta: 'Friesland · 3 dagen geleden', thema: 'Capaciteitsdruk', body: 'Medisch Centrum Leeuwarden en Tjongerschans gaan wachtlijsten gezamenlijk aanpakken door capaciteit te delen voor electieve ingrepen.' }],
+  'Groningen':     [{ title: 'UMCG lanceert digitaal zorgnetwerk Noordoost-Nederland', meta: 'Groningen · Gisteren', thema: 'Digitalisering', body: 'Het UMCG heeft een digitaal zorgnetwerk gelanceerd dat zorgprofessionals in Groningen, Friesland en Drenthe verbindt voor telediagnostiek en consultatie op afstand.' }],
+  'Zeeland':       [{ title: 'Adrz en gemeenten starten pilot bereikbaarheid ouderenzorg', meta: 'Zeeland · 4 dagen geleden', thema: 'Passende zorg', body: 'Admiraal De Ruyter Ziekenhuis en drie Zeeuwse gemeenten starten een pilot om de zorgbereikbaarheid voor ouderen in dunbevolkte gebieden te verbeteren.' }],
+  'Limburg':       [{ title: 'VieCuri en Zuyderland versterken samenwerking Midden-Limburg', meta: 'Limburg · 2 dagen geleden', thema: 'Regionale samenwerking', body: 'VieCuri Medisch Centrum en Zuyderland hebben afspraken gemaakt over de taakverdeling in Midden-Limburg voor complexe specialistische zorg.' }],
+  'Drenthe':       [{ title: 'Treant Zorggroep en huisartsen starten regio-overleg capaciteit', meta: 'Drenthe · 3 dagen geleden', thema: 'Capaciteitsdruk', body: 'Treant Zorggroep en de Drentse huisartsenorganisaties zijn een structureel capaciteitsoverleg gestart om de doorstroom tussen de eerste en tweede lijn te verbeteren.' }],
+  'Flevoland':     [{ title: 'MC Lelystad en partners werken aan regionale spoedketen', meta: 'Flevoland · 2 dagen geleden', thema: 'Regionale samenwerking', body: 'MC Lelystad werkt samen met huisartsenposten en de RAV aan een versterkte regionale spoedketen voor Flevoland.' }],
+};
+
+/* ══════════════════════════════════════
+   OPGESLAGEN ARTIKELEN
+══════════════════════════════════════ */
+let savedArticleIds = new Set();
+
+function toggleBookmark(id, btn) {
+  if (savedArticleIds.has(id)) {
+    savedArticleIds.delete(id);
+    btn.classList.remove('saved');
+    btn.title = 'Opslaan voor later';
+  } else {
+    savedArticleIds.add(id);
+    btn.classList.add('saved');
+    btn.title = 'Opgeslagen';
+  }
+  updateSavedCount();
+}
+
+function updateSavedCount() {
+  const n = savedArticleIds.size;
+  const chip = document.getElementById('stat-saved-chip');
+  const el = document.getElementById('stat-saved');
+  if (n > 0) { chip.style.display = 'flex'; el.textContent = n; }
+  else { chip.style.display = 'none'; }
+}
+
+function renderOpgeslagen() {
+  const grid = document.getElementById('opgeslagen-grid');
+  grid.innerHTML = '';
+  if (!savedArticleIds.size) {
+    grid.innerHTML = `<div class="saved-empty" style="grid-column:1/-1">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <p>Je hebt nog geen artikelen opgeslagen.<br>Gebruik het bladwijzer-icoon op een artikel.</p>
+    </div>`;
+    return;
+  }
+  [...savedArticleIds].forEach((id, i) => {
+    const art = ARTICLES.find(a => a.id === id);
+    if (art) buildArticleCard(grid, art, i);
+  });
+}
+
+/* ══════════════════════════════════════
+   NOTIFICATIES
+══════════════════════════════════════ */
+const NOTIFICATIONS = [];
+let notifPanelOpen = false;
+
+function buildNotifications() {
+  // Genereer relevante notificaties op basis van geprioriteerde thema's
+  const themas = profile.themas.slice(0, 3);
+  const notifData = [
+    { thema: themas[0] || 'Arbeidsmarkt', title: `Nieuw artikel: ${ARTICLES.find(a=>a.thema===(themas[0]||'Arbeidsmarkt'))?.title || 'Actueel nieuws'}`, meta: 'Zojuist', unread: true },
+    { thema: themas[1] || 'Digitalisering', title: `Dossierupdate: ${themas[1] || 'Digitalisering'} — nieuwe analyse beschikbaar`, meta: '1 uur geleden', unread: true },
+    { thema: profile.regio, title: `Regionieuws ${profile.regio}: nieuw samenwerkingsinitiatief`, meta: '3 uur geleden', unread: false },
+    { thema: themas[2] || 'Financiering', title: `NZa publiceert nieuwe tarieven — relevant voor ${profile.sector}`, meta: 'Gisteren', unread: false },
+  ];
+  NOTIFICATIONS.length = 0;
+  notifData.forEach(n => NOTIFICATIONS.push(n));
+  renderNotifList();
+  updateNotifDot();
+}
+
+function renderNotifList() {
+  const list = document.getElementById('notif-list');
+  list.innerHTML = '';
+  if (!NOTIFICATIONS.length) {
+    list.innerHTML = '<p style="padding:16px;color:var(--ink-muted);font-size:13px;text-align:center">Geen notificaties</p>';
+    return;
+  }
+  NOTIFICATIONS.forEach((n, i) => {
+    const el = document.createElement('div');
+    el.className = `notif-item${n.unread ? ' unread' : ''}`;
+    el.innerHTML = `<div class="ni-dot${n.unread ? '' : ' read'}"></div><div class="ni-body"><div class="ni-title">${n.title}</div><div class="ni-meta">${n.thema} · ${n.meta}</div></div>`;
+    el.onclick = () => { n.unread = false; el.classList.remove('unread'); el.querySelector('.ni-dot').classList.add('read'); updateNotifDot(); };
+    list.appendChild(el);
+  });
+}
+
+function updateNotifDot() {
+  const dot = document.getElementById('notif-dot');
+  const hasUnread = NOTIFICATIONS.some(n => n.unread);
+  dot.style.display = hasUnread ? 'block' : 'none';
+}
+
+function toggleNotifPanel() {
+  const popup = document.getElementById('notif-popup');
+  notifPanelOpen = !notifPanelOpen;
+  popup.classList.toggle('open', notifPanelOpen);
+}
+
+function markAllRead() {
+  NOTIFICATIONS.forEach(n => n.unread = false);
+  renderNotifList();
+  updateNotifDot();
+}
+
+document.addEventListener('click', e => {
+  if (notifPanelOpen && !e.target.closest('.notif-bell-wrap')) {
+    document.getElementById('notif-popup').classList.remove('open');
+    notifPanelOpen = false;
+  }
+});
+
+/* ══════════════════════════════════════
+   ZOEKFUNCTIE
+══════════════════════════════════════ */
+function openSearch() {
+  document.getElementById('search-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('search-main-input').focus(), 50);
+  doSearch('');
+}
+
+function closeSearch() {
+  document.getElementById('search-overlay').classList.remove('open');
+  document.getElementById('search-main-input').value = '';
+}
+
+function closeSearchOnOutside(e) {
+  if (e.target === document.getElementById('search-overlay')) closeSearch();
+}
+
+function doSearch(q) {
+  const results = document.getElementById('search-results');
+  const query = q.toLowerCase().trim();
+  if (!query) {
+    results.innerHTML = '<div class="search-empty">Begin te typen om te zoeken in artikelen en dossiers</div>';
+    return;
+  }
+  const hits = ARTICLES.filter(a =>
+    a.title.toLowerCase().includes(query) ||
+    a.excerpt.toLowerCase().includes(query) ||
+    a.thema.toLowerCase().includes(query)
+  ).slice(0, 8);
+  if (!hits.length) {
+    results.innerHTML = '<div class="search-empty">Geen resultaten gevonden voor "' + q + '"</div>';
+    return;
+  }
+  results.innerHTML = '';
+  hits.forEach(a => {
+    const el = document.createElement('div');
+    el.className = 'search-result-item';
+    el.innerHTML = `<span class="sri-tag">${a.thema}</span><div><div class="sri-title">${a.title}</div><div class="sri-excerpt">${a.excerpt.substring(0,80)}…</div></div>`;
+    el.onclick = () => { closeSearch(); openArtikel(a.id); };
+    results.appendChild(el);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSearch();
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+});
+
+/* ══════════════════════════════════════
+   WEKELIJKSE SAMENVATTING
+══════════════════════════════════════ */
+function renderWeeklySummary() {
+  const themas = profile.themas.slice(0, 3);
+  const h = new Date().getHours();
+  const greeting = h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond';
+  document.getElementById('ws-title').textContent = `${greeting} — dit speelt er deze week in jouw thema's`;
+  const itemsEl = document.getElementById('ws-items');
+  itemsEl.innerHTML = '';
+  themas.forEach(t => {
+    const arts = ARTICLES.filter(a => a.thema === t);
+    const latest = arts[0];
+    if (!latest) return;
+    const el = document.createElement('div');
+    el.className = 'ws-item';
+    el.textContent = `${t}: "${latest.title.substring(0, 60)}${latest.title.length > 60 ? '…' : ''}"`;
+    itemsEl.appendChild(el);
+  });
+}
 
 /* ══════════════════════════════════════
    ONBOARDING — selectie
@@ -489,7 +683,7 @@ function goStep(n) {
   document.querySelectorAll('.ls-item').forEach(el => {
     const num = parseInt(el.dataset.n);
     el.classList.toggle('active', num === n);
-    el.classList.toggle('done',   num < n);
+    el.classList.toggle('done', num < n);
   });
 }
 
@@ -521,16 +715,33 @@ function resetOnboarding() {
 ══════════════════════════════════════ */
 function navigateTo(page, linkEl) {
   if (linkEl) {
-    event && event.preventDefault();
+    event && event.preventDefault && event.preventDefault();
+    // Topbar nav links
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    linkEl.classList.add('active');
+    // Mobile nav buttons
+    document.querySelectorAll('.mn-item').forEach(l => l.classList.remove('active'));
+    // Mark the clicked element
+    if (linkEl.classList.contains('nav-link')) linkEl.classList.add('active');
+    if (linkEl.classList.contains('mn-item')) {
+      linkEl.classList.add('active');
+      // Sync topbar
+      const tl = document.querySelector(`.nav-link[data-page="${page}"]`);
+      if (tl) tl.classList.add('active');
+    } else {
+      // Sync mobile
+      const ml = document.querySelector(`.mn-item[data-page="${page}"]`);
+      if (ml) ml.classList.add('active');
+    }
   }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById(`page-${page}`).classList.add('active');
+  const pg = document.getElementById(`page-${page}`);
+  if (pg) pg.classList.add('active');
   currentPage = page;
-  if (page === 'artikelen') renderArtikelenPagina();
-  if (page === 'dossiers')  renderDossiers();
-  if (page === 'agenda')    renderAgenda();
+  if (page === 'artikelen')  renderArtikelenPagina();
+  if (page === 'dossiers')   renderDossiers();
+  if (page === 'agenda')     renderAgenda();
+  if (page === 'opgeslagen') renderOpgeslagen();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ══════════════════════════════════════
@@ -554,12 +765,14 @@ function buildDashboard() {
   const h = new Date().getHours();
   document.getElementById('welcome-title').textContent = `${h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond'}, Katy`;
 
+  // Sidebar thema's met SVG iconen
   const sb = document.getElementById('sidebar-themes');
   sb.innerHTML = '';
   profile.themas.forEach(t => {
     const btn = document.createElement('button');
     btn.className = 'theme-tag';
-    btn.innerHTML = `<span>${DUIDING[t]?.icon || '●'}</span>${t}`;
+    const iconSvg = THEME_ICONS[t] || `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/></svg>`;
+    btn.innerHTML = `<span style="display:flex;color:rgba(255,255,255,.8)">${iconSvg}</span><span>${t}</span>`;
     btn.onclick = () => setPriority(t);
     sb.appendChild(btn);
   });
@@ -568,9 +781,19 @@ function buildDashboard() {
   sel.innerHTML = '<option value="">— Geen prioriteit —</option>';
   profile.themas.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; sel.appendChild(o); });
 
+  // Regio link
+  const regio = profile.regio;
+  const regioLink = document.getElementById('regio-more-link');
+  if (regioLink) {
+    regioLink.href = '#';
+    regioLink.onclick = (e) => { e.preventDefault(); navigateTo('artikelen', document.querySelector('[data-page="artikelen"]')); };
+  }
+
+  renderWeeklySummary();
   renderArticles();
   renderDuiding();
   renderRegio();
+  buildNotifications();
 }
 
 /* ══════════════════════════════════════
@@ -595,9 +818,17 @@ function renderDuiding() {
     const card = document.createElement('div');
     card.className = 'duiding-card';
     card.style.animationDelay = `${i * 65}ms`;
-    card.innerHTML = `<div class="dc-header"><div class="dc-icon-wrap">${d.icon}</div><div><div class="dc-theme-name">${t}</div><div class="dc-label">Achtergrond &amp; context</div></div></div><div class="dc-body"><p class="dc-text">${d.text}</p><span class="dc-cta">Bekijk artikelen →</span></div>`;
+    const iconSvg = THEME_ICONS[t] || '';
+    card.innerHTML = `
+      <div class="dc-header">
+        <div class="dc-icon-wrap">${iconSvg}</div>
+        <div><div class="dc-theme-name">${t}</div><div class="dc-label">Achtergrond &amp; context</div></div>
+      </div>
+      <div class="dc-body">
+        <p class="dc-text">${d.text}</p>
+        <span class="dc-cta">Bekijk artikelen →</span>
+      </div>`;
     card.style.cursor = 'pointer';
-    card.title = `Bekijk alle artikelen over ${t}`;
     card.onclick = () => {
       artikelenFilter.thema = t;
       document.getElementById('filter-pills').innerHTML = '';
@@ -614,26 +845,60 @@ function renderRegio() {
   if (!regioFilterOn) { section.style.display = 'none'; return; }
   section.style.display = 'block';
   const items = REGIO_ITEMS[profile.regio] || [];
-  if (!items.length) { list.innerHTML = '<p style="color:var(--ink-muted);font-size:14px">Geen regionale berichten gevonden.</p>'; return; }
+  if (!items.length) {
+    list.innerHTML = '<p style="color:var(--ink-muted);font-size:14px">Geen regionale berichten gevonden.</p>';
+    return;
+  }
   items.forEach((item, i) => {
     const el = document.createElement('div');
     el.className = 'regio-item';
     el.style.animationDelay = `${i * 60}ms`;
-    el.innerHTML = `<div class="ri-pin"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><div><div class="ri-title">${item.title}</div><div class="ri-meta">${item.meta}</div></div><div class="ri-chevron">→</div>`;
+    el.innerHTML = `
+      <div class="ri-pin">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      </div>
+      <div class="ri-body">
+        <div class="ri-thema-tag">${item.thema || profile.regio}</div>
+        <div class="ri-title">${item.title}</div>
+        <div class="ri-meta">${item.meta}</div>
+      </div>
+      <div class="ri-chevron">→</div>`;
+    el.onclick = () => openRegioArtikel(item);
     list.appendChild(el);
   });
 }
 
+function openRegioArtikel(item) {
+  prevPage = currentPage;
+  const el = document.getElementById('article-detail-content');
+  el.innerHTML = `
+    <span class="ad-tag" style="background:var(--amber-light);color:#92400E">${item.thema || profile.regio}</span>
+    <h1 class="ad-title">${item.title}</h1>
+    <div class="ad-meta">
+      <span>${item.meta}</span>
+      <span>Redactie Zorgvisie</span>
+    </div>
+    <div class="ad-body"><p>${item.body}</p></div>`;
+  document.getElementById('detail-back-btn').onclick = () => navigateTo(prevPage, document.querySelector(`[data-page="${prevPage}"]`));
+  navigateTo('artikel-detail', null);
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.page === prevPage));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 /* ══════════════════════════════════════
-   ARTIKEL CARD
+   ARTIKEL CARD — met bladwijzer
 ══════════════════════════════════════ */
 function buildArticleCard(container, art, index) {
   const color = THEME_COLORS[art.thema] || '#888888';
   const card  = document.createElement('div');
   card.className = 'article-card';
   card.style.animationDelay = `${index * 55}ms`;
+  const isSaved = savedArticleIds.has(art.id);
   card.innerHTML = `
     ${art.img ? `<img class="ac-image" src="${art.img}" alt="${art.title}" loading="lazy" onerror="this.onerror=null;this.src='https://picsum.photos/seed/art${art.id}/800/400'">` : ''}
+    <button class="bookmark-btn${isSaved ? ' saved' : ''}" title="${isSaved ? 'Opgeslagen' : 'Opslaan voor later'}" onclick="event.stopPropagation(); toggleBookmark(${art.id}, this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+    </button>
     <div class="ac-stripe" style="background:${color}"></div>
     <div class="ac-body">
       <div class="ac-top">
@@ -656,8 +921,6 @@ const ZORG_FOTOS = [
   'photo-1576091160550-2173dba999ef', 'photo-1504813184591-01572f98c85f',
   'photo-1579684385127-1571037e9d45', 'photo-1530026186672-2cd00ffc50d1',
   'photo-1576671081837-5c4ab9c07dba', 'photo-1516841273335-e39b37888115',
-  'photo-1519494026-f1d59edd8df6',   'photo-1584820927498-cfe5211fd8bf',
-  'photo-1516574187841-cb9cc2ca948b', 'photo-1454165804606-c3d57bc86b40',
 ];
 
 function buildCustomThemePlaceholder(container, thema, index) {
@@ -668,12 +931,10 @@ function buildCustomThemePlaceholder(container, thema, index) {
   card.className = 'article-card';
   card.style.animationDelay = `${index * 55}ms`;
   card.innerHTML = `
-    <img class="ac-image" src="${imgUrl}" alt="${thema}" loading="lazy" onerror="this.onerror=null;this.src='https://picsum.photos/seed/${encodeURIComponent(thema)}/800/400'">
+    <img class="ac-image" src="${imgUrl}" alt="${thema}" loading="lazy">
     <div class="ac-stripe" style="background:${color}"></div>
     <div class="ac-body">
-      <div class="ac-top">
-        <span class="ac-tag" style="background:#f3f4f6;color:${color}">${thema}</span>
-      </div>
+      <div class="ac-top"><span class="ac-tag" style="background:#f3f4f6;color:${color}">${thema}</span></div>
       <div class="ac-title">Artikelen over ${thema}</div>
       <div class="ac-excerpt">Op Zorgvisie.nl zijn artikelen beschikbaar over dit onderwerp. In de live omgeving verschijnen ze hier automatisch op basis van jouw profiel.</div>
       <div class="ac-footer"><span class="ac-date" style="color:var(--ink-muted)">Zorgvisie.nl</span></div>
@@ -694,10 +955,11 @@ function openArtikel(id) {
 
   let duidingHtml = '';
   if (ctx) {
+    const iconSvg = THEME_ICONS[art.thema] || '';
     duidingHtml = `
     <div class="ad-duiding-blok">
       <div class="adb-header">
-        <span class="adb-icon">🔍</span>
+        <span class="adb-icon" style="color:var(--red)">${iconSvg}</span>
         <div>
           <div class="adb-title">Thematische duiding voor jou</div>
           <div class="adb-sub">${profile.functie || 'Professional'} · ${profile.sector || 'Zorg'}</div>
@@ -714,14 +976,19 @@ function openArtikel(id) {
   }
 
   const el = document.getElementById('article-detail-content');
+  const isSaved = savedArticleIds.has(art.id);
   el.innerHTML = `
     ${art.img ? `<img class="ad-hero" src="${art.img}" alt="${art.title}" loading="lazy" onerror="this.onerror=null;this.src='https://picsum.photos/seed/art${art.id}/800/400'">` : ''}
     <span class="ad-tag" style="background:${color}20;color:${color}">${art.thema}</span>
     <h1 class="ad-title">${art.title}</h1>
     <div class="ad-meta">
       <span>📅 ${art.datum}</span>
-      <span>⏱ ${art.minuten} minuten leestijd</span>
-      <span>✍️ Redactie Zorgvisie</span>
+      <span>⏱ ${art.minuten} min leestijd</span>
+      <span>Redactie Zorgvisie</span>
+      <button onclick="toggleBookmark(${art.id}, this)" class="bookmark-btn" style="position:static;opacity:1;width:auto;height:auto;padding:5px 12px;border-radius:99px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:5px;${isSaved ? 'background:var(--red-light);border-color:var(--red);color:var(--red)' : ''}">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="${isSaved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        ${isSaved ? 'Opgeslagen' : 'Opslaan'}
+      </button>
     </div>
     <div class="ad-body">${art.body}</div>
     ${duidingHtml}
@@ -792,7 +1059,7 @@ function renderArtikelenGrid() {
 }
 
 /* ══════════════════════════════════════
-   DOSSIERS
+   DOSSIERS — met SVG iconen
 ══════════════════════════════════════ */
 function renderDossiers() {
   const grid = document.getElementById('dossiers-grid');
@@ -801,8 +1068,14 @@ function renderDossiers() {
     const card = document.createElement('div');
     card.className = 'dossier-card';
     card.style.animationDelay = `${i * 60}ms`;
+    const iconSvg = THEME_ICONS[d.thema] || '';
+    const color = THEME_COLORS[d.thema] || '#CC0000';
     card.innerHTML = `
-      <div class="dos-header"><span class="dos-icon">${d.icon}</span><span class="dos-count">${d.artikelen} artikelen</span></div>
+      <div class="ac-stripe" style="background:${color}"></div>
+      <div class="dos-header">
+        <div class="dos-icon-wrap">${iconSvg}</div>
+        <span class="dos-count">${d.artikelen} artikelen</span>
+      </div>
       <div class="dos-body">
         <div class="dos-tag">${d.thema}</div>
         <div class="dos-title">${d.title}</div>
