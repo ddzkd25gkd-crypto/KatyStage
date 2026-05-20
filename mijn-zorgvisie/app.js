@@ -743,6 +743,7 @@ function navigateTo(page, linkEl) {
   if (page === 'dossiers')   renderDossiers();
   if (page === 'agenda')     renderAgenda();
   if (page === 'opgeslagen') renderOpgeslagen();
+  if (page === 'mijn-regio') renderMijnRegio();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1146,3 +1147,274 @@ function setPriority(val) {
 }
 
 window.onload = () => goStep(1);
+
+/* ══════════════════════════════════════
+   MIJN REGIO — DATA
+══════════════════════════════════════ */
+const ALLE_REGIO_NAMEN = ['Noord-Holland','Zuid-Holland','Utrecht','Noord-Brabant','Gelderland','Overijssel','Friesland','Groningen','Zeeland','Limburg','Drenthe','Flevoland'];
+
+const REGIO_SIGNALEN = {
+  'Noord-Holland':  { 'Arbeidsmarkt': { niveau:'hoog',   signaal:'Ernstige tekorten in VVT en GGZ; inhuurkosten 22% boven landelijk gemiddelde.' }, 'Passende zorg': { niveau:'middel', signaal:'IZA-plan loopt; 3 gemeenten stapten uit wegens governance-conflicten.' }, 'Digitalisering': { niveau:'hoog', signaal:'Amsterdam UMC leidt AI-pilots; ongelijke digitale volwassenheid in regio.' }, 'Capaciteitsdruk': { niveau:'hoog', signaal:'SEH-wachttijden overschrijden structureel 4-uursnorm in Amsterdam.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'Transferpunt NH-West gestart; uitrol vertraagd door bestuurlijke afstemming.' }, 'Financiering': { niveau:'middel', signaal:'Ziekenhuizen rapporteren gemiddeld 3,8% tekort door loonkosten en NZa-plafond.' } },
+  'Zuid-Holland':   { 'Arbeidsmarkt': { niveau:'hoog',   signaal:'Haagse en Rotterdamse zorg kampen met structureel verzuim boven 8%.' }, 'Passende zorg': { niveau:'hoog', signaal:'Rijnmond-convenant acute zorg ondertekend; substitutieopgave voor 2027 groot.' }, 'Digitalisering': { niveau:'middel', signaal:'Pilot zorgcoördinatie-app in Den Haag loopt; opschaling onduidelijk.' }, 'Capaciteitsdruk': { niveau:'hoog', signaal:'Wachtlijsten GGZ en ouderenzorg groeien harder dan landelijk gemiddelde.' }, 'Regionale samenwerking': { niveau:'hoog', signaal:'Sterke samenwerking Rijnmond-regio; Haagse regio minder ver.' }, 'Financiering': { niveau:'hoog', signaal:'Erasmus MC meldt €18M tekort; kleinere VVT-instellingen onder liquiditeitsdruk.' } },
+  'Utrecht':        { 'Arbeidsmarkt': { niveau:'middel', signaal:'Tekorten merkbaar, maar UMC Utrecht trekt goed aan; zijinstroom stijgt.' }, 'Passende zorg': { niveau:'laag', signaal:'Landelijk voorbeeldregio: 7 zorgpartijen en 3 gemeenten met breed IZA-plan.' }, 'Digitalisering': { niveau:'middel', signaal:'FHIR-implementatie loopt bij UMC; kleinere instellingen in achterstand.' }, 'Capaciteitsdruk': { niveau:'middel', signaal:'UMC en huisartsen starten wachtlijstoverleg; GGZ nog knelpunt.' }, 'Regionale samenwerking': { niveau:'laag', signaal:'Provincie investeert €4,2M in regionale GGZ-samenwerking en crisisteam.' }, 'Financiering': { niveau:'middel', signaal:'Financieel gezond, maar reserves nemen af door gestegen energiekosten.' } },
+  'Noord-Brabant':  { 'Arbeidsmarkt': { niveau:'middel', signaal:'Brabantse ziekenhuizen testen gezamenlijk capaciteitsmodel voor flex-roosters.' }, 'Passende zorg': { niveau:'middel', signaal:'Pilot uitkomstbekostiging Eindhoven toont 8% minder ziekenhuisopnames.' }, 'Digitalisering': { niveau:'middel', signaal:'Catharina Ziekenhuis loopt voor op AI in diagnostiek; regio volgt versneld.' }, 'Capaciteitsdruk': { niveau:'hoog', signaal:'Acht ziekenhuizen testen gezamenlijk real-time capaciteitsmodel.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'IZA-uitvoeringsplan goedgekeurd; focus op eerste lijn en preventie.' }, 'Financiering': { niveau:'middel', signaal:'Tariefstijging dekt 60% van loonkostenstijging; reservepositie verslechtert.' } },
+  'Gelderland':     { 'Arbeidsmarkt': { niveau:'middel', signaal:'30 organisaties lanceerden gezamenlijk arbeidsmarktplatform voor flex-inzet.' }, 'Passende zorg': { niveau:'middel', signaal:'Nijmegen loopt voor met regionaal zorgcoördinatiepunt; 12% minder dubbele contacten.' }, 'Digitalisering': { niveau:'laag',   signaal:'Radboudumc trekt regio mee in data-uitwisseling; FHIR-adoptie bovengemiddeld.' }, 'Capaciteitsdruk': { niveau:'middel', signaal:'Wachtlijsten specialistische GGZ structureel te lang; actieplan in voorbereiding.' }, 'Regionale samenwerking': { niveau:'laag', signaal:'IZA-netwerk Oost meest volwassen buiten Randstad; leidend op governance.' }, 'Financiering': { niveau:'laag', signaal:'Financieel stabielst van de oostelijke provincies; solide reserveposities.' } },
+  'Overijssel':     { 'Arbeidsmarkt': { niveau:'middel', signaal:'ZGT en MST bundelen krachten; gedeelde werving voor verpleging.' }, 'Passende zorg': { niveau:'middel', signaal:'Twente-regio test netwerkzorg model voor chronische aandoeningen.' }, 'Digitalisering': { niveau:'middel', signaal:'MST EPD-migratie succesvol; ZGT volgt in 2027.' }, 'Capaciteitsdruk': { niveau:'laag',   signaal:'Lage bevolkingsdichtheid geeft relatief meer speelruimte; minder SEH-druk.' }, 'Regionale samenwerking': { niveau:'laag',  signaal:'ZGT-MST-samenwerking geldt als best practice voor fusieloos samenwerken.' }, 'Financiering': { niveau:'middel', signaal:'Marge krap maar stabiel; beide ziekenhuizen hanteren voorzichtig investeringsbeleid.' } },
+  'Friesland':      { 'Arbeidsmarkt': { niveau:'hoog',   signaal:'Krimp beroepsbevolking versnelt tekort; dunne bevolking maakt werving kostbaar.' }, 'Passende zorg': { niveau:'middel', signaal:'MCL en Tjongerschans combineren wachtlijstaanpak voor electieve ingrepen.' }, 'Digitalisering': { niveau:'middel', signaal:'Telezorg in dunbevolkte gebieden groeit; infrastructuur soms beperkend.' }, 'Capaciteitsdruk': { niveau:'hoog',   signaal:'Leeuwarden heeft regionaal monopolie; wachttijden stijgen bij krimp aanbod.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'MCL-Tjongerschans-samenwerking stabiel; toevoegen Drachten in bespreking.' }, 'Financiering': { niveau:'hoog', signaal:'Dunbevolkt aanbod = hogere kosten per patiënt; bekostiging niet aangepast.' } },
+  'Groningen':      { 'Arbeidsmarkt': { niveau:'hoog',   signaal:'Krimp én vergrijzing creëren dubbele druk; UMCG-vertrek groot risico.' }, 'Passende zorg': { niveau:'laag',   signaal:'UMCG zet in op regionetwerk telediagnostiek; substitutie van specialistenzorg.' }, 'Digitalisering': { niveau:'laag',   signaal:'UMCG lanceert digitaal zorgnetwerk Noordoost voor telediagnostiek.' }, 'Capaciteitsdruk': { niveau:'middel', signaal:'Zorgcapaciteit geconcentreerd in Groningen-stad; platteland onderbedeeld.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'Drents-Gronings overleg actief; samenwerking moeizaam door provinciale grenzen.' }, 'Financiering': { niveau:'hoog',   signaal:'Structurele bekostigingsnadelen voor dunbevolkte regio nog niet opgelost in NZa-model.' } },
+  'Zeeland':        { 'Arbeidsmarkt': { niveau:'hoog',   signaal:'Kleinste zorgarbeidsmarkt van NL; werving uit andere provincies noodzakelijk.' }, 'Passende zorg': { niveau:'middel', signaal:'Adrz en gemeenten starten pilot bereikbaarheid ouderenzorg in dunne gebieden.' }, 'Digitalisering': { niveau:'middel', signaal:'Pilot uitkomstbekostiging chronische zorg toont veelbelovende eerste resultaten.' }, 'Capaciteitsdruk': { niveau:'hoog',   signaal:'Adrz enige ziekenhuis; geen uitwijkmogelijkheid bij piekbelasting.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'Samenwerking Zeeland-Brabant in acute zorg in voorbereiding.' }, 'Financiering': { niveau:'hoog',   signaal:'Monopoliepositie Adrz én krappe bevolkingsbasis leiden tot structureel kostenniveau.' } },
+  'Limburg':        { 'Arbeidsmarkt': { niveau:'hoog',   signaal:'Krimp en vergrijzing bevolking leidt tot dalende instroom zorgopleidingen.' }, 'Passende zorg': { niveau:'middel', signaal:'VieCuri en Zuyderland spreken taakverdeling af; specialisatie vervangt duplicatie.' }, 'Digitalisering': { niveau:'middel', signaal:'Mutsaersstichting GGZ loopt voor op e-health; Zuyderland volgt langzaam.' }, 'Capaciteitsdruk': { niveau:'hoog',   signaal:'GGZ-wachtlijsten in Limburg hoogst van alle provincies buiten Randstad.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'VieCuri-Zuyderland-akkoord Midden-Limburg als voorbeeld voor specialisatie.' }, 'Financiering': { niveau:'hoog',   signaal:'Meeste Limburgse instellingen opereren al jaren met negatieve marge.' } },
+  'Drenthe':        { 'Arbeidsmarkt': { niveau:'middel', signaal:'Treant Zorggroep kampt met structureel tekort verpleegkundigen; verzuim hoog.' }, 'Passende zorg': { niveau:'middel', signaal:'Treant en huisartsen starten capaciteitsoverleg voor betere doorstroom.' }, 'Digitalisering': { niveau:'laag',   signaal:'Treant digitaliseringsplan loopt; focus op administratievermindering.' }, 'Capaciteitsdruk': { niveau:'middel', signaal:'Wachttijden onder landelijk gemiddelde; dunbevolktheid geeft buffer.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'Drents-Gronings overleg over spoedzorg loopt maar levert nog weinig op.' }, 'Financiering': { niveau:'middel', signaal:'Treant financieel kwetsbaar; reserves onvoldoende voor EPD-vervanging.' } },
+  'Flevoland':      { 'Arbeidsmarkt': { niveau:'middel', signaal:'Jonge bevolkingsopbouw geeft tijdelijk voordeel; vergrijzing accelereert snel.' }, 'Passende zorg': { niveau:'middel', signaal:'MC Lelystad bouwt spoedketen met huisartsenposten en RAV.' }, 'Digitalisering': { niveau:'middel', signaal:'Snelgroeiende regio trekt digitale zorgstartups aan; integratie nog beperkt.' }, 'Capaciteitsdruk': { niveau:'hoog',   signaal:'MC Lelystad enige ziekenhuis; capaciteit te krap voor groeiende populatie.' }, 'Regionale samenwerking': { niveau:'middel', signaal:'Samenwerking met NH en Utrecht via transferpunten in opbouw.' }, 'Financiering': { niveau:'middel', signaal:'Groeiregio vraagt investeringen; bekostiging loopt achter op demografische realiteit.' } },
+};
+
+const REGIO_SCORES = {
+  'Noord-Holland':  { 'Arbeidsmarkt':9, 'Passende zorg':5, 'Digitalisering':8, 'Capaciteitsdruk':9, 'Regionale samenwerking':5, 'Financiering':6 },
+  'Zuid-Holland':   { 'Arbeidsmarkt':8, 'Passende zorg':8, 'Digitalisering':5, 'Capaciteitsdruk':8, 'Regionale samenwerking':7, 'Financiering':8 },
+  'Utrecht':        { 'Arbeidsmarkt':5, 'Passende zorg':2, 'Digitalisering':5, 'Capaciteitsdruk':5, 'Regionale samenwerking':2, 'Financiering':4 },
+  'Noord-Brabant':  { 'Arbeidsmarkt':5, 'Passende zorg':5, 'Digitalisering':5, 'Capaciteitsdruk':7, 'Regionale samenwerking':5, 'Financiering':5 },
+  'Gelderland':     { 'Arbeidsmarkt':5, 'Passende zorg':5, 'Digitalisering':3, 'Capaciteitsdruk':5, 'Regionale samenwerking':2, 'Financiering':3 },
+  'Overijssel':     { 'Arbeidsmarkt':5, 'Passende zorg':4, 'Digitalisering':5, 'Capaciteitsdruk':3, 'Regionale samenwerking':3, 'Financiering':4 },
+  'Friesland':      { 'Arbeidsmarkt':8, 'Passende zorg':5, 'Digitalisering':5, 'Capaciteitsdruk':7, 'Regionale samenwerking':5, 'Financiering':7 },
+  'Groningen':      { 'Arbeidsmarkt':9, 'Passende zorg':3, 'Digitalisering':3, 'Capaciteitsdruk':5, 'Regionale samenwerking':5, 'Financiering':8 },
+  'Zeeland':        { 'Arbeidsmarkt':9, 'Passende zorg':5, 'Digitalisering':5, 'Capaciteitsdruk':8, 'Regionale samenwerking':5, 'Financiering':9 },
+  'Limburg':        { 'Arbeidsmarkt':8, 'Passende zorg':5, 'Digitalisering':5, 'Capaciteitsdruk':8, 'Regionale samenwerking':5, 'Financiering':9 },
+  'Drenthe':        { 'Arbeidsmarkt':5, 'Passende zorg':4, 'Digitalisering':3, 'Capaciteitsdruk':4, 'Regionale samenwerking':4, 'Financiering':5 },
+  'Flevoland':      { 'Arbeidsmarkt':5, 'Passende zorg':5, 'Digitalisering':5, 'Capaciteitsdruk':7, 'Regionale samenwerking':5, 'Financiering':5 },
+};
+// Score 1=laag urgentie, 10=hoog urgentie
+
+const SAMENWERKINGSVERBANDEN = {
+  'Noord-Holland':  [
+    { titel:'Transferpunt Noord-Holland West', partijen:['Amsterdam UMC','Dijklander','Thuiszorg NHN'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Coördineert doorstroom van patiënten van ziekenhuizen naar thuiszorg en verpleeghuizen. Doel: gemiddelde ligduur bekorten met 2 dagen. Actief sinds Q1 2026.' },
+    { titel:'Digitaal Zorgnetwerk Metropoolregio', partijen:['OLVG','Spaarne Gasthuis','Huisartsen Amsterdam'], themas:['Digitalisering','Passende zorg'], detail:'Pilot voor digitale overdracht via FHIR tussen ziekenhuizen en huisartsenpraktijken in de metropoolregio. Budget: €2,4M over 3 jaar.' },
+  ],
+  'Zuid-Holland':   [
+    { titel:'Convenant Acute Zorg Rijnmond', partijen:['Erasmus MC','Maasstad','IJsselland','ROAZ ZH'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Regelt taakverdeling bij complexe spoedeisende gevallen. Partijen wisselen real-time capaciteitsdata uit via gedeeld platform.' },
+    { titel:'Haags Digitaal Zorgplatform', partijen:['HagaZiekenhuis','MCH','8 huisartsenpraktijken'], themas:['Digitalisering'], detail:'Pilot met digitale zorgcoördinatie-app voor naadloze overdracht tussen ziekenhuis, huisarts en wijkverpleging.' },
+  ],
+  'Utrecht':        [
+    { titel:'Breed IZA-Convenant Utrecht', partijen:['UMC Utrecht','Diakonessenhuis','Thuiszorg Utrecht','Gemeente Utrecht'], themas:['Regionale samenwerking','Passende zorg'], detail:'Zeven zorgorganisaties en drie gemeenten ondertekenden dit uitvoeringsplan. Bevat afspraken over thuiszorgcapaciteit, preventie en een regionaal zorgcoördinatiepunt.' },
+    { titel:'Regionale GGZ-Samenwerking', partijen:['Altrecht','UMC Utrecht','GGD Midden-Nederland'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Provincie Utrecht trekt €4,2M uit voor gezamenlijk crisisinterventie-team en regionale wachtlijstenbeurs GGZ.' },
+  ],
+  'Noord-Brabant':  [
+    { titel:'Brabants Capaciteitsmodel', partijen:['Catharina','MMC','Amphia','ETZ','CWZ','JBZ','Bernhoven','Bravis'], themas:['Capaciteitsdruk','Digitalisering'], detail:'Acht ziekenhuizen testen real-time capaciteitsplanningsmodel. Geeft inzicht in beschikbare bedden en operatiekamercapaciteit in de regio.' },
+    { titel:'Pilot Uitkomstbekostiging Eindhoven', partijen:['Catharina','Huisartsen Eindhoven','Zorgkantoor VGZ'], themas:['Financiering','Passende zorg'], detail:'Na één jaar laat de pilot 8% minder ziekenhuisopnames zien in de pilotpopulatie. Data-infrastructuur wordt versterkt voor opschaling.' },
+  ],
+  'Gelderland':     [
+    { titel:'Regionaal Zorgcoördinatiepunt Nijmegen', partijen:['Radboudumc','Canisius-Wilhelmina','Zorggroep Nijmegen'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Na drie maanden rapporteert het coördinatiepunt 12% minder dubbele zorgcontacten en 2 dagen kortere overdrachtstijd.' },
+    { titel:'Gelderse Arbeidsmarktalliantie', partijen:['30 zorgorganisaties','ROC Nijmegen','ROC Arnhem'], themas:['Arbeidsmarkt'], detail:'Platform voor flex-inzet tussen deelnemende organisaties. Medewerkers kunnen tijdelijk bij andere organisaties werken zonder te wisselen van werkgever.' },
+  ],
+  'Overijssel':     [
+    { titel:'ZGT-MST Strategische Samenwerking', partijen:['Ziekenhuisgroep Twente','Medisch Spectrum Twente'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Vergaande samenwerking zonder fusie: gedeelde back-office, gezamenlijke inkoop en taakverdeling in specialistische zorg.' },
+    { titel:'Netwerkzorg Chronisch Twente', partijen:['MST','Huisartsen Twente','Carintreggeland'], themas:['Passende zorg'], detail:'Model voor integrale netwerkzorg bij chronische aandoeningen; patiënt blijft ingeschreven bij eigen huisarts maar krijgt gecoördineerde zorg.' },
+  ],
+  'Friesland':      [
+    { titel:'MCL-Tjongerschans Wachtlijstaanpak', partijen:['MCL','Tjongerschans'], themas:['Capaciteitsdruk'], detail:'Twee ziekenhuizen delen capaciteit voor electieve ingrepen om wachtlijsten te verkorten. Eerste resultaten: 15% kortere wachttijd voor dagchirurgie.' },
+    { titel:'Telezorg Friesland', partijen:['MCL','Thuiszorg Friesland','GGD Fryslân'], themas:['Digitalisering','Passende zorg'], detail:'Telezorg voor patiënten op afstand van ziekenhuizen. Focus op hart- en longpatiënten in dunbevolkte gebieden.' },
+  ],
+  'Groningen':      [
+    { titel:'Digitaal Zorgnetwerk Noordoost', partijen:['UMCG','MCL','Treant'], themas:['Digitalisering','Regionale samenwerking'], detail:'Verbindt zorgprofessionals in Groningen, Friesland en Drenthe voor telediagnostiek en consultatie op afstand. Reduceert reistijd voor patiënten.' },
+    { titel:'Drents-Gronings Spoedoverleg', partijen:['UMCG','Treant','RAV Groningen'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Structureel overleg over spoedketensamenwerking over provinciegrenzen. Concrete afspraken over patiëntrouting bij calamiteiten.' },
+  ],
+  'Zeeland':        [
+    { titel:'Pilot Bereikbaarheid Ouderenzorg', partijen:['Adrz','Gemeente Middelburg','Gemeente Goes','Gemeente Terneuzen'], themas:['Passende zorg','Regionale samenwerking'], detail:'Pilot om zorgbereikbaarheid voor ouderen in dunbevolkte Zeeuwse gebieden te verbeteren. Focus op thuiszorgcoördinatie en digitale consultatie.' },
+    { titel:'Acute Zorg Zeeland-Brabant', partijen:['Adrz','Amphia','RAV Zeeland'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Samenwerkingsafspraken over patiëntenrouting bij piekbelasting Adrz naar Brabantse ziekenhuizen. Ambulanceprotocollen zijn al bijgesteld.' },
+  ],
+  'Limburg':        [
+    { titel:'VieCuri-Zuyderland Taakverdeling', partijen:['VieCuri','Zuyderland'], themas:['Regionale samenwerking','Passende zorg'], detail:'Afspraken over specialisatie in Midden-Limburg. Zuyderland neemt hoogcomplexe oncologie over; VieCuri focust op hartchirurgie en neurologie.' },
+    { titel:'Limburgs GGZ-Netwerk', partijen:['Vincent van Gogh','Mondriaan','GGD Zuid-Limburg'], themas:['Capaciteitsdruk','Regionale samenwerking'], detail:'Gezamenlijke aanpak wachtlijsten GGZ. Crisisdienst werkt integraal; bed-management gedeeld platform.' },
+  ],
+  'Drenthe':        [
+    { titel:'Treant-Huisartsen Capaciteitsoverleg', partijen:['Treant Zorggroep','Huisartsenzorg Drenthe'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Structureel overleg om doorstroom eerste-tweede lijn te verbeteren. Gezamenlijk triage-protocol verlaagde onnodige SEH-verwijzingen met 9%.' },
+  ],
+  'Flevoland':      [
+    { titel:'Regionale Spoedketen Flevoland', partijen:['MC Lelystad','Huisartsenpost Lelystad','RAV Flevoland'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Versterkte samenwerking voor betere spoedzorgketen. Ambulances beschikken over real-time bezettingsdata van MC Lelystad.' },
+  ],
+};
+
+const PRAKTIJKVOORBEELDEN = {
+  'Utrecht':        { titel:'Utrecht: breed IZA-convenant als landelijk voorbeeld', beschrijving:'In de regio Utrecht ondertekenden zeven zorgorganisaties en drie gemeenten een samenwerkingsconvenant voor de uitvoering van het IZA. Het convenant bevat concrete afspraken met budget, aanspreekpunten en meetbare doelen. Het ministerie presenteert de Utrechtse aanpak als voorbeeld voor andere regio\'s.', lessen:['Start met een klein kernteam van bevlogen bestuurders die commitment hebben van hun raad','Zorg voor een gedeeld financieel commitment vóórdat je inhoudelijk begint','Maak governance-afspraken expliciet; wie beslist wat bij een conflict?'] },
+  'Gelderland':     { titel:'Gelderland: regionaal zorgcoördinatiepunt in Nijmegen', beschrijving:'In de regio Nijmegen fungeert het regionale zorgcoördinatiepunt al drie maanden als spil tussen ziekenhuizen, huisartsen en thuiszorg. Resultaten na het eerste kwartaal tonen 12% minder dubbele zorgcontacten en gemiddeld twee dagen kortere overdrachtstijd.', lessen:['Wijs één regisseur aan die geen belang heeft bij één instelling','Investeer in een gedeeld digitaal platform voor real-time inzicht in capaciteit','Meet en publiceer resultaten maandelijks — transparantie vergroot vertrouwen'] },
+  'Overijssel':     { titel:'Overijssel: ZGT-MST strategisch samenwerken zonder fusie', beschrijving:'Ziekenhuisgroep Twente en Medisch Spectrum Twente werken intensief samen zonder te fuseren. Ze delen back-office-functies, inkoop en plannen een taakverdeling in specialistische zorg. Het model wordt landelijk gezien als alternatief voor schaalvergroting via fusie.', lessen:['Samenwerken zonder fusie vereist expliciete governance met wederzijdse vetorechten','Begin met back-office; vermijd direct controversiële medische taakverdeling','Leg resultaten contractueel vast met meetbare KPI\'s en jaarlijkse evaluatie'] },
+  'Noord-Brabant':  { titel:'Noord-Brabant: pilot uitkomstbekostiging Eindhoven', beschrijving:'Catharina Ziekenhuis, huisartsenpraktijken en zorgkantoor VGZ testen in Eindhoven een bekostigingsmodel op basis van gezondheidsuitkomsten. Na één jaar: 8% minder ziekenhuisopnames in de pilotpopulatie. De data-infrastructuur wordt nu versterkt voor opschaling.', lessen:['Investeer eerst in gedeelde data-infrastructuur voordat je bekostiging aanpast','Betrek patiënten bij definiëren van relevante uitkomstmaten','Houd administratieve last laag: begin met maximaal vijf eenvoudige indicatoren'] },
+  'Noord-Holland':  { titel:'Noord-Holland: transferpunt als sleutel voor doorstroom', beschrijving:'Het Transferpunt Noord-Holland West coördineert de doorstroom van patiënten van ziekenhuizen naar thuiszorg en verpleeghuizen. Doel is de gemiddelde ligduur met twee dagen te bekorten. Ambulante teams bezoeken dagelijks ziekenhuisafdelingen om ontslagdrempels weg te nemen.', lessen:['Zet een neutrale transfercoördinator in die geen deelinstelling vertegenwoordigt','Sluit thuiszorgorganisaties van dag één aan; zij bepalen de feitelijke uitstroomsnelheid','Monitor dagelijks en stuur bij; maandelijkse rapportage is te traag'] },
+  'Zuid-Holland':   { titel:'Zuid-Holland: convenant acute zorg Rijnmond', beschrijving:'Zeven Rijnmondse ziekenhuizen delen real-time capaciteitsdata en hebben taakverdeling afgesproken bij complexe spoedeisende gevallen. Het convenant legde vast wie welk type traumazorg behandelt, wat wachttijden op de SEH significant verlaagde.', lessen:['Real-time data-uitwisseling is de technische voorwaarde; regel dit eerst','Heldere taakverdeling vereist politieke moed: iemand levert iets in','Betrek ROAZ als neutrale regisseur bij conflicten over verdeling'] },
+  'Friesland':      { titel:'Friesland: telezorg voor dunbevolkte gebieden', beschrijving:'MCL en Thuiszorg Friesland bieden telezorg aan voor hart- en longpatiënten op grote afstand van het ziekenhuis. Patiënten meten zelf vitale parameters; verpleegkundigen monitoren op afstand. Aantal onnodige polikliniekbezoeken daalde met 21%.', lessen:['Investeer in patiënttraining: technologie werkt alleen als patiënten het kunnen bedienen','Koppel telezorg aan duidelijk escalatieprotocol bij afwijkende waarden','Begin met hoog-volume patiëntgroepen voor snel aantoonbaar effect'] },
+  'Groningen':      { titel:'Groningen: digitaal netwerk voor consultatie op afstand', beschrijving:'Het UMCG lanceerde een digitaal zorgnetwerk dat zorgprofessionals in Groningen, Friesland en Drenthe verbindt voor telediagnostiek. Specialisten in Groningen consulteren collega\'s in regionale ziekenhuizen zonder dat patiënten hoeven te reizen.', lessen:['Maak deelname laagdrempelig: één klik, één platform, geen apart account','Train gespecialiseerde verpleegkundigen als eerste aanspreekpunt bij consult','Meten van reductie in patiëntverplaatsing vergroot draagvlak bij financiers'] },
+  'Zeeland':        { titel:'Zeeland: pilot bereikbaarheid ouderenzorg', beschrijving:'Admiraal De Ruyter Ziekenhuis en drie Zeeuwse gemeenten testen modellen om zorg voor ouderen bereikbaar te houden in een dunbevolkt gebied. Thuiszorgcoördinatie wordt gecentraliseerd en digitale consulten vervangen een deel van de fysieke bezoeken.', lessen:['In dunbevolkt gebied is preventie economisch aantrekkelijker dan curatie','Centraliseer coördinatie maar decentraliseer uitvoering: zorg blijft dichtbij','Zet gemeenten vroegtijdig aan tafel: zij kennen de sociale context'] },
+  'Limburg':        { titel:'Limburg: specialisatie in plaats van duplicatie', beschrijving:'VieCuri en Zuyderland spraken een vergaande taakverdeling af voor Midden-Limburg. In plaats van beide ziekenhuizen alles te laten doen, specialiseert elk zich in bepaalde complexe zorg. Dit verbetert kwaliteit en maakt schaarste personeel efficiënter inzetbaar.', lessen:['Specialisatie vereist wederzijds vertrouwen en langdurige contractuele commitment','Communiceer actief naar patiënten: meer reistijd, maar betere kwaliteit','Volg OECD-data over volume-kwaliteitsrelaties om keuzes te onderbouwen'] },
+  'Drenthe':        { titel:'Drenthe: vermindering onnodige SEH-verwijzingen', beschrijving:'Treant Zorggroep en Drentse huisartsen implementeerden een gezamenlijk triage-protocol dat onnodige SEH-verwijzingen vermindert. Na zes maanden daalde het aantal onnodige SEH-bezoeken met 9%, wat druk op de SEH significant verlaagde.', lessen:['Begin met gezamenlijke triage-scholing voor alle betrokken zorgverleners','Stem criteria af op lokale bevolkingskenmerken; landelijke normen passen niet altijd','Betrek ambulancedienst: zij zijn de eerste schakel in de keten'] },
+  'Flevoland':      { titel:'Flevoland: spoedketen voor een groeiende regio', beschrijving:'MC Lelystad bouwt samen met huisartsenposten en RAV Flevoland een versterkte spoedketen. Ambulances beschikken over real-time bezettingsdata. De aanpak is nodig omdat de bevolking van Flevoland sneller groeit dan de zorgcapaciteit.', lessen:['Real-time bezettingsdata voor ambulances bespaart kostbare minuten','Groeiende regio vereist vooruitlopen op capaciteit: bouw voordat het misloopt','Betrek gemeente bij ruimtelijke planning van zorglocaties in nieuwe wijken'] },
+};
+
+/* ══════════════════════════════════════
+   MIJN REGIO — FUNCTIES
+══════════════════════════════════════ */
+let huidigeKaartRegio = null;
+
+function renderMijnRegio() {
+  const regio = huidigeKaartRegio || profile.regio || 'Noord-Holland';
+  selectRegioOnMap(regio);
+
+  // Vergelijk dropdown vullen
+  const sel = document.getElementById('rk-compare-select');
+  sel.innerHTML = '<option value="">— Kies een regio —</option>';
+  ALLE_REGIO_NAMEN.filter(r => r !== regio).forEach(r => {
+    const o = document.createElement('option');
+    o.value = r; o.textContent = r;
+    sel.appendChild(o);
+  });
+
+  // Leer-pills
+  const pills = document.getElementById('leer-pills');
+  pills.innerHTML = '';
+  ALLE_REGIO_NAMEN.filter(r => r !== regio).forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'leer-pill';
+    btn.textContent = r;
+    btn.onclick = () => toonPraktijkvoorbeeld(r, btn);
+    pills.appendChild(btn);
+  });
+  document.getElementById('leer-voorbeeld').style.display = 'none';
+}
+
+function selectRegioOnMap(regio) {
+  huidigeKaartRegio = regio;
+
+  // Kaart: active class
+  document.querySelectorAll('.rk-province').forEach(g => {
+    g.classList.toggle('active', g.dataset.regio === regio);
+  });
+
+  // Header
+  document.getElementById('rk-regio-name').textContent = regio;
+  const badge = document.getElementById('rk-jouw-badge');
+  badge.style.display = regio === profile.regio ? 'inline-flex' : 'none';
+
+  // Vergelijk dropdown: ververs opties zonder huidige regio
+  const sel = document.getElementById('rk-compare-select');
+  const prevVal = sel.value;
+  sel.innerHTML = '<option value="">— Kies een regio —</option>';
+  ALLE_REGIO_NAMEN.filter(r => r !== regio).forEach(r => {
+    const o = document.createElement('option');
+    o.value = r; o.textContent = r;
+    if (r === prevVal) o.selected = true;
+    sel.appendChild(o);
+  });
+
+  renderThemaSignalen(regio);
+  renderSamenwerkingsverbanden(regio);
+  renderVergelijking();
+
+  // Leer-pills bijwerken
+  const pills = document.getElementById('leer-pills');
+  pills.innerHTML = '';
+  ALLE_REGIO_NAMEN.filter(r => r !== regio).forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'leer-pill';
+    btn.textContent = r;
+    btn.onclick = () => toonPraktijkvoorbeeld(r, btn);
+    pills.appendChild(btn);
+  });
+  document.getElementById('leer-voorbeeld').style.display = 'none';
+}
+
+function renderThemaSignalen(regio) {
+  const grid = document.getElementById('ts-grid');
+  grid.innerHTML = '';
+  const signalen = REGIO_SIGNALEN[regio] || {};
+  Object.entries(signalen).forEach(([thema, data]) => {
+    const el = document.createElement('div');
+    el.className = 'ts-item';
+    el.innerHTML = `
+      <div class="ts-item-top">
+        <span class="ts-thema-name">${thema}</span>
+        <span class="ts-niveau ${data.niveau}">${data.niveau}</span>
+      </div>
+      <p class="ts-signaal">${data.signaal}</p>`;
+    el.onclick = () => {
+      artikelenFilter.thema = thema;
+      document.getElementById('filter-pills').innerHTML = '';
+      navigateTo('artikelen', document.querySelector('[data-page="artikelen"]'));
+    };
+    grid.appendChild(el);
+  });
+}
+
+function renderSamenwerkingsverbanden(regio) {
+  const list = document.getElementById('sw-list');
+  list.innerHTML = '';
+  const items = SAMENWERKINGSVERBANDEN[regio] || [];
+  if (!items.length) {
+    list.innerHTML = '<p style="font-size:13px;color:var(--ink-muted)">Geen samenwerkingsverbanden bekend voor deze regio.</p>';
+    return;
+  }
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'sw-card';
+    card.innerHTML = `
+      <div class="sw-card-header" onclick="toggleSamenwerking(this.parentElement)">
+        <div class="sw-card-left">
+          <div class="sw-card-title">${item.titel}</div>
+          <div class="sw-partijen">${item.partijen.join(' · ')}</div>
+          <div class="sw-tags">${item.themas.map(t => `<span class="sw-tag">${t}</span>`).join('')}</div>
+        </div>
+        <span class="sw-chevron">›</span>
+      </div>
+      <div class="sw-detail">${item.detail}</div>`;
+    list.appendChild(card);
+  });
+}
+
+function toggleSamenwerking(card) {
+  card.classList.toggle('open');
+}
+
+function renderVergelijking() {
+  const regio1 = huidigeKaartRegio || profile.regio;
+  const regio2 = document.getElementById('rk-compare-select').value;
+  const container = document.getElementById('vg-charts');
+  if (!regio2) { container.innerHTML = ''; return; }
+
+  const scores1 = REGIO_SCORES[regio1] || {};
+  const scores2 = REGIO_SCORES[regio2] || {};
+  const themas  = Object.keys(THEME_ICONS);
+  const short   = { 'Arbeidsmarkt':'Arbeid','Passende zorg':'Passend','Digitalisering':'Digital','Capaciteitsdruk':'Capaciteit','Regionale samenwerking':'Samenwerking','Financiering':'Financiering' };
+
+  const barsHtml = (scores, cls) => themas.map(t =>
+    `<div class="vg-bar-row">
+      <div class="vg-bar-label">${short[t] || t}</div>
+      <div class="vg-bar-track"><div class="vg-bar-fill ${cls}" style="width:${(scores[t] || 0) * 10}%"></div></div>
+    </div>`
+  ).join('');
+
+  container.innerHTML = `
+    <div class="vg-chart-col">
+      <div class="vg-chart-title">${regio1}</div>
+      ${barsHtml(scores1, 'primary')}
+    </div>
+    <div class="vg-chart-col">
+      <div class="vg-chart-title">${regio2}</div>
+      ${barsHtml(scores2, 'compare')}
+    </div>
+    <div class="vg-legend" style="grid-column:1/-1">
+      <div class="vg-legend-dot primary"></div><span>${regio1}</span>
+      <div class="vg-legend-dot compare"></div><span>${regio2}</span>
+      <span style="color:var(--ink-muted);margin-left:4px">— hogere balk = hogere urgentie</span>
+    </div>`;
+}
+
+function toonPraktijkvoorbeeld(regio, btn) {
+  document.querySelectorAll('.leer-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const vb = PRAKTIJKVOORBEELDEN[regio];
+  const el = document.getElementById('leer-voorbeeld');
+  if (!vb) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="leer-titel">${vb.titel}</div>
+    <p class="leer-beschrijving">${vb.beschrijving}</p>
+    <div class="leer-lessen-title">3 concrete lessen</div>
+    ${vb.lessen.map(l => `<div class="leer-les">${l}</div>`).join('')}`;
+}

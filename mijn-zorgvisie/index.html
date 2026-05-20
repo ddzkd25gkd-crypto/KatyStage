@@ -208,6 +208,10 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Agenda
       </a>
+      <a href="#" class="nav-link" data-page="mijn-regio" onclick="navigateTo('mijn-regio', this); return false;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Mijn Regio
+      </a>
     </nav>
     <div class="topbar-right">
       <button class="t-icon-btn" onclick="openSearch()" title="Zoeken">
@@ -385,6 +389,112 @@
         <div class="agenda-list" id="agenda-list"></div>
       </div>
 
+      <!-- MIJN REGIO -->
+      <div class="page" id="page-mijn-regio">
+        <div class="page-header">
+          <h2 class="page-title">Mijn Regio</h2>
+          <p class="page-sub">Verken thema-signalen, samenwerkingsverbanden en praktijkvoorbeelden per provincie.</p>
+        </div>
+        <div class="regio-kompas-layout">
+
+          <!-- SVG kaart -->
+          <div class="rk-map-panel">
+            <p class="rk-map-hint">Klik op een provincie</p>
+            <svg class="nl-map" viewBox="0 0 290 375" xmlns="http://www.w3.org/2000/svg">
+              <!-- IJsselmeer water -->
+              <polygon points="95,50 148,44 155,70 150,108 135,118 112,112 102,96 98,72" fill="#DDEEF8" stroke="none"/>
+
+              <g class="rk-province" data-regio="Noord-Holland" onclick="selectRegioOnMap('Noord-Holland')">
+                <polygon points="36,118 50,38 66,18 92,14 108,28 110,62 103,95 90,114 70,122 50,116"/>
+                <text x="66" y="72">Noord-<tspan x="66" dy="12">Holland</tspan></text>
+              </g>
+              <g class="rk-province" data-regio="Friesland" onclick="selectRegioOnMap('Friesland')">
+                <polygon points="92,14 148,8 178,18 180,48 162,68 136,76 106,66 95,48"/>
+                <text x="136" y="44">Friesland</text>
+              </g>
+              <g class="rk-province" data-regio="Groningen" onclick="selectRegioOnMap('Groningen')">
+                <polygon points="178,18 238,12 262,28 264,58 246,78 216,84 190,76 180,52"/>
+                <text x="218" y="50">Groningen</text>
+              </g>
+              <g class="rk-province" data-regio="Drenthe" onclick="selectRegioOnMap('Drenthe')">
+                <polygon points="190,76 216,84 246,78 264,58 268,98 254,128 226,134 204,120 190,100"/>
+                <text x="222" y="108">Drenthe</text>
+              </g>
+              <g class="rk-province" data-regio="Flevoland" onclick="selectRegioOnMap('Flevoland')">
+                <polygon points="112,112 135,118 150,108 150,140 136,150 114,144 104,130 106,114"/>
+                <text x="127" y="132">Flevo-<tspan x="127" dy="11">land</tspan></text>
+              </g>
+              <g class="rk-province" data-regio="Overijssel" onclick="selectRegioOnMap('Overijssel')">
+                <polygon points="204,120 226,134 254,128 268,98 272,138 260,168 234,175 208,162 193,142 192,122"/>
+                <text x="228" y="148">Overijssel</text>
+              </g>
+              <g class="rk-province" data-regio="Utrecht" onclick="selectRegioOnMap('Utrecht')">
+                <polygon points="106,138 138,132 150,142 150,168 133,178 110,178 98,164 98,148"/>
+                <text x="124" y="158">Utrecht</text>
+              </g>
+              <g class="rk-province" data-regio="Gelderland" onclick="selectRegioOnMap('Gelderland')">
+                <polygon points="150,142 193,142 208,162 234,175 260,168 264,204 248,220 216,226 186,216 160,200 150,180"/>
+                <text x="202" y="188">Gelderland</text>
+              </g>
+              <g class="rk-province" data-regio="Zuid-Holland" onclick="selectRegioOnMap('Zuid-Holland')">
+                <polygon points="30,120 68,124 90,128 100,145 98,172 86,196 66,208 40,210 20,196 16,172 20,144"/>
+                <text x="56" y="168">Zuid-<tspan x="56" dy="12">Holland</tspan></text>
+              </g>
+              <g class="rk-province" data-regio="Zeeland" onclick="selectRegioOnMap('Zeeland')">
+                <polygon points="20,210 55,212 75,222 76,248 58,262 28,260 12,244 12,222"/>
+                <text x="42" y="238">Zeeland</text>
+              </g>
+              <g class="rk-province" data-regio="Noord-Brabant" onclick="selectRegioOnMap('Noord-Brabant')">
+                <polygon points="44,218 78,215 115,218 150,215 168,222 186,232 188,258 163,272 126,276 90,272 56,258 36,240 30,222"/>
+                <text x="112" y="248">Noord-Brabant</text>
+              </g>
+              <g class="rk-province" data-regio="Limburg" onclick="selectRegioOnMap('Limburg')">
+                <polygon points="186,232 216,226 244,216 260,240 254,278 240,306 220,312 204,292 190,268 186,250"/>
+                <text x="218" y="270">Limburg</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Detail panel -->
+          <div class="rk-detail-panel" id="rk-detail-panel">
+            <div class="rk-detail-header">
+              <h3 class="rk-regio-name" id="rk-regio-name">—</h3>
+              <span class="rk-jouw-badge" id="rk-jouw-badge" style="display:none">Jouw regio</span>
+            </div>
+
+            <!-- 1. Thema-signalen -->
+            <section class="rk-section">
+              <h4 class="rk-section-title">Thema-signalen</h4>
+              <p class="rk-section-sub">Klik op een thema om alle artikelen te bekijken.</p>
+              <div class="ts-grid" id="ts-grid"></div>
+            </section>
+
+            <!-- 2. Samenwerkingsverbanden -->
+            <section class="rk-section">
+              <h4 class="rk-section-title">Samenwerkingsverbanden</h4>
+              <div class="sw-list" id="sw-list"></div>
+            </section>
+
+            <!-- 3. Vergelijk -->
+            <section class="rk-section">
+              <h4 class="rk-section-title">Vergelijk met andere regio</h4>
+              <select class="rk-compare-select" id="rk-compare-select" onchange="renderVergelijking()">
+                <option value="">— Kies een regio —</option>
+              </select>
+              <div class="vg-charts" id="vg-charts"></div>
+            </section>
+
+            <!-- 4. Leer van andere regio -->
+            <section class="rk-section">
+              <h4 class="rk-section-title">Leer van andere regio</h4>
+              <p class="rk-section-sub">Klik op een regio voor een praktijkvoorbeeld.</p>
+              <div class="leer-pills" id="leer-pills"></div>
+              <div class="leer-voorbeeld" id="leer-voorbeeld" style="display:none"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+
       <!-- ARTIKEL DETAIL -->
       <div class="page" id="page-artikel-detail">
         <div class="detail-back">
@@ -417,6 +527,10 @@
       <button class="mn-item" data-page="opgeslagen" onclick="navigateTo('opgeslagen', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
         Opgeslagen
+      </button>
+      <button class="mn-item" data-page="mijn-regio" onclick="navigateTo('mijn-regio', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Mijn Regio
       </button>
     </div>
   </nav>
