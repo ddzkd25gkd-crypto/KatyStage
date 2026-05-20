@@ -1354,77 +1354,24 @@ const PRAKTIJKVOORBEELDEN = {
 /* ══════════════════════════════════════
    MIJN REGIO — FUNCTIES
 ══════════════════════════════════════ */
-let huidigeKaartRegio   = null;
-let d3MapInitialized    = false;
+let huidigeKaartRegio = null;
 
-const PROVINCE_NAME_MAP = { 'Fryslân': 'Friesland', 'Fryslân': 'Friesland' };
-const PROVINCE_SHORT    = {
-  'Noord-Holland':'N-Holland','Zuid-Holland':'Z-Holland','Noord-Brabant':'N-Brabant',
-  'Overijssel':'Overijssel','Gelderland':'Gelderland','Groningen':'Groningen',
-  'Friesland':'Friesland','Drenthe':'Drenthe','Flevoland':'Flevoland',
-  'Utrecht':'Utrecht','Zeeland':'Zeeland','Limburg':'Limburg',
-};
-
-function normProvince(name) { return PROVINCE_NAME_MAP[name] || name; }
-
-async function initD3Map() {
-  const container = document.getElementById('nl-d3-map');
-  if (!container || d3MapInitialized) return;
-  if (typeof d3 === 'undefined') { container.innerHTML = '<p class="rk-map-error">D3 niet geladen.</p>'; return; }
-  try {
-    const geojson = await fetch('https://cartomap.github.io/nl/wgs84/provincie_2023.geojson').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
-    container.innerHTML = '';
-    const W = container.clientWidth || 290;
-    const H = Math.round(W * 1.28);
-    const svg = d3.select('#nl-d3-map').append('svg')
-      .attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('height', H).style('display','block').style('background','#EBF5FB');
-
-    const proj    = d3.geoMercator().fitSize([W, H], geojson);
-    const pathGen = d3.geoPath().projection(proj);
-
-    const paths = svg.selectAll('path.nl-d3-province')
-      .data(geojson.features).join('path')
-      .attr('class','nl-d3-province').attr('d', pathGen)
-      .on('mouseenter', function() { if (!d3.select(this).classed('active')) d3.select(this).classed('hover', true); })
-      .on('mouseleave', function() { d3.select(this).classed('hover', false); })
-      .on('click', function(event, d) { selectRegioOnMap(normProvince(d.properties.statnaam || d.properties.name || '')); });
-
-    svg.selectAll('text.nl-d3-label')
-      .data(geojson.features).join('text')
-      .attr('class','nl-d3-label')
-      .attr('x', d => pathGen.centroid(d)[0])
-      .attr('y', d => pathGen.centroid(d)[1])
-      .text(d => PROVINCE_SHORT[normProvince(d.properties.statnaam || d.properties.name || '')] || '');
-
-    d3MapInitialized = true;
-    if (huidigeKaartRegio || profile.regio) updateD3ActiveProvince(huidigeKaartRegio || profile.regio);
-  } catch(e) {
-    const container2 = document.getElementById('nl-d3-map');
-    if (container2) container2.innerHTML = '<p class="rk-map-error">Kaart kon niet worden geladen.<br>Controleer uw verbinding.</p>';
-  }
-}
-
-function updateD3ActiveProvince(regio) {
-  if (!regio || !d3MapInitialized || typeof d3 === 'undefined') return;
-  d3.selectAll('.nl-d3-province').classed('active', false).classed('hover', false);
-  d3.selectAll('.nl-d3-province').classed('active', function(d) {
-    return normProvince(d.properties.statnaam || d.properties.name || '') === regio;
-  });
-  d3.selectAll('.nl-d3-label').attr('fill', function(d) {
-    return normProvince(d.properties.statnaam || d.properties.name || '') === regio ? '#fff' : '#4A4A4A';
+function updateInlineMapProvince(regio) {
+  document.querySelectorAll('.nl-province-group').forEach(g => {
+    g.classList.toggle('active', g.dataset.name === regio);
   });
 }
 
 function renderMijnRegio() {
   const regio = huidigeKaartRegio || profile.regio || 'Noord-Holland';
-  initD3Map().then(() => updateD3ActiveProvince(regio));
+  huidigeKaartRegio = regio;
   selectRegioOnMap(regio);
 }
 
 function selectRegioOnMap(regio) {
   if (!regio) return;
   huidigeKaartRegio = regio;
-  updateD3ActiveProvince(regio);
+  updateInlineMapProvince(regio);
 
   // Header
   document.getElementById('rk-regio-name').textContent = regio;

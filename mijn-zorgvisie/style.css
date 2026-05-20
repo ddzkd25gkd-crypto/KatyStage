@@ -615,40 +615,34 @@ input:checked ~ .rt-track::after { transform: translateX(16px); }
 .rk-map-hint { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; }
 
 /* D3 map container */
-.nl-d3-map-container {
+.nl-map-container {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   overflow: hidden;
-  min-height: 180px;
-  display: flex; align-items: center; justify-content: center;
   background: #EBF5FB;
 }
-.rk-map-loading {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; color: var(--ink-muted);
-}
-.rk-map-error { font-size: 13px; color: var(--ink-muted); text-align: center; padding: 20px; }
 
-/* D3 SVG province paths */
-.nl-d3-province {
-  fill: #D6E4EF;
+/* Inline SVG province map */
+.nl-province-group { cursor: pointer; }
+.nl-province {
+  fill: #F0F0F0;
   stroke: #fff;
-  stroke-width: 1.5px;
-  cursor: pointer;
+  stroke-width: 1px;
   transition: fill 120ms ease;
 }
-.nl-d3-province.hover  { fill: #FFCCCC; }
-.nl-d3-province.active { fill: var(--red); }
+.nl-province-group:hover:not(.active) .nl-province { fill: #FFCCCC; }
+.nl-province-group.active .nl-province { fill: var(--red); }
 
-.nl-d3-label {
+.nl-prov-label {
   font-family: var(--font-sans);
-  font-size: 7.5px;
+  font-size: 8.5px;
   font-weight: 700;
-  fill: #4A4A4A;
+  fill: #555;
   pointer-events: none;
   text-anchor: middle;
   dominant-baseline: central;
 }
+.nl-province-group.active .nl-prov-label { fill: #fff; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
