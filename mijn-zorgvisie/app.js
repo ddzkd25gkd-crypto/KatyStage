@@ -937,18 +937,6 @@ function buildDashboard() {
   const h = new Date().getHours();
   document.getElementById('welcome-title').textContent = `${h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond'}, Katy`;
 
-  // Sidebar thema's met SVG iconen
-  const sb = document.getElementById('sidebar-themes');
-  sb.innerHTML = '';
-  profile.themas.forEach(t => {
-    const btn = document.createElement('button');
-    btn.className = 'theme-tag';
-    const iconSvg = THEME_ICONS[t] || `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/></svg>`;
-    btn.innerHTML = `<span style="display:flex;color:rgba(255,255,255,.8)">${iconSvg}</span><span>${t}</span>`;
-    btn.onclick = () => setPriority(t);
-    sb.appendChild(btn);
-  });
-
   renderThemeDragList();
 
   // Regio link
@@ -956,7 +944,7 @@ function buildDashboard() {
   const regioLink = document.getElementById('regio-more-link');
   if (regioLink) {
     regioLink.href = '#';
-    regioLink.onclick = (e) => { e.preventDefault(); navigateTo('artikelen', document.querySelector('[data-page="artikelen"]')); };
+    regioLink.onclick = (e) => { e.preventDefault(); navigateTo('mijn-regio', document.querySelector('[data-page="mijn-regio"]')); };
   }
 
   /* Zet fetch in gang voor alle eigen thema's */
