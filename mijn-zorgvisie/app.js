@@ -732,21 +732,46 @@ function doSearch(q) {
     results.innerHTML = '<div class="search-empty">Begin te typen om te zoeken in artikelen en dossiers</div>';
     return;
   }
-  const hits = ARTICLES.filter(a =>
+
+  /* Artikelen zoeken */
+  const artHits = ARTICLES.filter(a =>
     a.title.toLowerCase().includes(query) ||
     a.excerpt.toLowerCase().includes(query) ||
     a.thema.toLowerCase().includes(query)
-  ).slice(0, 8);
-  if (!hits.length) {
+  ).slice(0, 6);
+
+  /* Regioberichten zoeken (alle provincies) */
+  const regioHits = [];
+  Object.entries(REGIO_ITEMS).forEach(([regio, items]) => {
+    items.forEach(item => {
+      if (
+        item.title.toLowerCase().includes(query) ||
+        item.body.toLowerCase().includes(query) ||
+        regio.toLowerCase().includes(query)
+      ) {
+        regioHits.push({ ...item, regio });
+      }
+    });
+  });
+  const topRegioHits = regioHits.slice(0, 3);
+
+  if (!artHits.length && !topRegioHits.length) {
     results.innerHTML = '<div class="search-empty">Geen resultaten gevonden voor "' + q + '"</div>';
     return;
   }
   results.innerHTML = '';
-  hits.forEach(a => {
+  artHits.forEach(a => {
     const el = document.createElement('div');
     el.className = 'search-result-item';
     el.innerHTML = `<span class="sri-tag">${a.thema}</span><div><div class="sri-title">${a.title}</div><div class="sri-excerpt">${a.excerpt.substring(0,80)}…</div></div>`;
     el.onclick = () => { closeSearch(); openArtikel(a.id); };
+    results.appendChild(el);
+  });
+  topRegioHits.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'search-result-item';
+    el.innerHTML = `<span class="sri-tag" style="background:var(--amber-light);color:#92400E">${item.regio}</span><div><div class="sri-title">${item.title}</div><div class="sri-excerpt">${item.meta}</div></div>`;
+    el.onclick = () => { closeSearch(); openRegioArtikel(item); };
     results.appendChild(el);
   });
 }
@@ -858,6 +883,36 @@ function goStep(n) {
   });
 }
 
+/* ══════════════════════════════════════
+   LOCALSTORAGE — profiel opslaan/laden
+══════════════════════════════════════ */
+const LS_KEY = 'mijnzorgvisie_profile_v1';
+
+function saveProfile() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      functie: profile.functie,
+      sector:  profile.sector,
+      regio:   profile.regio,
+      themas:  profile.themas,
+    }));
+  } catch (_) { /* private browsing */ }
+}
+
+function loadProfile() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const saved = JSON.parse(raw);
+    if (!saved.functie || !saved.sector || !saved.regio) return false;
+    profile.functie = saved.functie;
+    profile.sector  = saved.sector;
+    profile.regio   = saved.regio;
+    profile.themas  = Array.isArray(saved.themas) ? saved.themas : [];
+    return true;
+  } catch (_) { return false; }
+}
+
 function finishOnboarding() {
   if (profile.themas.length === 0) {
     document.querySelectorAll('.theme-card').forEach((tc, i) => {
@@ -870,16 +925,29 @@ function finishOnboarding() {
   if (!profile.functie) profile.functie = 'Beleidsmedewerker';
   if (!profile.sector)  profile.sector  = 'VVT';
   if (!profile.regio)   profile.regio   = 'Noord-Holland';
+  saveProfile();
   buildDashboard();
   document.getElementById('onboarding').classList.remove('active');
   document.getElementById('dashboard').classList.add('active');
 }
 
 function resetOnboarding() {
+  localStorage.removeItem(LS_KEY);
   document.getElementById('dashboard').classList.remove('active');
   document.getElementById('onboarding').classList.add('active');
+  /* reset profiel state */
+  profile.functie = null; profile.sector = null; profile.regio = null; profile.themas = [];
   goStep(1);
 }
+
+/* Auto-load bij opstarten */
+(function initApp() {
+  if (loadProfile()) {
+    buildDashboard();
+    document.getElementById('onboarding').classList.remove('active');
+    document.getElementById('dashboard').classList.add('active');
+  }
+})();
 
 /* ══════════════════════════════════════
    NAVIGATIE
@@ -919,10 +987,23 @@ function navigateTo(page, linkEl) {
 /* ══════════════════════════════════════
    DASHBOARD
 ══════════════════════════════════════ */
+/* Initialen afleiden van functie + sector */
+function getInitials() {
+  const f = (profile.functie || 'Z').trim();
+  const s = (profile.sector  || 'Z').trim();
+  return (f[0] + s[0]).toUpperCase();
+}
+
+/* Naam afleiden: als functie/sector bekend, toon die combinatie anders fallback */
+function getDisplayName() {
+  return profile.functie ? profile.functie : 'Gebruiker';
+}
+
 function buildDashboard() {
-  document.getElementById('topbar-avatar').textContent  = 'KV';
-  document.getElementById('sidebar-avatar').textContent = 'KV';
-  document.getElementById('profile-name').textContent   = 'Katy van Vogelpoel';
+  const initials = getInitials();
+  document.getElementById('topbar-avatar').textContent  = initials;
+  document.getElementById('sidebar-avatar').textContent = initials;
+  document.getElementById('profile-name').textContent   = profile.functie || 'Mijn profiel';
   document.getElementById('profile-role').textContent   = `${profile.functie} · ${profile.sector}`;
   document.getElementById('regio-naam').textContent     = profile.regio;
   document.getElementById('stat-themas').textContent    = profile.themas.length;
@@ -931,11 +1012,17 @@ function buildDashboard() {
   document.getElementById('stat-artikelen').textContent = artCount;
   document.getElementById('welcome-count').textContent  = `${artCount} nieuwe artikelen`;
 
+  /* Actuele dossiers = dossiers die overeenkomen met jouw thema's */
+  const dossierCount = DOSSIERS.filter(d => profile.themas.includes(d.thema)).length || DOSSIERS.length;
+  const dosEl = document.getElementById('stat-dossiers');
+  if (dosEl) dosEl.textContent = dossierCount;
+
   const intro = document.getElementById('welcome-intro');
   if (intro) intro.style.display = sessionStorage.getItem('intro-dismissed') ? 'none' : 'flex';
 
   const h = new Date().getHours();
-  document.getElementById('welcome-title').textContent = `${h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond'}, Katy`;
+  const greeting = h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond';
+  document.getElementById('welcome-title').textContent = `${greeting}, ${profile.functie || 'welkom'}`;
 
   renderThemeDragList();
 
