@@ -940,14 +940,6 @@ function resetOnboarding() {
   goStep(1);
 }
 
-/* Auto-load bij opstarten */
-(function initApp() {
-  if (loadProfile()) {
-    buildDashboard();
-    document.getElementById('onboarding').classList.remove('active');
-    document.getElementById('dashboard').classList.add('active');
-  }
-})();
 
 /* ══════════════════════════════════════
    NAVIGATIE
@@ -1901,3 +1893,16 @@ function toonPraktijkvoorbeeld(regio, btn) {
     <div class="leer-lessen-title">3 concrete lessen</div>
     ${vb.lessen.map(l => `<div class="leer-les">${l}</div>`).join('')}`;
 }
+
+/* ══════════════════════════════════════
+   AUTO-LOAD — moet als LAATSTE staan zodat
+   alle const-variabelen (REGIO_SIGNALEN etc.)
+   al geïnitialiseerd zijn
+══════════════════════════════════════ */
+(function initApp() {
+  if (loadProfile()) {
+    buildDashboard();
+    document.getElementById('onboarding').classList.remove('active');
+    document.getElementById('dashboard').classList.add('active');
+  }
+})();
