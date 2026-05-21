@@ -10,6 +10,10 @@ let currentPage     = 'dashboard';
 let prevPage        = 'dashboard';
 let artikelenFilter = { zoek: '', thema: null };
 
+/* Cache voor live opgehaalde artikelen bij eigen thema's */
+const customThemaCache   = {}; /* { thema: [{title,excerpt,url,datum,source}] | null } */
+const customThemaLoading = {}; /* { thema: true } */
+
 /* ══════════════════════════════════════
    DATA — THEMA'S
 ══════════════════════════════════════ */
@@ -20,11 +24,15 @@ const DUIDING = {
   'Capaciteitsdruk':        { icon: '📊', text: 'Wachtlijsten groeien in bijna alle sectoren. Capaciteitsplanning vraagt om samenwerking over grenzen heen. Regiobeelden bieden inzicht, maar de vertaling naar oplossingen blijft een uitdaging.' },
   'Regionale samenwerking': { icon: '🤝', text: 'IZA-akkoorden dwingen tot regionale samenwerking. Netwerkzorg vraagt nieuwe governance en heldere afspraken. Regio\'s verschillen sterk in volwassenheid — van verkenning tot concrete uitvoering.' },
   'Financiering':           { icon: '💶', text: 'De NZa stuurt op transparantie en doelmatigheid. Bezuinigingen op langdurige zorg zetten druk op instellingen. Bestuurders zoeken naar bekostigingsmodellen die kwaliteit en kostenbeheersing verbinden.' },
+  'Zorgtransformatie':      { icon: '🔄', text: 'Zorgtransformatie vraagt om fundamentele herinrichting van zorgprocessen, organisaties en samenwerkingsvormen. Digitalisering, populatiemanagement en integrale ketenzorg zijn de pijlers. Het IZA is het beleidsmatige anker voor deze transitie.' },
+  'Preventie':              { icon: '🛡️', text: 'Het Nationaal Preventieakkoord zet in op rookvrije generaties, gezonder eten en meer bewegen. Gemeenten krijgen een regisserende rol. Preventie verschuift van een medisch naar een sociaal en ruimtelijk vraagstuk met grote impact op de zorgvraag.' },
+  'Ouderenzorg':            { icon: '👴', text: 'De vergrijzing versnelt de vraag naar verpleeg- en thuiszorg structureel. "Thuis als standaard" is het beleidsmotto: langer zelfstandig wonen vraagt meer wijkgerichte zorg en mantelzorgondersteuning. Kwaliteitskaders en personeelstekorten bepalen het bestuurlijk ritme.' },
 };
 
 const THEME_COLORS = {
   'Arbeidsmarkt': '#0B7075', 'Passende zorg': '#2D6A4F', 'Digitalisering': '#4F46E5',
   'Capaciteitsdruk': '#C2410C', 'Regionale samenwerking': '#0369A1', 'Financiering': '#7C3AED',
+  'Zorgtransformatie': '#0E7490', 'Preventie': '#65A30D', 'Ouderenzorg': '#9333EA',
 };
 
 /* ══════════════════════════════════════
@@ -90,6 +98,42 @@ const ARTIKEL_CONTEXT = {
       'Financieel directeur':'Kostenverdeling in regionale samenwerking en gezamenlijke investeringen vragen om heldere financiële afspraken en transparante rapportage.',
     },
     betekenis: 'Regionale samenwerking vereist investering in relaties, heldere governance en de bereidheid om eigen belangen af te wegen tegen het bredere regionale belang.',
+  },
+  'Zorgtransformatie': {
+    speelt: 'Het zorglandschap ondergaat een fundamentele heroriëntatie: van aanbodgestuurd naar vraaggestuurd, van behandelen naar voorkomen, van sector-denken naar integrale ketenzorg. IZA-middelen en populatiemanagement zijn de instrumenten; governance en cultuurverandering zijn de knelpunten.',
+    relevant: {
+      'Zorgmanager':         'Jij staat midden in de transitie: zorgpaden herinrichten, ketensamenwerking opbouwen en je team meenemen in nieuw werkende modellen. De operationele vertaalslag is jouw dagelijkse uitdaging.',
+      'Bestuurder':          'Zorgtransformatie herpositioneert de eigen organisatie in een veranderend landschap. Fusies, strategische allianties en focus op kernactiviteiten zijn het speelbord van de komende jaren.',
+      'Beleidsmedewerker':   'Transformatiebeleid vertalen naar uitvoerbare plannen vraagt begrip van het IZA, populatiemanagement en regionaal zorglandschap. Jij bent de verbindende schakel tussen beleid en praktijk.',
+      'Adviseur':            'Instellingen zoeken externe begeleiding bij proces- en organisatieverandering die de transformatie vraagt. Verandermanagement en implementatiebegeleiding zijn de kernvragen.',
+      'HR-professional':     'Zorgtransformatie vraagt andere competentieprofielen, bijgestelde functies en een scholingsagenda die gericht is op ketensamenwerking, zelfmanagement en digitale vaardigheden.',
+      'Financieel directeur':'Transformatie kost geld voordat het wat oplevert. Een gedegen businesscase, meerjaren-investeringsplan en heldere afspraken over bekostiging van transitiekosten zijn essentieel.',
+    },
+    betekenis: 'Zorgtransformatie vraagt om een integrale aanpak: verbind strategische herpositionering met operationele herinrichting, investeer in cultuur en governance, en houd de patiënt centraal als kompas bij elke beslissing.',
+  },
+  'Preventie': {
+    speelt: 'Het Nationaal Preventieakkoord heeft doelstellingen op roken, overgewicht en bewegen. Gemeenten nemen een regisseursrol, maar de samenwerking met zorgaanbieders vraagt nog veel aandacht. Zorgverzekeraars investeren toenemend in preventieve contracten. Evidence-based interventies schalen moeizaam op.',
+    relevant: {
+      'Zorgmanager':         'Preventie raakt jouw dagelijkse zorgverlening: vroegsignalering, leefstijlcoaching en zelfmanagementondersteuning zijn de schakel tussen preventie en behandeling in jouw team.',
+      'Bestuurder':          'Preventieve zorg biedt strategische kansen: samenwerking met gemeenten, zorgverzekeraars en werkgevers opent nieuwe financieringsstromen en positioneert de organisatie voor de toekomst.',
+      'Beleidsmedewerker':   'Preventiebeleid op instellingsniveau vertalen, deelnemen aan gemeentelijke gezondheidsagenda's en IZA-preventieafspraken monitoren zijn directe taken.',
+      'Adviseur':            'Adviesvragen rondom de opzet van preventieve programma's, leefstijlinterventies en de verbinding met het sociaal domein nemen sterk toe.',
+      'HR-professional':     'Preventie heeft ook een interne dimensie: gezond werkgeverschap, vitaliteitsprogramma's en verzuimpreventie voor medewerkers zijn onderdeel van jouw agenda.',
+      'Financieel directeur':'Preventieve investeringen renderen op lange termijn maar kosten op korte termijn. Een heldere businesscase en bekostigingsafspraken met zorgverzekeraars zijn nodig.',
+    },
+    betekenis: 'Preventie vraagt om een sectoroverstijgende aanpak: verbind zorg, gemeenten, werkgevers en verzekeraars. Investeer in vroegsignalering en leefstijlondersteuning als onderdeel van de kernstrategie.',
+  },
+  'Ouderenzorg': {
+    speelt: 'Nederland vergrijst snel: in 2030 zijn er naar schatting 170.000 mensen met dementie. Het kabinetsbeleid "Thuis als standaard" drukt de vraag naar verpleeghuisplaatsen maar vergroot de druk op wijkverpleging en mantelzorgers. Kwaliteitskader verpleeghuiszorg vraagt meer personele inzet terwijl het arbeidsmarktprobleem nijpend blijft.',
+    relevant: {
+      'Zorgmanager':         'Ouderenzorg vraagt om zorgpaden gericht op langer zelfstandig thuis wonen, adequate transfermomenten en intensieve samenwerking met wijkteams en mantelzorgers.',
+      'Bestuurder':          'Strategische keuzes over capaciteitsuitbreiding, transformatie naar thuiszorgconcepten en samenwerking met gemeenten bepalen de toekomstbestendigheid van de organisatie.',
+      'Beleidsmedewerker':   'Ouderenbeleid omvat bekostiging via WLZ en WMO, kwaliteitskaders, gemeentelijke woonzorgvisies en IZA-afspraken over de ouderenzorgketen.',
+      'Adviseur':            'Adviesvragen rondom transformatie naar extramurale zorg, dementiezorg, personeelsmodellen en samenwerking met het sociaal domein zijn sterk in opkomst.',
+      'HR-professional':     'De ouderenzorg heeft de zwaarste arbeidsmarktvraagstukken: hoge uitstroom, zware werkdruk en specifieke competenties voor dementiezorg en palliatieve zorg.',
+      'Financieel directeur':'WLZ-bekostiging, zorgzwaartepakketten en de financiële impact van thuiszorguitbreiding versus intramurale capaciteit zijn jouw kerndossier in de ouderenzorg.',
+    },
+    betekenis: 'Ouderenzorg vraagt om een transformatie richting thuis-gerichte modellen, intensieve regionale samenwerking en een aanpak die de personeelscrisis structureel adresseert zonder concessies te doen aan kwaliteit.',
   },
   'Financiering': {
     speelt: 'NZa-tarieven stijgen gemiddeld 3,1% terwijl werkelijke kostenstijging uitkomt op 5,4%. Bezuinigingen op langdurige zorg zetten instellingen met krappe marges verder onder druk. Uitkomstbekostiging wint terrein maar is complex te implementeren.',
@@ -370,6 +414,120 @@ const ARTICLES = [
     <p>GGZ Nederland stelt dat schaalvergroting noodzakelijk is om specialistische zorg bereikbaar te houden en het hoofd te bieden aan personeelstekorten. Patiëntenorganisaties zijn bezorgder en vragen om garanties voor toegankelijkheid.</p>
     <blockquote>"Schaalvergroting mag nooit ten koste gaan van bereikbaarheid voor de patiënt." — Directeur MIND</blockquote>`,
   },
+
+  /* ── ZORGTRANSFORMATIE ── */
+  {
+    id: 25, thema: 'Zorgtransformatie', datum: 'Vandaag', minuten: 6,
+    img: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=400&fit=crop&q=80',
+    title: 'Zorgtransformatie gaat te langzaam: experts pleiten voor dwingend tijdpad',
+    excerpt: 'Onafhankelijke evaluatoren concluderen dat de transformatie van het zorgsysteem achterblijft bij de ambities uit het IZA. Zonder dwingend tijdpad dreigt de kans te worden gemist.',
+    body: `<p>De transformatie van het Nederlandse zorgsysteem verloopt te langzaam. Dit concluderen onafhankelijke evaluatoren in een tussentijds rapport over de voortgang van het Integraal Zorgakkoord. De evaluatoren stellen dat de structurele verschuiving van tweedelijn naar eerste lijn en van behandelen naar voorkomen weliswaar zichtbaar is, maar te gefragmenteerd en te traag.</p>
+    <h3>Structurele obstakels</h3>
+    <p>Onderzoekers wijzen op drie hardnekkige obstakels: het personeelstekort dat transformatie-investeringen opslokt, de bekostigingssystematiek die ziekenhuizen beloont voor volume, en de governance-complexiteit van regionale samenwerking. "Elk van deze factoren vertraagt op zichzelf al de transformatie — samen vormen ze een rem die moeilijk te overwinnen is zonder externe druk," aldus het rapport.</p>
+    <blockquote>"We weten al jaren wat er moet veranderen. Het gebrek is niet aan kennis maar aan urgentie en sturing." — Voorzitter Raad voor Volksgezondheid & Samenleving</blockquote>
+    <h3>Aanbevelingen</h3>
+    <p>De evaluatoren pleiten voor een dwingende routekaart met concrete mijlpalen per regio, aangevuld met transformatiebudgetten die pas vrijkomen bij aantoonbare resultaten. Ook wordt aanbevolen om bestuurlijke verantwoordelijkheid explicieter te beleggen.</p>`,
+  },
+  {
+    id: 26, thema: 'Zorgtransformatie', datum: 'Gisteren', minuten: 4,
+    img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=400&fit=crop&q=80',
+    title: 'Vijf ziekenhuizen bouwen gezamenlijke integrale zorgeenheden',
+    excerpt: 'In een gezamenlijk IZA-initiatief transformeren vijf ziekenhuizen hun poliklinische zorg naar integrale eenheden waar cure en care samenkomen.',
+    body: `<p>Vijf middelgrote ziekenhuizen in drie regio's starten een ambitieus transformatieprogramma: hun poliklinische afdelingen worden omgebouwd naar integrale zorgeenheden waar chronische patiënten hun complete zorgtraject kunnen doorlopen, van diagnostiek en behandeling tot verpleging en ondersteuning bij zelfmanagement.</p>
+    <h3>Concept en werkwijze</h3>
+    <p>In de nieuwe eenheden werken specialisten, verpleegkundig specialisten, diëtisten, fysiotherapeuten en maatschappelijk werkers in vaste teams samen rondom groepen patiënten met vergelijkbare aandoeningen. De administratie is geïntegreerd in het zorgproces, waardoor artsen en verpleegkundigen minder tijd kwijt zijn aan systemen en meer aan de patiënt.</p>
+    <blockquote>"Integratie is niet een modewoord — het is de enige manier om de zorg betaalbaar en menselijk te houden." — Bestuurder deelnemend ziekenhuis</blockquote>
+    <h3>Verwachte resultaten</h3>
+    <p>Het programma loopt drie jaar en wordt extern geëvalueerd. Eerste projecties wijzen op een verkorting van de doorlooptijd van complexe trajecten met gemiddeld 25% en een hogere patiënttevredenheid.</p>`,
+  },
+  {
+    id: 27, thema: 'Zorgtransformatie', datum: '3 dagen geleden', minuten: 5,
+    img: 'https://images.unsplash.com/photo-1453738773917-9c3eff1db985?w=800&h=400&fit=crop&q=80',
+    title: 'RVS-rapport: zorgtransformatie vraagt cultuurverandering, niet alleen structuur',
+    excerpt: 'De Raad voor Volksgezondheid & Samenleving waarschuwt dat structurele hervormingen zonder cultuurverandering gedoemd zijn te mislukken.',
+    body: `<p>Structurele hervormingen in de zorg slagen alleen als er tegelijk wordt geïnvesteerd in cultuurverandering binnen zorgorganisaties. Dat is de kernboodschap van een nieuw adviesrapport van de Raad voor Volksgezondheid & Samenleving (RVS). Het rapport, getiteld 'Transformeren van binnenuit', analyseert tien jaar beleidsinspanningen op het gebied van zorgtransformatie.</p>
+    <h3>Wat mist er</h3>
+    <p>De RVS constateert dat de meeste transformatie-initiatieven focussen op structuren, systemen en financiering, maar de menselijke kant — waarden, gedrag en leiderschapsstijl — te weinig adresseren. "Nieuwe structuren worden bevolkt door mensen met oude gewoonten. Dat maakt ze al snel oud," stelt het rapport.</p>
+    <blockquote>"De hardste knop om aan te draaien is de cultuur van meten, verantwoorden en wantrouwen die de sector in de greep houdt." — RVS</blockquote>
+    <h3>Concrete aanbevelingen</h3>
+    <p>De raad pleit voor meer ruimte voor experimenten, minder verantwoordingslast voor voorlopers en actief leiderschapsontwikkelingsprogramma's specifiek gericht op de zorg.</p>`,
+  },
+
+  /* ── PREVENTIE ── */
+  {
+    id: 28, thema: 'Preventie', datum: 'Gisteren', minuten: 5,
+    img: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop&q=80',
+    title: 'Preventieakkoord haalt rookdoelstelling niet: tempo van daling te laag',
+    excerpt: 'Een tussentijdse evaluatie van het Nationaal Preventieakkoord concludeert dat het doel van een rookvrije generatie in 2040 niet gehaald wordt als beleid ongewijzigd blijft.',
+    body: `<p>Nederland haalt de ambitieuze doelstelling van het Nationaal Preventieakkoord om in 2040 een rookvrije generatie te hebben niet als het huidige tempo van dalingen aanhoudt. Dat concludeert het RIVM in een tussentijdse evaluatie. Het percentage rokers daalt weliswaar, maar te langzaam om de beoogde reductie van 20% naar minder dan 5% te halen.</p>
+    <h3>Wat werkt, wat niet</h3>
+    <p>Succesvolle interventies zijn de verhoging van accijns, reclameverboden en de uitbreiding van rookvrije zones. Minder effectief blijken de vrijwillige samenwerking met de tabaksindustrie en zelfreguleringsafspraken. Het RIVM pleit voor aanvullende maatregelen, waaronder een uitgebreider verkoopverbod en hogere accijnzen.</p>
+    <blockquote>"Vrijwilligheid werkt niet bij verslavende producten. We hebben wetgeving nodig." — Directeur RIVM</blockquote>
+    <h3>Implicaties voor de zorgsector</h3>
+    <p>Zorgaanbieders spelen een cruciale rol via stoppen-met-roken-trajecten. De vergoeding vanuit de basisverzekering is uitgebreid, maar de doorverwijzing vanuit de huisartsenpraktijk blijft achter bij de verwachtingen.</p>`,
+  },
+  {
+    id: 29, thema: 'Preventie', datum: '2 dagen geleden', minuten: 4,
+    img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=400&fit=crop&q=80',
+    title: 'Gemeenten verdubbelen budget wijkgerichte preventie na positieve resultaten',
+    excerpt: 'Na drie jaar pilots met wijkgerichte preventie zien gemeenten aanwijzingen van lagere zorgkosten en meer zelfredzaamheid. Budget wordt verdubbeld.',
+    body: `<p>Meer dan 40 gemeenten kondigen aan hun budget voor wijkgerichte preventie te verdubbelen. De beslissing volgt op drie jaar pilotprogramma's waarbij buurtcoaches, zorgaanbieders en sociale wijkteams intensief samenwerken om gezondheidsachterstanden in kwetsbare wijken te verminderen.</p>
+    <h3>Resultaten van de pilots</h3>
+    <p>In de acht intensiefst onderzochte pilotwijken is de ziekenhuisopname vanwege vermijdbare aandoeningen met 11% gedaald ten opzichte van vergelijkbare wijken zonder programma. De zelfraportagecijfers over gezondheid zijn gestegen. De kosten-baten analyse over vijf jaar toont een positieve business case, al zijn de onderzoekers voorzichtig vanwege de korte looptijd.</p>
+    <blockquote>"Preventie kost geld nu, maar spaart zorg later. Deze cijfers geven ons het vertrouwen om te investeren." — Wethouder Volksgezondheid gemeente Rotterdam</blockquote>
+    <h3>Wat de zorg moet doen</h3>
+    <p>Zorgaanbieders worden opgeroepen hun preventief zorgaanbod te koppelen aan de wijkgerichte aanpak. Huisartsen, GGZ-aanbieders en thuiszorg moeten structureler samenwerken met gemeentelijke sociale teams.</p>`,
+  },
+  {
+    id: 30, thema: 'Preventie', datum: '4 dagen geleden', minuten: 6,
+    img: 'https://images.unsplash.com/photo-1571772996211-2f02c9727629?w=800&h=400&fit=crop&q=80',
+    title: 'Sport als zorginterventie wint terrein: huisartsen schrijven steeds vaker voor',
+    excerpt: 'Beweegrecepten en sportverwijzingen worden steeds gangbaarder in de huisartsenpraktijk. Onderzoek toont effectiviteit bij chronische aandoeningen.',
+    body: `<p>Het aantal beweegrecepten dat huisartsen uitschrijven is in drie jaar tijd verdrievoudigd. Steeds meer praktijken werken samen met lokale sportaanbieders om patiënten met diabetes type 2, hart- en vaatziekten en depressie een bewegingsinterventie te bieden als aanvulling op of alternatief voor medicatie.</p>
+    <h3>Wetenschappelijke basis</h3>
+    <p>Een grootschalige studie van de Vrije Universiteit Amsterdam toont aan dat patiënten met diabetes type 2 die deelnemen aan een gestructureerd beweegprogramma gemiddeld 0,7 HbA1c-punten lager eindigen dan de controlegroep. Bij depressie toont beweging vergelijkbare effectiviteit als antidepressiva bij milde en matige gevallen.</p>
+    <blockquote>"Bewegen is zorg. We moeten het ook zo bekostigen en organiseren." — Hoogleraar Sportgeneeskunde VU Amsterdam</blockquote>
+    <h3>Drempels</h3>
+    <p>Bekostiging blijft een knelpunt: beweegrecepten vallen deels buiten de basisverzekering. Gemeenten en zorgverzekeraars werken aan nieuwe contractvormen, maar er is nog geen landelijk dekkend model.</p>`,
+  },
+
+  /* ── OUDERENZORG ── */
+  {
+    id: 31, thema: 'Ouderenzorg', datum: 'Vandaag', minuten: 5,
+    img: 'https://images.unsplash.com/photo-1576765607924-3f7b8410a787?w=800&h=400&fit=crop&q=80',
+    title: 'Kabinet presenteert Ouderenzorgplan 2030: "Thuis als standaard"',
+    excerpt: 'Het nieuwe kabinetsplan zet in op een fundamentele verschuiving: ouderen blijven langer thuis wonen met intensieve wijkzorgondersteuning als norm.',
+    body: `<p>Het kabinet heeft het Ouderenzorgplan 2030 gepresenteerd. De kern van het plan is het principe "Thuis als standaard": ook ouderen met complexe zorgvragen krijgen primair ondersteuning om thuis te blijven wonen. Verpleeghuisopname is voortaan het sluitstuk, niet de vanzelfsprekende oplossing.</p>
+    <h3>Vier pijlers</h3>
+    <p>Het plan steunt op vier pijlers: uitbreiding van de wijkverpleging met 15.000 extra fte's, een mantelzorgondersteuningsprogramma, digitale zorg thuis (sensoren, videoconsulten, medicatiedispensers) en aanpassing van het woningbestand door 120.000 extra levensloopbestendige woningen vóór 2028.</p>
+    <blockquote>"We bouwen een samenleving waar oud worden geen synoniem is voor institutionalisering." — Minister VWS</blockquote>
+    <h3>Reacties uit de sector</h3>
+    <p>ActiZ en de thuiszorgbranche reageren gematigd positief maar benadrukken dat de personeelstekorten het plan direct in de weg staan. Zonder structurele arbeidsmarktinvesteringen blijft "thuis als standaard" een wens op papier.</p>`,
+  },
+  {
+    id: 32, thema: 'Ouderenzorg', datum: '3 dagen geleden', minuten: 4,
+    img: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=800&h=400&fit=crop&q=80',
+    title: 'Kwaliteitskader verpleeghuiszorg: inspectie ziet achterblijvende uitvoering',
+    excerpt: 'De IGJ constateert dat een kwart van de verpleeghuizen nog niet voldoet aan de personeelsnormen uit het Kwaliteitskader, vier jaar na invoering.',
+    body: `<p>Vier jaar na de invoering van het Kwaliteitskader verpleeghuiszorg voldoet nog altijd een kwart van de verpleeghuizen niet aan de minimumnormen voor personeelsbezetting en deskundigheidsmix. Dat constateert de Inspectie Gezondheidszorg en Jeugd (IGJ) in haar jaarlijkse analyse. De inspectie spreekt van "zorgwekkend structureel tekortschieten" bij de achterliggende groep instellingen.</p>
+    <h3>Voornaamste tekortkomingen</h3>
+    <p>De meest genoemde tekortkomingen zijn onvoldoende aanwezigheid van verpleegkundigen met HBO-opleiding, te weinig specialisten ouderengeneeskunde voor de cliëntpopulatie en onvoldoende aandacht voor welbevinden naast medische zorg. De inspectie wijst erop dat de personeelstekorten zowel oorzaak als gevolg zijn van deze problematiek.</p>
+    <blockquote>"Een kader dat niet wordt nageleefd beschermt niemand. We zullen moeten doorzetten, ook als dat ongemakkelijk voelt." — Hoofdinspecteur IGJ</blockquote>
+    <h3>Wat bestuurders moeten doen</h3>
+    <p>De IGJ verwacht van alle verpleeghuisbesturen een actueel verbeterplan en een realistisch meerjarenscenario voor personeelsopbouw. Instellingen die niet aantoonbaar verbeteren, riskeren aanwijzingen of publieke rapportages.</p>`,
+  },
+  {
+    id: 33, thema: 'Ouderenzorg', datum: '5 dagen geleden', minuten: 6,
+    img: 'https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=800&h=400&fit=crop&q=80',
+    title: 'Dementiezorg in Nederland: 170.000 diagnoses verwacht in 2030',
+    excerpt: 'Nederland bereidt zich voor op een forse stijging van dementiegevallen. Nieuwe zorgconcepten en vroegsignalering staan centraal in het Nationaal Dementieprogramma.',
+    body: `<p>In 2030 worden naar schatting 170.000 mensen in Nederland gediagnosticeerd met dementie — een stijging van 30% ten opzichte van nu. Dit prognose van het RIVM en Alzheimer Nederland vormt de aanleiding voor het nieuwe Nationaal Dementieprogramma, dat inzet op vroegsignalering, persoonsgerichte zorg en innovatieve woonconcepten.</p>
+    <h3>Vroegsignalering als prioriteit</h3>
+    <p>Diagnostiek en vroegsignalering staan centraal: hoe eerder de diagnose, hoe langer mensen zelfstandig kunnen functioneren met de juiste begeleiding. Het programma investeert in geheugenpoli's, training van huisartsen en digitale screeningsinstrumenten.</p>
+    <blockquote>"Dementie is geen normaal oud worden. We moeten het herkennen als de medische aandoening die het is, en er ook als zodanig naar handelen." — Directeur Alzheimer Nederland</blockquote>
+    <h3>Woonconcepten</h3>
+    <p>Kleinschalige woonconcepten gericht op vertrouwdheid, zingeving en beweging hebben bewezen positief effect op de kwaliteit van leven van mensen met dementie. Het programma subsidieert de uitrol van 500 extra kleinschalige woonprojecten tot 2028 en investeert in opleiding van dementiespecialisten.</p>`,
+  },
 ];
 
 /* ══════════════════════════════════════
@@ -382,6 +540,9 @@ const DOSSIERS = [
   { icon: '📊', thema: 'Capaciteitsdruk', title: 'Capaciteit en wachtlijsten', desc: 'Analyses van wachttijden per sector, capaciteitsplanning en regionale spreidingsvraagstukken.', artikelen: 15, updated: 'Bijgewerkt: 3 dagen geleden' },
   { icon: '🤝', thema: 'Regionale samenwerking', title: 'Regionale zorgnetwerken', desc: 'Overzicht van IZA-uitvoeringsplannen per regio, governance-modellen en praktijkvoorbeelden.', artikelen: 20, updated: 'Bijgewerkt: 1 week geleden' },
   { icon: '💶', thema: 'Financiering', title: 'Financiering en bekostiging', desc: 'NZa-tarieven, bezuinigingen, prestatiebekostiging en financiële duurzaamheid in de zorg.', artikelen: 22, updated: 'Bijgewerkt: 4 dagen geleden' },
+  { icon: '🔄', thema: 'Zorgtransformatie', title: 'Zorgtransformatie & IZA-uitvoering', desc: 'De fundamentele herinrichting van het zorgstelsel: integrale zorg, populatiemanagement en cultuurverandering.', artikelen: 17, updated: 'Bijgewerkt: vandaag' },
+  { icon: '🛡️', thema: 'Preventie', title: 'Preventie en leefstijl', desc: 'Nationaal Preventieakkoord, wijkgerichte gezondheidsbevordering en de verbinding tussen zorg en sociaal domein.', artikelen: 14, updated: 'Bijgewerkt: gisteren' },
+  { icon: '👴', thema: 'Ouderenzorg', title: 'Ouderenzorg en dementie', desc: 'Vergrijzing, verpleeghuiszorg, thuiszorg, dementiebeleid en de transitie naar "thuis als standaard".', artikelen: 19, updated: 'Bijgewerkt: 2 dagen geleden' },
 ];
 
 const AGENDA = [
@@ -404,6 +565,9 @@ const THEME_ICONS = {
   'Capaciteitsdruk':        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
   'Regionale samenwerking': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
   'Financiering':           `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+  'Zorgtransformatie':      `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`,
+  'Preventie':              `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>`,
+  'Ouderenzorg':            `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
 };
 
 const KNOWN_THEMAS = new Set(Object.keys(THEME_ICONS));
@@ -670,6 +834,8 @@ function addAndersThema() {
   list.appendChild(chip);
   inp.value = '';
   inp.focus();
+  /* Start meteen ophalen zodat artikelen klaar staan zodra het dashboard opent */
+  fetchCustomThemaArtikelen(val);
 }
 
 function removeAndersThema(btn, val) {
@@ -793,6 +959,9 @@ function buildDashboard() {
     regioLink.onclick = (e) => { e.preventDefault(); navigateTo('artikelen', document.querySelector('[data-page="artikelen"]')); };
   }
 
+  /* Zet fetch in gang voor alle eigen thema's */
+  profile.themas.filter(t => !KNOWN_THEMAS.has(t)).forEach(t => fetchCustomThemaArtikelen(t));
+
   renderWeeklySummary();
   renderArticles();
   renderDuiding();
@@ -808,10 +977,11 @@ function renderArticles() {
   const grid = document.getElementById('articles-grid');
   grid.innerHTML = '';
   let list = ARTICLES.filter(a => profile.themas.includes(a.thema));
-  if (!list.length) list = ARTICLES;
+  const customThemas = profile.themas.filter(t => !KNOWN_THEMAS.has(t));
+  /* Alleen fallback naar alle artikelen als de gebruiker géén custom thema's heeft */
+  if (!list.length && !customThemas.length) list = ARTICLES;
   if (priorityTheme) list = [...list.filter(a => a.thema === priorityTheme), ...list.filter(a => a.thema !== priorityTheme)];
   list.slice(0, 8).forEach((art, i) => buildArticleCard(grid, art, i));
-  const customThemas = profile.themas.filter(t => !KNOWN_THEMAS.has(t));
   customThemas.forEach((t, i) => buildCustomThemePlaceholder(grid, t, list.length + i));
 }
 
@@ -955,23 +1125,167 @@ const ZORG_FOTOS = [
   'photo-1576671081837-5c4ab9c07dba', 'photo-1516841273335-e39b37888115',
 ];
 
+/* ══════════════════════════════════════
+   LIVE ARTIKELEN VOOR EIGEN THEMA'S
+══════════════════════════════════════ */
+
+async function fetchCustomThemaArtikelen(thema) {
+  if (customThemaCache[thema] !== undefined) return; /* al opgehaald */
+  if (customThemaLoading[thema]) return;             /* bezig */
+  customThemaLoading[thema] = true;
+
+  /* --- Poging 1: Rijksoverheid Open Data API (juiste endpoint & response) --- */
+  try {
+    const q = encodeURIComponent(thema + ' zorg');
+    const rUrl = `https://opendata.rijksoverheid.nl/v1/infotypes/newsarticle/?output=json&rows=5&q=${q}`;
+    const rRes = await fetch(rUrl, { signal: AbortSignal.timeout(7000) });
+    if (rRes.ok) {
+      const data = await rRes.json();
+      /* Rijksoverheid geeft { content: [...], total: N, ... } terug */
+      const items = data.content || (Array.isArray(data) ? data : []);
+      if (items.length > 0) {
+        customThemaCache[thema] = items.slice(0, 5).map(item => ({
+          title:   item.title || 'Artikel',
+          excerpt: (item.introduction || item.intro || item.shortintro || '')
+                     .replace(/<[^>]+>/g, '').substring(0, 220).trim(),
+          url:     item.url
+                     ? (item.url.startsWith('http') ? item.url : `https://www.rijksoverheid.nl${item.url}`)
+                     : 'https://www.rijksoverheid.nl',
+          datum:   item.lastmodified
+                     ? new Date(item.lastmodified).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
+                     : item.publicationdate
+                       ? new Date(item.publicationdate).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
+                       : 'Recent',
+          source:  'Rijksoverheid.nl',
+          thema,
+        }));
+        customThemaLoading[thema] = false;
+        _refreshCustomThema(thema);
+        return;
+      }
+    }
+  } catch (_) { /* door naar volgende bron */ }
+
+  /* --- Poging 2: Wikipedia NL met verrijkte samenvattingen --- */
+  try {
+    const wUrl = `https://nl.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(thema + ' zorg Nederland')}&format=json&origin=*&srlimit=6&utf8=1`;
+    const wRes = await fetch(wUrl, { signal: AbortSignal.timeout(7000) });
+    const wData = await wRes.json();
+    const hits = (wData.query?.search || []).slice(0, 4);
+
+    /* Haal voor elk resultaat een uitgebreidere samenvatting op via de summary API */
+    const enriched = await Promise.all(hits.map(async (r) => {
+      let excerpt = r.snippet.replace(/<[^>]+>/g, '').trim();
+      let datum   = 'Wikipedia';
+      try {
+        const sumRes = await fetch(
+          `https://nl.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(r.title)}`,
+          { signal: AbortSignal.timeout(5000) }
+        );
+        if (sumRes.ok) {
+          const sum = await sumRes.json();
+          if (sum.extract) excerpt = sum.extract.substring(0, 240).trimEnd() + '…';
+          if (sum.timestamp) {
+            datum = new Date(sum.timestamp).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+          }
+        }
+      } catch (_) { /* gebruik search snippet als fallback */ }
+      return {
+        title:   r.title,
+        excerpt,
+        url:     `https://nl.wikipedia.org/wiki/${encodeURIComponent(r.title.replace(/ /g, '_'))}`,
+        datum,
+        source:  'Wikipedia NL',
+        thema,
+      };
+    }));
+
+    customThemaCache[thema] = enriched.filter(a => a.title);
+  } catch (_) {
+    customThemaCache[thema] = [];
+  }
+
+  customThemaLoading[thema] = false;
+  _refreshCustomThema(thema);
+}
+
+function _refreshCustomThema(thema) {
+  renderArticles();
+  if (currentPage === 'artikelen') renderArtikelenGrid();
+}
+
 function buildCustomThemePlaceholder(container, thema, index) {
-  const foto = ZORG_FOTOS[(thema.length + index) % ZORG_FOTOS.length];
-  const imgUrl = `https://images.unsplash.com/${foto}?w=800&h=400&fit=crop&q=80`;
-  const color = '#6B7280';
-  const card = document.createElement('div');
-  card.className = 'article-card';
-  card.style.animationDelay = `${index * 55}ms`;
-  card.innerHTML = `
-    <img class="ac-image" src="${imgUrl}" alt="${thema}" loading="lazy">
-    <div class="ac-stripe" style="background:${color}"></div>
-    <div class="ac-body">
-      <div class="ac-top"><span class="ac-tag" style="background:#f3f4f6;color:${color}">${thema}</span></div>
-      <div class="ac-title">Artikelen over ${thema}</div>
-      <div class="ac-excerpt">Op Zorgvisie.nl zijn artikelen beschikbaar over dit onderwerp. In de live omgeving verschijnen ze hier automatisch op basis van jouw profiel.</div>
-      <div class="ac-footer"><span class="ac-date" style="color:var(--ink-muted)">Zorgvisie.nl</span></div>
-    </div>`;
-  container.appendChild(card);
+  const arts    = customThemaCache[thema];
+  const loading = customThemaLoading[thema];
+
+  /* Nog niet opgehaald — start fetch en toon skeleton */
+  if (!arts && !loading) fetchCustomThemaArtikelen(thema);
+
+  /* === SKELETON (laden) === */
+  if (!arts) {
+    const card = document.createElement('div');
+    card.className = 'article-card custom-loading-card';
+    card.dataset.thema = thema;
+    card.style.animationDelay = `${index * 55}ms`;
+    card.innerHTML = `
+      <div class="ac-image clc-skeleton"></div>
+      <div class="ac-stripe" style="background:#E0E0E0"></div>
+      <div class="ac-body">
+        <div class="ac-top"><span class="ac-tag" style="background:#f3f4f6;color:#888">${thema}</span></div>
+        <div class="clc-bar" style="width:80%"></div>
+        <div class="clc-bar" style="width:60%"></div>
+        <div class="clc-bar" style="width:40%;margin-top:10px"></div>
+        <p style="font-size:12px;color:var(--ink-muted);margin-top:6px">Artikelen ophalen…</p>
+      </div>`;
+    container.appendChild(card);
+    return;
+  }
+
+  /* === GEEN RESULTATEN === */
+  if (arts.length === 0) {
+    const foto = ZORG_FOTOS[(thema.length + index) % ZORG_FOTOS.length];
+    const card = document.createElement('div');
+    card.className = 'article-card';
+    card.style.animationDelay = `${index * 55}ms`;
+    card.innerHTML = `
+      <img class="ac-image" src="https://images.unsplash.com/${foto}?w=800&h=400&fit=crop&q=80" alt="${thema}" loading="lazy">
+      <div class="ac-stripe" style="background:#6B7280"></div>
+      <div class="ac-body">
+        <div class="ac-top"><span class="ac-tag" style="background:#f3f4f6;color:#6B7280">${thema}</span></div>
+        <div class="ac-title">Geen openbare artikelen gevonden</div>
+        <div class="ac-excerpt">Voor "${thema}" zijn momenteel geen openbare artikelen beschikbaar. Probeer een iets andere zoekterm.</div>
+        <div class="ac-footer"><span class="ac-date" style="color:var(--ink-muted)">Geen resultaten</span></div>
+      </div>`;
+    container.appendChild(card);
+    return;
+  }
+
+  /* === ECHTE RESULTATEN === */
+  arts.forEach((art, i) => {
+    const foto = ZORG_FOTOS[(thema.length + index + i) % ZORG_FOTOS.length];
+    const card = document.createElement('div');
+    card.className = 'article-card external-article';
+    card.style.animationDelay = `${(index + i) * 55}ms`;
+    card.title = `Opent ${art.source} in nieuw tabblad`;
+    card.innerHTML = `
+      <img class="ac-image" src="https://images.unsplash.com/${foto}?w=800&h=400&fit=crop&q=80" alt="${art.title}" loading="lazy"
+           onerror="this.onerror=null;this.src='https://picsum.photos/seed/${encodeURIComponent(thema)}${i}/800/400'">
+      <div class="ac-stripe" style="background:#0369A1"></div>
+      <div class="ac-body">
+        <div class="ac-top">
+          <span class="ac-tag" style="background:#EFF6FF;color:#0369A1">${thema}</span>
+          <span class="ac-source-badge">${art.source}</span>
+        </div>
+        <div class="ac-title">${art.title}</div>
+        <div class="ac-excerpt">${art.excerpt}</div>
+        <div class="ac-footer">
+          <span class="ac-date">${art.datum}</span>
+          <span class="ac-arrow">Lees meer →</span>
+        </div>
+      </div>`;
+    card.onclick = () => window.open(art.url, '_blank', 'noopener');
+    container.appendChild(card);
+  });
 }
 
 /* ══════════════════════════════════════
@@ -1075,18 +1389,26 @@ function filterArtikelen(zoek) {
 function renderArtikelenGrid() {
   const grid = document.getElementById('artikelen-grid');
   grid.innerHTML = '';
+
+  /* Eigen thema gefilterd — toon alleen live opgehaalde artikelen */
+  if (artikelenFilter.thema && !KNOWN_THEMAS.has(artikelenFilter.thema)) {
+    buildCustomThemePlaceholder(grid, artikelenFilter.thema, 0);
+    return;
+  }
+
+  const customThemas = profile.themas.filter(t => !KNOWN_THEMAS.has(t));
   let list = ARTICLES.filter(a => profile.themas.includes(a.thema));
-  if (!list.length) list = ARTICLES;
+  /* Alleen fallback naar alle artikelen als de gebruiker géén custom thema's heeft */
+  if (!list.length && !customThemas.length) list = ARTICLES;
   if (artikelenFilter.thema) list = list.filter(a => a.thema === artikelenFilter.thema);
   if (artikelenFilter.zoek)  list = list.filter(a =>
     a.title.toLowerCase().includes(artikelenFilter.zoek) ||
     a.excerpt.toLowerCase().includes(artikelenFilter.zoek));
-  if (!list.length) {
+  if (!list.length && !customThemas.length) {
     grid.innerHTML = '<p style="color:var(--ink-muted);font-size:14px;grid-column:1/-1">Geen artikelen gevonden. Kies een ander onderwerp of zoekterm.</p>';
     return;
   }
   list.forEach((art, i) => buildArticleCard(grid, art, i));
-  const customThemas = profile.themas.filter(t => !KNOWN_THEMAS.has(t));
   if (!artikelenFilter.thema) customThemas.forEach((t, i) => buildCustomThemePlaceholder(grid, t, list.length + i));
 }
 
