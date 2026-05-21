@@ -116,9 +116,9 @@ const ARTIKEL_CONTEXT = {
     relevant: {
       'Zorgmanager':         'Preventie raakt jouw dagelijkse zorgverlening: vroegsignalering, leefstijlcoaching en zelfmanagementondersteuning zijn de schakel tussen preventie en behandeling in jouw team.',
       'Bestuurder':          'Preventieve zorg biedt strategische kansen: samenwerking met gemeenten, zorgverzekeraars en werkgevers opent nieuwe financieringsstromen en positioneert de organisatie voor de toekomst.',
-      'Beleidsmedewerker':   'Preventiebeleid op instellingsniveau vertalen, deelnemen aan gemeentelijke gezondheidsagenda's en IZA-preventieafspraken monitoren zijn directe taken.',
-      'Adviseur':            'Adviesvragen rondom de opzet van preventieve programma's, leefstijlinterventies en de verbinding met het sociaal domein nemen sterk toe.',
-      'HR-professional':     'Preventie heeft ook een interne dimensie: gezond werkgeverschap, vitaliteitsprogramma's en verzuimpreventie voor medewerkers zijn onderdeel van jouw agenda.',
+      'Beleidsmedewerker':   'Preventiebeleid op instellingsniveau vertalen, deelnemen aan gemeentelijke gezondheidsagenda\'s en IZA-preventieafspraken monitoren zijn directe taken.',
+      'Adviseur':            'Adviesvragen rondom de opzet van preventieve programma\'s, leefstijlinterventies en de verbinding met het sociaal domein nemen sterk toe.',
+      'HR-professional':     'Preventie heeft ook een interne dimensie: gezond werkgeverschap, vitaliteitsprogramma\'s en verzuimpreventie voor medewerkers zijn onderdeel van jouw agenda.',
       'Financieel directeur':'Preventieve investeringen renderen op lange termijn maar kosten op korte termijn. Een heldere businesscase en bekostigingsafspraken met zorgverzekeraars zijn nodig.',
     },
     betekenis: 'Preventie vraagt om een sectoroverstijgende aanpak: verbind zorg, gemeenten, werkgevers en verzekeraars. Investeer in vroegsignalering en leefstijlondersteuning als onderdeel van de kernstrategie.',
