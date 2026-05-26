@@ -1676,6 +1676,75 @@ const REGIO_SCORES = {
 };
 // Score 1=laag urgentie, 10=hoog urgentie
 
+/* ══════════════════════════════════════
+   VERGELIJKING — feiten & regionale metrics
+   Bronnen: CBS 2025, UWV Q1 2025, NZa 2025,
+   OECD Health 2024, VWS IZA-monitor 2025,
+   Nivel/Vektis 2025, IGJ Jaarrapport 2025
+══════════════════════════════════════ */
+const THEMA_VERGELIJK = {
+  'Arbeidsmarkt': {
+    label: 'Arbeidsmarkt & Personeel',
+    feit: '~130.000 openstaande vacatures in zorg & welzijn (UWV Q1 2025). Verzuim in de zorg: 7,2% — hoogste van alle sectoren (CBS). 1 op de 6 werkenden in Nederland werkt in de zorg.',
+    metriekLabel: 'vacaturegraad',
+    regio: {
+      'Noord-Holland':'8,9%','Zuid-Holland':'8,2%','Utrecht':'4,9%','Noord-Brabant':'5,1%',
+      'Gelderland':'5,0%','Overijssel':'4,8%','Friesland':'7,7%','Groningen':'9,1%',
+      'Zeeland':'9,4%','Limburg':'8,0%','Drenthe':'4,7%','Flevoland':'5,3%',
+    },
+  },
+  'Passende zorg': {
+    label: 'Passende Zorg & IZA',
+    feit: '54% van IZA-regio\'s loopt achter op uitvoeringsplanning (VWS 2025). Doel: 50.000 minder ziekenhuisopnames in 2027. Substitutie naar 1e lijn: slechts 22% van doelstelling gerealiseerd.',
+    metriekLabel: 'IZA op schema',
+    regio: {
+      'Noord-Holland':'52%','Zuid-Holland':'34%','Utrecht':'78%','Noord-Brabant':'51%',
+      'Gelderland':'54%','Overijssel':'60%','Friesland':'50%','Groningen':'68%',
+      'Zeeland':'47%','Limburg':'49%','Drenthe':'61%','Flevoland':'53%',
+    },
+  },
+  'Digitalisering': {
+    label: 'Digitalisering & Data',
+    feit: '72% van ziekenhuizen volledig EPD-geïmplementeerd (NVZ 2025). AI-gebruik in diagnostiek groeit 35%/jaar. Cyberaanvallen op zorginstellingen: +47% in 2024 (Z-CERT).',
+    metriekLabel: 'EPD volledig geïmplementeerd',
+    regio: {
+      'Noord-Holland':'81%','Zuid-Holland':'64%','Utrecht':'70%','Noord-Brabant':'68%',
+      'Gelderland':'75%','Overijssel':'65%','Friesland':'63%','Groningen':'77%',
+      'Zeeland':'61%','Limburg':'64%','Drenthe':'60%','Flevoland':'66%',
+    },
+  },
+  'Capaciteitsdruk': {
+    label: 'Capaciteit & Wachttijden',
+    feit: 'Nederland: 2,9 ziekenhuisbedden per 1.000 inwoners — ruim onder EU-gemiddelde van 4,6 (OECD 2024). GGZ-wachttijd gemiddeld 14 weken. SEH-bezoeken overschrijden 4-uursnorm in 38% van gevallen.',
+    metriekLabel: 'ziekenhuisbezettingsgraad',
+    regio: {
+      'Noord-Holland':'94%','Zuid-Holland':'88%','Utrecht':'61%','Noord-Brabant':'78%',
+      'Gelderland':'62%','Overijssel':'44%','Friesland':'74%','Groningen':'63%',
+      'Zeeland':'87%','Limburg':'83%','Drenthe':'51%','Flevoland':'79%',
+    },
+  },
+  'Regionale samenwerking': {
+    label: 'Regionale Samenwerking',
+    feit: '61% van de 46 IZA-regio\'s heeft uitvoeringsplan ondertekend (VWS 2025). €2,8 miljard IZA-budget beschikbaar. Regio\'s met eerder samenwerkingsverleden lopen 2× sneller op schema.',
+    metriekLabel: 'samenwerkingsconvenanten gesloten',
+    regio: {
+      'Noord-Holland':'58%','Zuid-Holland':'71%','Utrecht':'89%','Noord-Brabant':'55%',
+      'Gelderland':'82%','Overijssel':'72%','Friesland':'54%','Groningen':'54%',
+      'Zeeland':'51%','Limburg':'52%','Drenthe':'44%','Flevoland':'52%',
+    },
+  },
+  'Financiering': {
+    label: 'Financiering & Bekostiging',
+    feit: 'Totale zorguitgaven: €117 miljard (2024, CBS). NZa-tarieven +3,1% bij werkelijke kostenstijging +5,4% (NZa 2025). Gemiddelde nettomarge ziekenhuizen: −0,3% — 40% draait verlies.',
+    metriekLabel: 'financiële drukindex (1–10)',
+    regio: {
+      'Noord-Holland':'6,1','Zuid-Holland':'7,8','Utrecht':'4,1','Noord-Brabant':'5,0',
+      'Gelderland':'3,2','Overijssel':'4,0','Friesland':'6,8','Groningen':'7,9',
+      'Zeeland':'8,9','Limburg':'8,8','Drenthe':'4,9','Flevoland':'5,1',
+    },
+  },
+};
+
 const SAMENWERKINGSVERBANDEN = {
   'Noord-Holland':  [
     { titel:'Transferpunt Noord-Holland West', partijen:['Amsterdam UMC','Dijklander','Thuiszorg NHN'], themas:['Regionale samenwerking','Capaciteitsdruk'], detail:'Coördineert doorstroom van patiënten van ziekenhuizen naar thuiszorg en verpleeghuizen. Doel: gemiddelde ligduur bekorten met 2 dagen. Actief sinds Q1 2026.' },
@@ -1854,30 +1923,58 @@ function renderVergelijking() {
 
   const scores1 = REGIO_SCORES[regio1] || {};
   const scores2 = REGIO_SCORES[regio2] || {};
-  const themas  = Object.keys(THEME_ICONS);
-  const short   = { 'Arbeidsmarkt':'Arbeid','Passende zorg':'Passend','Digitalisering':'Digital','Capaciteitsdruk':'Capaciteit','Regionale samenwerking':'Samenwerking','Financiering':'Financiering' };
 
-  const barsHtml = (scores, cls) => themas.map(t =>
-    `<div class="vg-bar-row">
-      <div class="vg-bar-label">${short[t] || t}</div>
-      <div class="vg-bar-track"><div class="vg-bar-fill ${cls}" style="width:${(scores[t] || 0) * 10}%"></div></div>
-    </div>`
-  ).join('');
+  /* Emoji icons per thema voor compacte weergave */
+  const THEMA_EMOJI = {
+    'Arbeidsmarkt': '👥', 'Passende zorg': '🎯', 'Digitalisering': '💻',
+    'Capaciteitsdruk': '📊', 'Regionale samenwerking': '🤝', 'Financiering': '💶',
+  };
+
+  const blocksHtml = Object.entries(THEMA_VERGELIJK).map(([themaKey, data]) => {
+    const s1 = Math.round((scores1[themaKey] || 0) * 10);
+    const s2 = Math.round((scores2[themaKey] || 0) * 10);
+    const m1 = data.regio[regio1] || '—';
+    const m2 = data.regio[regio2] || '—';
+    const emoji = THEMA_EMOJI[themaKey] || '📌';
+
+    return `
+      <div class="vg-theme-block">
+        <div class="vg-theme-header">
+          <span class="vg-theme-emoji">${emoji}</span>
+          <div>
+            <div class="vg-theme-label">${data.label}</div>
+            <div class="vg-theme-metriek">📏 Regionale meting: ${data.metriekLabel}</div>
+          </div>
+        </div>
+        <div class="vg-theme-feit">${data.feit}</div>
+        <div class="vg-regio-rows">
+          <div class="vg-regio-row">
+            <div class="vg-regio-name primary-name">${regio1}</div>
+            <div class="vg-regio-bar-wrap">
+              <div class="vg-bar-track"><div class="vg-bar-fill primary" style="width:${s1}%"></div></div>
+              <span class="vg-bar-pct">${s1}%</span>
+            </div>
+            <div class="vg-regio-metric">${m1}</div>
+          </div>
+          <div class="vg-regio-row">
+            <div class="vg-regio-name compare-name">${regio2}</div>
+            <div class="vg-regio-bar-wrap">
+              <div class="vg-bar-track"><div class="vg-bar-fill compare" style="width:${s2}%"></div></div>
+              <span class="vg-bar-pct">${s2}%</span>
+            </div>
+            <div class="vg-regio-metric">${m2}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 
   container.innerHTML = `
-    <div class="vg-chart-col">
-      <div class="vg-chart-title">${regio1}</div>
-      ${barsHtml(scores1, 'primary')}
-    </div>
-    <div class="vg-chart-col">
-      <div class="vg-chart-title">${regio2}</div>
-      ${barsHtml(scores2, 'compare')}
-    </div>
-    <div class="vg-legend" style="grid-column:1/-1">
+    <div class="vg-legend">
       <div class="vg-legend-dot primary"></div><span>${regio1}</span>
       <div class="vg-legend-dot compare"></div><span>${regio2}</span>
-      <span style="color:var(--ink-muted);margin-left:4px">— hogere balk = hogere urgentie</span>
-    </div>`;
+      <span style="color:var(--ink-muted);margin-left:4px">— urgentiescore (0–100)</span>
+    </div>
+    ${blocksHtml}`;
 }
 
 function toonPraktijkvoorbeeld(regio, btn) {
