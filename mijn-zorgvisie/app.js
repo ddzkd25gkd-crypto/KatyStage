@@ -1937,7 +1937,7 @@ function renderVergelijking() {
           <span class="vg-theme-icon">${icon}</span>
           <div>
             <div class="vg-theme-label">${data.label}</div>
-            <div class="vg-theme-metriek">📏 Regionale meting: ${data.metriekLabel}</div>
+            <div class="vg-theme-metriek">Regionale meting: ${data.metriekLabel}</div>
           </div>
         </div>
         <div class="vg-theme-feit">${data.feit}</div>
