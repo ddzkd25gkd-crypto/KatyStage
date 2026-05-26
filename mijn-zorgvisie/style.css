@@ -824,7 +824,8 @@ input:checked ~ .rt-track::after { transform: translateX(16px); }
   gap: 10px;
   margin-bottom: 8px;
 }
-.vg-theme-emoji { font-size: 20px; flex-shrink: 0; line-height: 1.2; }
+.vg-theme-icon { width: 20px; height: 20px; flex-shrink: 0; color: var(--red); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.vg-theme-icon svg { width: 20px; height: 20px; }
 .vg-theme-label { font-size: 13.5px; font-weight: 700; color: var(--ink); line-height: 1.3; }
 .vg-theme-metriek { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
 

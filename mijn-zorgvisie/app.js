@@ -1924,23 +1924,17 @@ function renderVergelijking() {
   const scores1 = REGIO_SCORES[regio1] || {};
   const scores2 = REGIO_SCORES[regio2] || {};
 
-  /* Emoji icons per thema voor compacte weergave */
-  const THEMA_EMOJI = {
-    'Arbeidsmarkt': '👥', 'Passende zorg': '🎯', 'Digitalisering': '💻',
-    'Capaciteitsdruk': '📊', 'Regionale samenwerking': '🤝', 'Financiering': '💶',
-  };
-
   const blocksHtml = Object.entries(THEMA_VERGELIJK).map(([themaKey, data]) => {
     const s1 = Math.round((scores1[themaKey] || 0) * 10);
     const s2 = Math.round((scores2[themaKey] || 0) * 10);
     const m1 = data.regio[regio1] || '—';
     const m2 = data.regio[regio2] || '—';
-    const emoji = THEMA_EMOJI[themaKey] || '📌';
+    const icon = THEME_ICONS[themaKey] || '';
 
     return `
       <div class="vg-theme-block">
         <div class="vg-theme-header">
-          <span class="vg-theme-emoji">${emoji}</span>
+          <span class="vg-theme-icon">${icon}</span>
           <div>
             <div class="vg-theme-label">${data.label}</div>
             <div class="vg-theme-metriek">📏 Regionale meting: ${data.metriekLabel}</div>
